@@ -1,0 +1,17 @@
+<?php
+$fw = \Base::instance();
+$design = \app\models\core\Design::instance();
+$url = \app\models\core\Url::instance();
+?>
+<head>
+    <meta charset="<?php echo $fw->get('ENCODING'); ?>" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo $fw->get('PAGE_TITLE') ?></title>
+    <base href="<?php echo $url->getBaseUrl(); ?>" />
+    <?php if ($faviconUrl = $design->getFaviconUrl()): ?>
+        <link rel="icon" type="image/png" href="<?php echo $faviconUrl ?>" />
+    <?php endif; ?>
+
+    <?php echo $design->renderItems('header'); ?>
+</head>

@@ -1,0 +1,438 @@
+/*****************************************************************************/
+/*                     HTML ELEMENTS                                         */
+/*****************************************************************************/
+body {
+    font-size: .9em;
+    font-family: Verdana, Arial, sans-serif;
+    background-color: #eeeeee;
+}
+
+div {
+    overflow: visible;
+}
+
+th, td {
+    padding: .8em;
+    cursor: default;
+}
+
+tbody tr:hover {
+    opacity: .5;
+}
+
+p, ul, ol {
+    margin: 0;
+}
+
+ul li {
+    list-style: none;
+}
+
+pre, label, input, button, select, textarea {
+    font-family: Arial, Verdana;
+    vertical-align: baseline;
+}
+
+table {
+    background-color: #e6e6e6;
+}
+
+
+/*****************************************************************************/
+/*                     GLOBAL                                                */
+/*****************************************************************************/
+
+.header {
+    background-color: #8bb0d7;
+    color: #fdfdfd;
+    height: 60px !important;
+}
+
+.header img {
+    width: inherit;
+}
+
+.header a, .header ul {
+    color: #fdfdfd;
+}
+
+.header .nav-container {
+    max-width: 768px;
+    margin: 0 auto;
+}
+
+.header .brand, .header .brand > div {
+    display: inline-block;
+}
+
+.header .separator {
+    display: inline-block;
+    min-width: 2em;
+}
+
+.header .nav-menu {
+    display: inline-block;
+    margin: auto;
+    float: none;
+    font-size: 12px !important;
+    top: 20px;
+}
+
+.header .nav-menu li {
+    padding: 0 1em;
+    border-top: 1px solid #fdfdfd;
+    line-height: 30px;
+}
+
+.header .nav-menu li.level-1 {
+    border-top: none;
+}
+
+.header .nav-menu li.level-2 {
+    font-size: 12px;
+    line-height: 20px;
+}
+
+.header .nav-menu .dir {
+    background-color: #8bb0d7;
+}
+
+.header .nav-menu li:hover {
+    background-color: #b3b3b3;
+}
+
+.header .nav-menu li.level-1::before {
+    content: " ";
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+    top: -1px;
+    margin-right: 5px;
+    vertical-align:middle;
+    background-position: 0px 0px;
+    background-repeat: no-repeat;
+}
+
+.header .nav-menu li.account-operations-links::before {
+    background-position: 0px -3px;
+    background-image: url(../images/hicolor_actions_24x24_hb-ope-show.png);
+}
+
+.header .nav-menu li.vehiclecost-link::before {
+    background-image: url(../images/hicolor_actions_24x24_hb-rep-vehicle.png);
+}
+
+.header h1 {
+    display: none;
+}
+
+#content-wrapper {
+    margin: 10px 0;
+}
+
+span .mono {
+    font-family: monospace, fixed;
+}
+
+.left {
+    text-align: left;
+}
+
+.footer {
+    margin-top: 30px;
+    background-color: #8bb0d7;
+}
+
+.footer p {
+    padding:2px;
+    line-height: 1em;
+    font-size: xx-small;
+}
+
+.currency.number-pos {
+    color: #44bb44;
+}
+.currency.number-neg {
+    color: #bb4444;
+}
+
+/* Global Messages */
+.session-messages {
+    margin: 5px auto;
+}
+.session-messages > div {
+    display: block;
+    border: dotted 1px;
+    padding: 5px;
+    margin: 1px auto;
+    max-width: 700px;
+}
+.session-messages > div:before {
+    content: " ";
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    margin-right: 5px;
+    vertical-align:middle;
+}
+.session-messages .message-error {
+    border-color: #bb4444;
+    background: rgba(200, 100, 40, .3);
+}
+.session-messages .message-error::before {
+    background-image: url(../images/error.png);
+}
+.session-messages .message-warn {
+    border-color: #dddb44;
+    background: rgba(200, 200, 40, .3);
+}
+.session-messages .message-warn::before {
+    background-image: url(../images/important.png);
+}
+.session-messages .message-info {
+    border-color: grey;
+    background: rgba(0, 0, 0, .1);
+}
+.session-messages .message-info::before {
+    background-image: url(../images/info.png);
+}
+
+.toolbar ul {
+    margin-top: .5em;
+    margin-bottom: .5em;
+}
+
+.toolbar label {
+    margin-right: .4em;
+}
+
+.toolbar .filter-input {
+    margin-right: 2em;
+}
+
+.toolbar li.last {
+    margin-right: 0;
+}
+
+.toolbar ul li, .toolbar div {
+    margin-top: .2em;
+    display: inline-block;
+}
+
+.toolbar ul li:last-child {
+    float: right;
+}
+
+.toolbar select {
+    max-width: 200px;
+}
+
+.toolbar input[name="search"] {
+    width: 160px;
+    float: right;
+    padding-left: 24px;
+    background: url(../images/search.png) no-repeat no-repeat 2px 2px;
+}
+
+.clear {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.hidden {
+    display: none;
+}
+
+.back-link.bottom {
+    margin: 2em 0;
+}
+.back-link a::before {
+    display: inline-block;
+    content: '«';
+    margin-right: 5px;
+}
+
+.canvas-container {
+    position: relative;
+    text-align: center;
+}
+
+/*****************************************************************************/
+/*                     ACCOUNTS                                              */
+/*****************************************************************************/
+
+.accounts-table th:first-child {
+    text-align: left;
+}
+
+.accounts-table th {
+    text-align: right;
+}
+
+.accounts-table tr.account-type {
+    font-weight: bold;
+}
+.accounts-table tr.account td:first-child,
+.accounts-table tr.total td:first-child {
+    padding-left: 4em;
+}
+.accounts-table tr.total {
+    font-weight: bold;
+}
+.accounts-table td.balance {
+    text-align: right;
+}
+
+.chart .toolbar {
+    float: right;
+    margin-bottom: 20px;
+}
+.chart .legend {
+    float: right;
+    max-width: 300px;
+}
+.chart .legend li span.label-color {
+    width: 10px;
+    height: 10px;
+    margin-right: 20px;
+    display: inline-block;
+}
+.chart canvas {
+    float: left;
+}
+
+.chart-footer p {
+    font-size: 10px;
+}
+
+.canvas-container .no-data-message {
+    position: absolute;
+    top: 200px;
+    left: 80px;
+}
+
+/*****************************************************************************/
+/*                     OPERATIONS                                            */
+/*****************************************************************************/
+
+.account-operation-index h1 {
+    float: left;
+}
+
+.account-operation-index .content {
+    max-width: none;
+}
+
+.account-operation-index #total-balance {
+    float: right;
+    margin: .4em;
+}
+
+.operations-table th:first-child,
+.operations-table td:first-child {
+    width: auto;
+}
+
+.operations-table td.info {
+    padding-left: 24px;
+    background-position: 2px 50%;
+    background-repeat: no-repeat;
+}
+
+.operations-table tr.paymode-ccard td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-ccard.png);
+}
+.operations-table tr.paymode-check td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-check.png);
+}
+.operations-table tr.paymode-cash td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-cash.png);
+}
+.operations-table tr.paymode-xfer td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-transfer.png);
+}
+.operations-table tr.paymode-intxfer td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-intransfer.png);
+}
+.operations-table tr.paymode-dcard td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-dcard.png);
+}
+.operations-table tr.paymode-repeatpmt td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-standingorder.png);
+}
+.operations-table tr.paymode-epayment td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-epayment.png);
+}
+.operations-table tr.paymode-deposit td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-deposit.png);
+}
+.operations-table tr.paymode-fee td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-fifee.png);
+}
+.operations-table tr.paymode-directdebit td.info {
+    background-image: url(../images/hicolor_status_16x16_pm-directdebit.png);
+}
+
+.operations-table td.status {
+    text-align: center;
+}
+
+.account-summary {
+    position: relative;
+    bottom: -4em;
+}
+
+.account-balance-summary {
+    position: absolute;
+    bottom: -1em;
+    right: 0;
+    display: inline-block;
+}
+
+.account-balance-summary .label-value-group {
+    display: inline-block;
+    margin-right: 2em;
+}
+
+.account-balance-summary .label-value-group.last {
+    margin-right: 0;
+}
+
+.status-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+}
+
+.status-icon.status-0 {
+    background-image: url(..);
+}
+.status-icon.status-1 {
+    background-image: url(../images/hicolor_actions_16x16_hb-ope-cleared.png);
+}
+.status-icon.status-2 {
+    background-image: url(../images/hicolor_actions_16x16_hb-ope-reconciled.png);
+}
+.status-icon.status-3 {
+    background-image: url(../images/hicolor_actions_16x16_hb-ope-remind.png);
+}
+
+/*****************************************************************************/
+/*                     VEHICLE REPORTS                                       */
+/*****************************************************************************/
+
+table.vehiclecost-summary-table td.meter,
+table.vehiclecost-table td.meter,
+table.vehiclecost-summary-table td.fuel,
+table.vehiclecost-table td.fuel,
+table.vehiclecost-summary-table td.fuel-cost,
+table.vehiclecost-table td.fuel-cost,
+table.vehiclecost-summary-table td.other-costs,
+table.vehiclecost-table td.other-costs,
+table.vehiclecost-summary-table td.total-cost,
+table.vehiclecost-table td.total-cost
+{
+    text-align: right;
+}

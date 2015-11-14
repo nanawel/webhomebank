@@ -1,0 +1,46 @@
+<?php
+/* @var $this \app\models\whb\View */
+$noResults = empty($CONSUMPTION_SUMMARY_DATA);
+$xhbSession = \app\models\core\Main::app()->getSession('xhb');
+$i18n = \app\models\core\I18n::instance();
+
+$distUnit = $xhbSession->getCarDistanceUnit();
+$volUnit = $xhbSession->getCarFuelVolumeUnit();
+?>
+
+<table class="data-table vehiclecost-summary-table<?php if ($noResults): echo ' no-data'; endif; ?>">
+    <thead>
+        <tr>
+            <th class="title"><?php echo $this->__('Period Summary') ?></th>
+            <th class="meter"><?php echo $this->__('Meter') ?></a></th>
+            <th class="fuel"><?php echo $this->__('Fuel') ?></a></th>
+            <th class="fuel-cost"><?php echo $this->__('Fuel Cost') ?></a></th>
+            <!-- <th class="other-costs"><?php echo $this->__('Other Costs') ?></th> -->
+            <th class="total-cost"><?php echo $this->__('Total Cost') ?></a></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($noResults): ?>
+        <tr class="vehiclecost-summary-row">
+            <td colspan="4"><?php echo $this->__('No data for this period of time or this category') ?></td>
+        </tr>
+        <?php else: ?>
+            <tr class="vehiclecost-summary-row per100">
+                <td class="title"><?php echo $i18n->tr('100 {0}', $distUnit) ?></td>
+                <td class="meter">&nbsp;</td>
+                <td class="fuel"><?php echo $i18n->tr('{0} {1}', $i18n->number($CONSUMPTION_SUMMARY_DATA['per100']['fuel']), $volUnit) ?></a></td>
+                <td class="fuel-cost"><?php echo $i18n->currency($CONSUMPTION_SUMMARY_DATA['per100']['fuel_cost'], true) ?></a></td>
+                <!-- <td class="other-costs"><?php echo $i18n->currency($CONSUMPTION_SUMMARY_DATA['per100']['other_costs'], true) ?></td> -->
+                <td class="total-cost"><?php echo $i18n->currency($CONSUMPTION_SUMMARY_DATA['per100']['total_cost'], true) ?></a></td>
+            </tr>
+            <tr class="vehiclecost-summary-row total">
+                <td class="title"><?php echo $i18n->tr('Total') ?></td>
+                <td class="meter"><?php echo $i18n->tr('{0} {1}', $i18n->number($CONSUMPTION_SUMMARY_DATA['total']['meter']), $distUnit) ?></a></td>
+                <td class="fuel"><?php echo $i18n->tr('{0} {1}', $i18n->number($CONSUMPTION_SUMMARY_DATA['total']['fuel']), $volUnit) ?></td>
+                <td class="fuel-cost"><?php echo $i18n->currency($CONSUMPTION_SUMMARY_DATA['total']['fuel_cost'], true) ?></a></td>
+                <!-- <td class="other-costs"><?php echo $i18n->currency($CONSUMPTION_SUMMARY_DATA['total']['other_costs'], true) ?></td> -->
+                <td class="total-cost"><?php echo $i18n->currency($CONSUMPTION_SUMMARY_DATA['total']['total_cost'], true) ?></a></td>
+            </tr>
+        <?php endif; ?>
+    </tbody>
+</table>

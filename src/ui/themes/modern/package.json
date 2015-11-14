@@ -1,0 +1,19 @@
+{
+    "name": "whb-theme-modern",
+    "version": "1.0.0",
+    "description": "WHB Modern Theme",
+    "main": "Gruntfile.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Nanawel",
+    "license": "ISC",
+    "devDependencies": {
+        "node-fs-extra": "*",
+        "grunt": "~0.4.5",
+        "grunt-contrib-less": "*",
+        "grunt-contrib-sass": "*",
+        "grunt-banner": "~0.6",
+        "foundation-sites": "~5.5"
+    }
+}

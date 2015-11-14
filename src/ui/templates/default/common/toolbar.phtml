@@ -1,0 +1,34 @@
+<div class="toolbar">
+    <?php if (isset($FILTER_FORM_ACTION) && $FILTER_FORM_ACTION && isset($FILTERS) && !empty($FILTERS)): ?>
+        <form action="<?php echo $FILTER_FORM_ACTION ?>" method="get" target="_self" id="toolbar-form">
+            <ul>
+                <?php foreach ($FILTERS as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>
+                    <?php if ($filterElement->getName() == 'search') continue; ?>
+                    <li class="filter-container">
+                        <label for="<?php echo $filterElement->getId() ?>" class="filter-label"><?php echo $this->__($filterElement->getLabel()) ?></label>
+                        <?php echo $filterElement->toHtml() ?>
+                    </li>
+                <?php endforeach; ?>
+                <li class="buttons-set">
+                    <button class="hidden" type="submit"><?php echo $this->__('Submit') ?></button>
+                    <button class="reset"><?php echo $this->__('Reset') ?></button>
+                </li>
+                <?php if (isset($FILTERS['search'])): ?>
+                    <li class="filter-container">
+                        <?php echo $FILTERS['search']->toHtml() ?>
+                    </li>
+                <?php endif; ?>
+            </ul>
+        </form>
+        <script type="application/javascript">
+            $('#toolbar-form select').change(function() {
+                $('#toolbar-form').submit();
+            });
+            $('#toolbar-form button.reset').click(function(ev) {
+                window.location = "<?php echo $RESET_FILTERS_URL ?>";
+                return false;
+            });
+        </script>
+    <?php endif; ?>
+</div>
+

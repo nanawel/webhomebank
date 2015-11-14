@@ -1,0 +1,368 @@
+$topbar-bg: #8BB0D7;
+$topbar-link-bg: $topbar-bg;
+$topbar-link-bg-hover: darken($topbar-bg, 20%);
+$topbar-dropdown-bg: $topbar-bg;
+$topbar-dropdown-link-bg: $topbar-bg;
+$topbar-dropdown-link-bg-hover: $topbar-link-bg-hover;
+$primary-color: #3465a4;
+$secondary-color: #edd400;
+$body-bg: #eeeeee;
+$table-row-hover-color: rgba(238, 213, 6, 0.35);
+
+@import "../node_modules/foundation-sites/scss/foundation";
+
+/*****************************************************************************/
+/*                     HTML ELEMENTS                                         */
+/*****************************************************************************/
+
+table {
+    width: 100%;
+
+    tbody tr:hover {
+        background-color: $table-row-hover-color;
+    }
+}
+
+select {
+    width: auto !important;
+}
+
+/*****************************************************************************/
+/*                     GLOBAL                                                */
+/*****************************************************************************/
+
+.hidden {
+    display: none !important;
+}
+
+span.mono {
+    font-family: "courier new", courier, monospace;
+}
+
+.currency.number-pos {
+    color: #44bb44;
+}
+.currency.number-neg {
+    color: #bb4444;
+}
+
+.header-container {
+    @extend .contain-to-grid;
+
+    .header {
+        @extend .top-bar;
+
+        .brand {
+            @extend .title-area;
+
+            div {
+                @extend .name;
+
+                h1 {
+                    display: inline-block;
+                    a { font-weight: normal; }
+                }
+            }
+        }
+
+        .nav-menu {
+            @extend .top-bar-section;
+            @extend .right;
+
+            li.dir {
+                @extend .has-dropdown;
+
+                ul.dir {
+                    @extend .dropdown;
+                }
+            }
+
+            li.level-1 > a::before {
+                content: " ";
+                width: 24px;
+                height: 24px;
+                display: inline-block;
+                position: relative;
+                top: -1px;
+                margin-right: 5px;
+                vertical-align:middle;
+                background-position: 0px 0px;
+                background-repeat: no-repeat;
+            }
+
+            li.account-operations-links > a::before {
+                background-position: 0px -3px;
+                background-image: url(../images/hicolor_actions_24x24_hb-ope-show.png);
+            }
+
+            li.vehiclecost-link > a::before {
+                background-image: url(../images/hicolor_actions_24x24_hb-rep-vehicle.png);
+            }
+        }
+    }
+}
+
+.footer {
+    background-color: $topbar-bg;
+    color: #fff;
+    text-align: center;
+    margin-top: 30px;
+
+    p {
+        margin: 0;
+        padding:2px;
+        line-height: 1em;
+        font-size: x-small;
+    }
+}
+
+.session-messages {
+    margin-top: 0.5em;
+
+    .message-info {
+        @include alert($info-color, $alert-radius);
+    }
+    .message-warn {
+        @include alert($warning-color, $alert-radius);
+    }
+    .message-error {
+        @include alert($alert-color, $alert-radius);
+    }
+
+    > div {
+        margin-bottom: 0.5em !important;
+    }
+}
+
+.session-messages, .content {
+    @extend .row;
+}
+
+.back-link.bottom {
+    margin: 2em 0;
+}
+.back-link a::before {
+    display: inline-block;
+    content: '«';
+    margin-right: 5px;
+}
+
+.toolbar {
+    @include grid-row();
+
+    form {
+        margin-bottom: 0;
+
+        > ul {
+            margin: 0;
+
+            > li {
+                margin-top: .2em;
+                display: inline-block;
+
+                &.filter-container {
+                    .filter-label {
+                        display: inline-block;
+                        margin-right: .4em;
+                    }
+                    .filter-input {
+                        width: auto;
+                        margin-right: 2em;
+                    }
+                }
+
+                &:last-child {
+                    float: right;
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+
+    button {
+        @include button($padding:$button-tny);
+    }
+}
+
+.chart .toolbar form > ul > li {
+    float: none;
+    display: block;
+    margin-top: 0;
+}
+
+input[type='text'].search {
+    padding-left: 26px;
+    background: #fff url(../images/search.png) no-repeat no-repeat 6px 8px;
+}
+
+.custom-dropdown-area li {
+    display: block !important;
+}
+
+.custom-dropdown-options {
+    margin: 0;
+}
+
+.chart {
+    @include grid-row();
+
+    .canvas-container {
+        @include grid-column($columns:8);
+
+        position: relative;
+        min-height: 300px;
+        text-align: center;
+
+        .no-data-message {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+        }
+    }
+
+    .toolbar {
+        @include grid-column($columns:4);
+
+        .filter-label {
+            @include prefix-postfix-base();
+            @include prefix();
+            @include grid-column(
+                $columns:4,
+                $float:left
+            );
+        }
+        .filter-input .custom-dropdown-area {
+            @include grid-column($columns:8);
+        }
+    }
+
+    .legend {
+        @include grid-column($columns:4);
+
+        li {
+            list-style: none;
+
+            span.label-color {
+                width: 10px;
+                height: 10px;
+                margin-right: 20px;
+                display: inline-block;
+            }
+        }
+    }
+
+    &.toolbar-top-right {
+        .toolbar {
+            float: right;
+        }
+
+        .canvas-container {
+            clear: both;
+        }
+    }
+}
+
+/*****************************************************************************/
+/*                     ACCOUNTS                                              */
+/*****************************************************************************/
+
+.accounts-table {
+    thead th:not(:first-child) {
+        text-align: center;
+    }
+    td.account-name {
+        padding-left: 4em;
+    }
+    td.balance {
+        text-align: right;
+    }
+}
+
+td.date, td.currency {
+    white-space: nowrap;
+}
+
+.account-summary {
+    @include grid-row();
+    margin-bottom: 1em;
+
+    .account-balance-summary {
+        .label-value-group {
+            @include grid-column($columns:3, $float: right);
+
+            label {
+                line-height: 1.5;
+            }
+        }
+    }
+}
+
+/*****************************************************************************/
+/*                     OPERATIONS                                            */
+/*****************************************************************************/
+
+.account-operation-index #total-balance {
+    float: right;
+    margin: .4em;
+}
+
+.operations-table {
+    td.info {
+        padding-left: 24px;
+        background-position: 2px 50%;
+        background-repeat: no-repeat;
+    }
+    tr.paymode-ccard td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-ccard.png);
+    }
+    tr.paymode-check td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-check.png);
+    }
+    tr.paymode-cash td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-cash.png);
+    }
+    tr.paymode-xfer td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-transfer.png);
+    }
+    tr.paymode-intxfer td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-intransfer.png);
+    }
+    tr.paymode-dcard td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-dcard.png);
+    }
+    tr.paymode-repeatpmt td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-standingorder.png);
+    }
+    tr.paymode-epayment td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-epayment.png);
+    }
+    tr.paymode-deposit td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-deposit.png);
+    }
+    tr.paymode-fee td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-fifee.png);
+    }
+    tr.paymode-directdebit td.info {
+        background-image: url(../images/hicolor_status_16x16_pm-directdebit.png);
+    }
+}
+
+
+.status-icon {
+    height: 16px;
+    width: 16px;
+    display: inline-block;
+}
+
+.status-icon.status-0 {
+    background-image: url(..);
+}
+.status-icon.status-1 {
+    background-image: url(../images/hicolor_actions_16x16_hb-ope-cleared.png);
+}
+.status-icon.status-2 {
+    background-image: url(../images/hicolor_actions_16x16_hb-ope-reconciled.png);
+}
+.status-icon.status-3 {
+    background-image: url(../images/hicolor_actions_16x16_hb-ope-remind.png);
+}

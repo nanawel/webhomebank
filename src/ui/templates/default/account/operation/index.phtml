@@ -1,0 +1,81 @@
+<?php
+/* @var $this \app\models\whb\View */
+$account = \Base::instance()->get('current_account');
+$noResults = count($OPERATION_COLLECTION) == 0;
+$gridHelper = \app\models\core\Grid::instance();
+?>
+
+<div class="back-link top">
+	<span><a href="<?php echo $this->getUrl('account') ?>"><?php echo $this->__('Back to accounts page') ?></a></span>
+</div>
+
+<h1><?php echo $account->getName() ?></h1>
+<div class="account-summary">
+    <?php echo $this->renderBlock('account_summary'); ?>
+</div>
+
+<div class="clear"></div>
+
+<?php echo $this->renderBlock('operation_toolbar'); ?>
+
+<div id="total-balance"><?php echo $this->__('{0} item(s) ({1})', count($OPERATION_COLLECTION), $this->i18n()->currency($OPERATION_COLLECTION->getBalance(), true)) ?></div>
+<table class="data-table operations-table<?php if ($noResults): echo ' no-data'; endif; ?>">
+    <thead>
+        <tr>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('date' => null)) ?>"><?php echo $this->__('Date') ?></a></th>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('info' => null)) ?>"><?php echo $this->__('Info') ?></a></th>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('payee' => null)) ?>"><?php echo $this->__('Payee') ?></a></th>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('category' => null)) ?>"><?php echo $this->__('Category') ?></a></th>
+            <th><?php echo $this->__('Tags') ?></th>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('status' => null)) ?>"><?php echo $this->__('Status') ?></a></th>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('amount' => null)) ?>"><?php echo $this->__('Outcome') ?></a></th>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('amount' => null)) ?>"><?php echo $this->__('Income') ?></a></th>
+            <th><?php echo $this->__('Balance') ?></th>
+            <th><a href="<?php echo $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('wording' => null)) ?>"><?php echo $this->__('Memo') ?></a></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($noResults): ?>
+        <tr class="operation">
+            <td colspan="10"><?php echo $this->__('No data for this period of time') ?></td>
+        </tr>
+        <?php else: ?>
+            <?php foreach($OPERATION_COLLECTION as $operation): ?>
+            <?php
+                $outcome = $operation->getAmount() < 0 ? $this->i18n()->currency($operation->getAmount(), true) : '';
+                $income = $operation->getAmount() >= 0 ? $this->i18n()->currency($operation->getAmount(), true) : '';
+                $balance = $this->i18n()->currency($operation->getAccountBalance(), true);
+                $category = $operation->getCategoryModels();
+                if (!empty($category)) {
+                    $categoryName = count($category) == 1 ? $category[0]->getFullname() : $this->__('- split -');
+                }
+                else {
+                    $categoryName = false;
+                }
+            ?>
+            <tr class="operation<?php if ($paymode = $operation->getPaymodeCode()) echo ' paymode-' . $paymode; ?>">
+                <td class="date"><?php echo $this->i18n()->date($operation->getDateModel()) ?></td>
+                <td class="info"><?php echo $operation->getInfo() ?></td>
+                <td class="payee"><?php echo $operation->getPayeeModel() ? $operation->getPayeeModel()->getName() : '&nbsp;' ?></td>
+                <td class="category"><?php echo $categoryName ? $categoryName : '&nbsp;' ?></td>
+                <td class="tags"><?php echo $operation->getTags() ?></td>
+                <td class="status"><span class="status-icon status-<?php echo $operation->getStatus() ?>"></span></td>
+                <td class="currency outcome"><?php echo $outcome ?></td>
+                <td class="currency income"><?php echo $income ?></td>
+                <td class="currency balance"><?php echo $balance ?></td>
+                <td class="memo"><?php echo $operation->getWording() ?></td>
+            </tr>
+            <?php endforeach; ?>
+        <?php endif; ?>
+    </tbody>
+</table>
+
+<div class="clear"></div>
+<div class="charts-container">
+	<?php echo $this->renderBlock('charts'); ?>
+</div>
+
+<div class="clear"></div>
+<div class="back-link bottom">
+	<span><a href="<?php echo $this->getUrl('account') ?>"><?php echo $this->__('Back to accounts page') ?></a></span>
+</div>

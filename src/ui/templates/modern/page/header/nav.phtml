@@ -1,0 +1,23 @@
+<?php
+/* @var $this \app\models\whb\View */
+$fw = \Base::instance();
+$design = \app\models\core\Design::instance();
+$url = \app\models\core\Url::instance();
+?>
+<section class="top-bar-section">
+    <ul class="nav-menu right" id="nav">
+        <li class="level-1 account-operations-links has-dropdown">
+            <a href="javascript:void(0)"><?php echo $this->__('Account Operations') ?></a>
+            <ul class="dropdown">
+                <?php foreach($this->getModel()->getAccountCollection() as $account): ?>
+                    <li class="level-2 account-operations-link">
+                        <a href="<?php echo $url->getUrl('account_operation/index', array('account_id' => $account->getId())) ?>"><?php echo $account->getName() ?></a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+        <li class="level-1 vehiclecost-link">
+            <a href="<?php echo $url->getUrl('report_vehiclecost/index') ?>"><?php echo $this->__('Vehicle Cost') ?></a>
+        </li>
+    </ul>
+</section>

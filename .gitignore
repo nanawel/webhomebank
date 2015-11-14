@@ -1,0 +1,16 @@
+.idea
+.svn
+export
+*.sh
+Dockerfile-*
+resources/*.xhb
+src/composer.lock
+src/test.php
+src/app/vendor
+src/etc/local.ini
+src/var/cache
+src/var/tmp
+src/var/log
+src/tmp
+src/ui/themes/modern/.sass-cache
+src/ui/themes/modern/node_modules
