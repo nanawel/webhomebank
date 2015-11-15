@@ -116,10 +116,6 @@ The following directives should be placed into your VirtualHost listening on por
         RequestHeader set X-Forwarded-Proto https
     </Location>
 
-# Screenshots
-
-
-
 # License
 
 See LICENSE
