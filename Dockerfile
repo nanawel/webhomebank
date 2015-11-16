@@ -4,6 +4,8 @@
 # BUILD
 #   docker build -t webhomebank .
 #
+# (you need to run "composer install" first to install the dependencies, see README.md)
+#
 # RUN (interactive mode; use -d instead of -i to run as background daemon)
 #   docker run -i -t --rm \
 #          -p 49080:80 \                                                       # App will be available from host at localhost:49080
