@@ -59,7 +59,7 @@ class Xhb extends Session
                 if (isset($resourceParams['DB']['driver'])) {
                     switch($resourceParams['DB']['driver']) {
                         case 'Pdo_Sqlite':
-                            $this->_importXhbToSqlite($xhbParams, $resourceParams, $parser->getXhbData(), $xhbId);
+                            $this->_importXhbToSqlite($xhbParams, $resourceParams, $parser, $xhbId);
                             break 2;
 
                         // TODO Handle other databases
@@ -99,7 +99,7 @@ class Xhb extends Session
      * @param $xhbParams
      * @return string Connection string to DB
      */
-    protected function _importXhbToSqlite(&$xhbParams, &$resourceParams, array $xhbData, $xhbId) {
+    protected function _importXhbToSqlite(&$xhbParams, &$resourceParams, Parser $parser, $xhbId) {
         $dbConfig =& $resourceParams['DB'];
         if (!isset($dbConfig['database']) || empty($dbConfig['database'])) {
             // Create a DB file per XHB file, using unique ID
@@ -112,8 +112,11 @@ class Xhb extends Session
         $xhbAdapter = new Db($adapter);
 
         try {
-            if ($xhbAdapter->importXhbData($xhbData, $xhbId)) {
-                $this->addMessage(I18n::instance()->tr('XHB imported to database successfully!'), self::MESSAGE_INFO);
+            if (!$xhbAdapter->xhbExists($xhbId)) {
+                if ($xhbAdapter->importXhbData($parser->getXhbData(), $xhbId)) {
+                    @chmod($dbConfig['database'], 0640);
+                    $this->addMessage(I18n::instance()->tr('XHB imported to database successfully!'), self::MESSAGE_INFO);
+                }
             }
         }
         catch (\Exception $e) {
@@ -122,7 +125,7 @@ class Xhb extends Session
             throw $e;
         }
 
-        //TODO Cleanup old db files
+        //TODO Clean up old db files
     }
 
     protected function _getXhbConfig($key = null) {

@@ -75,8 +75,8 @@ class Db
      * @param $xhbId
      * @return bool TRUE if database has been created/updated, FALSE otherwise
      */
-    public function importXhbData($xhbData, $xhbId) {
-        if (!$this->_xhbExists($xhbId)) {
+    public function importXhbData($xhbData, $xhbId, $force = false) {
+        if (!$this->xhbExists($xhbId) || $force) {
             $this->_createSchema()
                 ->_importXhbData($xhbData, $xhbId);
             return true;
@@ -88,7 +88,7 @@ class Db
         return $this->_db;
     }
 
-    protected function _xhbExists($xhbId) {
+    public function xhbExists($xhbId) {
         try {
             $select = $this->_sql->select(Xhb::MAIN_TABLE);
             $select->columns(array('id'))
