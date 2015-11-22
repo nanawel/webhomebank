@@ -16,6 +16,7 @@ use Zend\Db\Sql\Predicate\In;
 use Zend\Db\Sql\Predicate\IsNull;
 use Zend\Db\Sql\Predicate\Like;
 use Zend\Db\Sql\Predicate\NotIn;
+use Zend\Db\Sql\Predicate\NotLike;
 use Zend\Db\Sql\Predicate\Operator;
 use Zend\Db\Sql\Predicate\Predicate;
 use Zend\Db\Sql\Select;
@@ -205,8 +206,12 @@ abstract class AbstractCollection extends \xhb\models\Resource\AbstractCollectio
                 $predicate = new Like($field, $value);
                 break;
 
+            case 'nlike':
+                $predicate = new NotLike($field, $value);
+                break;
+
             default:
-                Log::instance()->log('Unknown operator "' . $operator . '", ignoring.', LOG_WARNING);
+                throw new \InvalidArgumentException('"' . $operator . '" is not a valid operator');
         }
         return $predicate;
     }

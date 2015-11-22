@@ -8,7 +8,6 @@
 
 namespace xhb\models\Resource;
 
-use app\models\core\Log;
 use xhb\util\MagicObject;
 
 /**
