@@ -251,6 +251,7 @@ class Db
                 ->addColumn(new Varchar('scat', 128, true))
                 ->addColumn(new Varchar('samt', 128, true))
                 ->addColumn(new Varchar('smem', 128, true))
+                ->addColumn(new Integer('kxfer', true))
                 ->addColumn(new Floating('account_balance', 10, 4, false, 0))
                 ->addColumn(new Floating('general_balance', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
