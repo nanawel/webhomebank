@@ -46,7 +46,7 @@ abstract class AbstractController
 
     public final function __construct($fw) {
         $this->_fw = $fw;
-        Main::instance($fw)->setup();
+        Main::instance()->setup();
         Main::app()->setCurrentController($this);
         $this->setPageTemplate(self::PAGE_TEMPLATE_DEFAULT);
         $this->_init();

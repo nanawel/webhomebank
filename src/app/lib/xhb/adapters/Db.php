@@ -289,40 +289,6 @@ class Db
         }
     }
 
-    /* Deprecated */
-    /*protected function _insertInto($table, array $data, $columns = null, $orReplace = false) {
-        $commonSql = 'INSERT ' . ($orReplace ? ' OR REPLACE' : '') . ' INTO ' . $this->_db->quotekey($table) . ' ';
-        if ($columns === null) {
-            $columns = $this->_db->schema($table);
-            if (!$columns) {
-                throw new \Exception("Table '$table' not found.");
-            }
-            $columns = array_keys($columns);
-        }
-        $columnsSql = '(' . implode(', ', array_map(array($this->_db, 'quotekey'), $columns)) . ')';
-
-        $chunks = array_chunk($data, 100, true);
-        foreach($chunks as $chunk) {
-            $insertRows = array();
-            foreach($chunk as $rowId => $row) {
-                // Prepare rows according to columns order
-                $rowData = array();
-                foreach($columns as $col) {
-                    $rowData[$col] = $this->_quote(isset($row[$col]) ? $row[$col] : null);
-                }
-                $insertRows[] = '(' . implode(', ', $rowData) . ') ';
-            }
-
-            $sql = $commonSql . $columnsSql . ' VALUES ' . implode(', ', $insertRows);
-            //var_dump($sql);
-            $this->_db->exec($sql);
-        }
-    }
-
-    protected function _quote($value) {
-        return $value === null ? 'null' : $this->_db->quote($value);
-    }*/
-
     protected function _insertInto($table, array $data, $columns = null) {
         if (!$data) {
             return;

@@ -45,6 +45,7 @@ class WhbController extends AbstractController
                 })                                                                  //
             ->setBlockTemplate('messages', 'messages.phtml')
             ->setBlockCachePlaceholder('messages');
+        return $this;
     }
 
     protected function _addCrumbsToTitle(array $elements) {
