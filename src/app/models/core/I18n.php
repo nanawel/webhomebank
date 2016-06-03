@@ -35,6 +35,7 @@ class I18n extends \Prefab
 
     public function setLocale($locale) {
         $this->_locale = $locale;
+        \Base::instance()->set('LANGUAGE', $locale);
     }
 
     public function setCurrencyCode($currencyCode) {
@@ -43,7 +44,7 @@ class I18n extends \Prefab
 
     public function getAvailableLocales()
     {
-        //TODO
+        return Main::app()->getConfig('LANGUAGES');
     }
 
     public function getAvailableCurrencies()

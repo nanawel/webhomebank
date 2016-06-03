@@ -30,8 +30,8 @@ class SettingsController extends WhbController
     }
 
     public function setLocaleAction() {
-        $localeCode = $this->getRequestQuery('code');
-        $this->getSession('xhb')->setLocaleCode($localeCode);
+        $locale = $this->getRequestQuery('code');
+        $this->getSession()->setLocale($locale);
 
         $this->_redirectReferer();
     }

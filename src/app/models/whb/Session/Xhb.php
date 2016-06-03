@@ -142,4 +142,4 @@ class Xhb extends Session
     public function setCurrencyCode($code) {
         return $this->set('currency_code', $code);
     }
-} 
+}
