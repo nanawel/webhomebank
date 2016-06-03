@@ -131,4 +131,15 @@ class Xhb extends Session
     protected function _getXhbConfig($key = null) {
         return $key === null ? Main::app()->getConfig('XHB') : Main::app()->getConfig('XHB.' . $key);
     }
+
+    public function getCurrencyCode() {
+        if (!$this->get('currency_code')) {
+            $this->set('currency_code', Main::app()->getConfig('CURRENCY'));
+        }
+        return $this->get('currency_code');
+    }
+
+    public function setCurrencyCode($code) {
+        return $this->set('currency_code', $code);
+    }
 } 

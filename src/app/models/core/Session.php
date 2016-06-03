@@ -118,8 +118,4 @@ class Session extends \Magic
         $encoding = \Base::instance()->get('ENCODING');
         return str_replace('-', '_', $lang) . ".$encoding";
     }
-
-    public function getCurrencyCode() {
-        return Main::app()->getConfig('CURRENCY');
-    }
 }

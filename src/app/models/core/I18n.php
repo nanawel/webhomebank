@@ -28,7 +28,6 @@ class I18n extends \Prefab
         $fw = \Base::instance();
         self::$_PREFIX = $fw->get('PREFIX');
 
-
         if (!extension_loaded('intl')) {
             throw new \Exception('Missing "intl" extension.');
         }
@@ -40,6 +39,16 @@ class I18n extends \Prefab
 
     public function setCurrencyCode($currencyCode) {
         $this->_currencyCode = $currencyCode;
+    }
+
+    public function getAvailableLocales()
+    {
+        //TODO
+    }
+
+    public function getAvailableCurrencies()
+    {
+        return Main::app()->getConfig('CURRENCIES');
     }
 
     /**
@@ -73,12 +82,15 @@ class I18n extends \Prefab
      * @param $value
      * @return string
      */
-    public function currency($value, $withContainer = false) {
+    public function currency($value, $withContainer = false, $currencyCode = null) {
+        if ($currencyCode === null) {
+            $currencyCode = $this->_currencyCode;
+        }
         if ($formatter = $this->getCurrencyFormatterInstance()) {
-            $return = $formatter->formatCurrency($value, $this->_currencyCode);
+            $return = $formatter->formatCurrency($value, $currencyCode);
         }
         else {
-            $return = \Base::instance()->format('{0,number,currency}', $value);
+            $return = \Base::instance()->format("{0,number,currency,$currencyCode}", $value);
         }
 
         if ($withContainer) {

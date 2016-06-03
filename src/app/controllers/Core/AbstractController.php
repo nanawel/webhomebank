@@ -387,14 +387,20 @@ abstract class AbstractController
     protected function _redirectReferer() {
         $referrer = $this->_fw->get('SERVER.HTTP_REFERER');
         if ($referrer && $referrer != $this->_fw->get('REALM')) {
-            $this->_reroute($referrer);
+            $this->_rerouteUrl($referrer);
         }
-        $this->_reroute('/');
+        else {
+            $this->_reroute('/');
+        }
         return $this;
     }
 
     protected function _reroute($path, $permanent = false) {
         $url = $this->getUrl($path, array('_force_scheme' => true));
+        $this->_rerouteUrl($url, $permanent);
+    }
+
+    protected function _rerouteUrl($url, $permanent = false) {
         $this->_fw->reroute($url, $permanent);
     }
 

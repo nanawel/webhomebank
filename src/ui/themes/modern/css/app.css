@@ -8424,6 +8424,9 @@ span.mono {
 .header-container .header .nav-menu li.vehiclecost-link > a::before {
   background-image: url(../images/hicolor_actions_24x24_hb-rep-vehicle.png);
 }
+.header-container .header .nav-menu li.settings-links > a::before {
+  background-image: url(../images/categories_24x24_gtk-preferences.png);
+}
 
 .footer {
   background-color: #8BB0D7;
