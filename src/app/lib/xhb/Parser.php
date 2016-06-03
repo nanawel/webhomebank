@@ -89,7 +89,9 @@ class Parser
     }
 
     public function getUniqueKey() {
-        $this->parse();
+        if (!$this->_id) {
+            $this->_id = sha1_file($this->_xhbFile);
+        }
         return $this->_id;
     }
 

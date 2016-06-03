@@ -10,12 +10,7 @@ namespace app\models\core;
 
 class Main extends \Prefab
 {
-    protected static $_fw;
     protected static $_app;
-
-    public function __construct($fw) {
-        self::$_fw = $fw;
-    }
 
     public function setup() {
         $this->_checkRequirements();
@@ -40,7 +35,7 @@ class Main extends \Prefab
      */
     public static function app() {
         if (!self::$_app) {
-            $appClass = self::$_fw->get('app.APP_CLASS');
+            $appClass = \Base::instance()->get('app.APP_CLASS');
             if (!$appClass) {
                 throw new \Exception('Missing app.APP_CLASS in configuration');
             }

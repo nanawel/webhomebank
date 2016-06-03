@@ -4,6 +4,8 @@
 # BUILD
 #   docker build -t webhomebank .
 #
+# (you need to run "composer install" first to install the dependencies, see README.md)
+#
 # RUN (interactive mode; use -d instead of -i to run as background daemon)
 #   docker run -i -t --rm \
 #          -p 49080:80 \                                                       # App will be available from host at localhost:49080
@@ -24,6 +26,10 @@ RUN apt-get update && apt-get install -y \
     nano \
     php5-intl \
     php5-gd
+
+# Log Apache access and errors to STDOUT/STDERR
+RUN ln -sf /dev/stdout /var/log/apache2/access.log
+RUN ln -sf /dev/stderr /var/log/apache2/error.log
 
 RUN a2enmod rewrite
 RUN a2enmod deflate

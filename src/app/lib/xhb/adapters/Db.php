@@ -75,8 +75,8 @@ class Db
      * @param $xhbId
      * @return bool TRUE if database has been created/updated, FALSE otherwise
      */
-    public function importXhbData($xhbData, $xhbId) {
-        if (!$this->_xhbExists($xhbId)) {
+    public function importXhbData($xhbData, $xhbId, $force = false) {
+        if (!$this->xhbExists($xhbId) || $force) {
             $this->_createSchema()
                 ->_importXhbData($xhbData, $xhbId);
             return true;
@@ -88,7 +88,7 @@ class Db
         return $this->_db;
     }
 
-    protected function _xhbExists($xhbId) {
+    public function xhbExists($xhbId) {
         try {
             $select = $this->_sql->select(Xhb::MAIN_TABLE);
             $select->columns(array('id'))
@@ -251,6 +251,7 @@ class Db
                 ->addColumn(new Varchar('scat', 128, true))
                 ->addColumn(new Varchar('samt', 128, true))
                 ->addColumn(new Varchar('smem', 128, true))
+                ->addColumn(new Integer('kxfer', true))
                 ->addColumn(new Floating('account_balance', 10, 4, false, 0))
                 ->addColumn(new Floating('general_balance', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
@@ -287,40 +288,6 @@ class Db
             }
         }
     }
-
-    /* Deprecated */
-    /*protected function _insertInto($table, array $data, $columns = null, $orReplace = false) {
-        $commonSql = 'INSERT ' . ($orReplace ? ' OR REPLACE' : '') . ' INTO ' . $this->_db->quotekey($table) . ' ';
-        if ($columns === null) {
-            $columns = $this->_db->schema($table);
-            if (!$columns) {
-                throw new \Exception("Table '$table' not found.");
-            }
-            $columns = array_keys($columns);
-        }
-        $columnsSql = '(' . implode(', ', array_map(array($this->_db, 'quotekey'), $columns)) . ')';
-
-        $chunks = array_chunk($data, 100, true);
-        foreach($chunks as $chunk) {
-            $insertRows = array();
-            foreach($chunk as $rowId => $row) {
-                // Prepare rows according to columns order
-                $rowData = array();
-                foreach($columns as $col) {
-                    $rowData[$col] = $this->_quote(isset($row[$col]) ? $row[$col] : null);
-                }
-                $insertRows[] = '(' . implode(', ', $rowData) . ') ';
-            }
-
-            $sql = $commonSql . $columnsSql . ' VALUES ' . implode(', ', $insertRows);
-            //var_dump($sql);
-            $this->_db->exec($sql);
-        }
-    }
-
-    protected function _quote($value) {
-        return $value === null ? 'null' : $this->_db->quote($value);
-    }*/
 
     protected function _insertInto($table, array $data, $columns = null) {
         if (!$data) {

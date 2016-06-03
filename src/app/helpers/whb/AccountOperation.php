@@ -8,7 +8,7 @@
 
 namespace app\helpers\whb;
 
-use app\models\core\I18n;
+use xhb\models\Constants;
 use xhb\models\Operation;
 use xhb\models\Resource\AbstractCollection;
 use xhb\models\Xhb\DateHelper;
@@ -155,5 +155,12 @@ class AccountOperation
             }
         }
         return $processedFilters;
+    }
+
+    public static function getPayeeLabelForDisplay(Operation $operation) {
+        if ($operation->getPaymode() == Constants::PAYMODE_INTXFER) {
+            return $operation->getXhb()->getAccount($operation->getDstAccount())->getName();
+        }
+        return $operation->getPayeeModel() ? $operation->getPayeeModel()->getName() : '';
     }
 }

@@ -5,6 +5,10 @@ accounting, released under the GPL v2 license.
 
 Please visit [http://homebank.free.fr/]([http://homebank.free.fr/]) for more information about the original software.
 
+# Demo
+
+An online demo is available at [http://webhomebank-demo.sloppy.zone/](http://webhomebank-demo.sloppy.zone/), check it out!
+
 # Previews
 
 ![Preview 1](/resources/screenshots/home_en_modern_600px.png "Preview 1")
@@ -53,6 +57,10 @@ dedicated virtual host.
 Copy the sample configuration etc/local.ini.sample to etc/local.ini and set the BUDGET_FILE variable to point to your
 XHB file (HomeBank save file).
 
+Install the dependencies with [Composer](https://getcomposer.org/) (it may take a few minutes).
+
+    composer -d src/ install
+
 Open your browser and go to the index.php of the application.
 
 If you plan to use a reverse-proxy/load-balancer, please read the section below in order to configure the special
@@ -65,6 +73,10 @@ section if necessary. Some examples are already commented in it.
 ## With provided Docker build file
 
 Clone repository at the location of your choice, it can be a temporary folder.
+
+Install the dependencies with [Composer](https://getcomposer.org/) (it may take a few minutes).
+
+    composer -d src/ install
 
 Then build the image (based on [php:5.6-apache]([https://github.com/docker-library/php/blob/cf1e938f3721632443e01734bcfcbcf1160ea539/5.6/apache/Dockerfile])).
 
@@ -115,10 +127,6 @@ The following directives should be placed into your VirtualHost listening on por
         RequestHeader set X-External-Base-Path /whb
         RequestHeader set X-Forwarded-Proto https
     </Location>
-
-# Screenshots
-
-
 
 # License
 

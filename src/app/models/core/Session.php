@@ -114,12 +114,17 @@ class Session extends \Magic
      * @return string
      */
     public function getLocale() {
-        list($lang) = explode(',', \Base::instance()->get('LANGUAGE'));
-        $encoding = \Base::instance()->get('ENCODING');
-        return str_replace('-', '_', $lang) . ".$encoding";
+        if (!$locale = $this->get('locale')) {
+            list($locale) = explode(',', \Base::instance()->get('LANGUAGE'));
+        }
+        if (strpos($locale, '.') === false) {
+            $locale .= '.' . \Base::instance()->get('ENCODING');
+        }
+        $this->setLocale($locale);
+        return $locale;
     }
 
-    public function getCurrencyCode() {
-        return Main::app()->getConfig('CURRENCY');
+    public function setLocale($locale) {
+        return $this->set('locale', $locale);
     }
 }

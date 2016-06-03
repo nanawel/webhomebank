@@ -16,6 +16,8 @@ use xhb\util\Date;
  * @method float getAccountBalance()
  * @method float getGeneralBalance()
  * @method string getMemo()
+ * @method int getDstAccount()
+ * @method int getKxfer()
  *
  * @package xhb\models
  */

@@ -30,7 +30,7 @@ class App extends \app\models\core\App
         // Setup i18n
         $i18n = I18n::instance();
         $i18n->setLocale($this->getSession()->getLocale());
-        $i18n->setCurrencyCode($this->getSession()->getCurrencyCode());
+        $i18n->setCurrencyCode($this->getSession('xhb')->getCurrencyCode());
 
         // Set HTML lang according to defined locale
         $this->_fw->set('HTML_LANG', $i18n->getLocaleCountryCodeISO2());

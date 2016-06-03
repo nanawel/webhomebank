@@ -56,7 +56,7 @@ $gridHelper = \app\models\core\Grid::instance();
             <tr class="operation<?php if ($paymode = $operation->getPaymodeCode()) echo ' paymode-' . $paymode; ?>">
                 <td class="date"><?php echo $this->i18n()->date($operation->getDateModel()) ?></td>
                 <td class="info"><?php echo $operation->getInfo() ?></td>
-                <td class="payee"><?php echo $operation->getPayeeModel() ? $operation->getPayeeModel()->getName() : '&nbsp;' ?></td>
+                <td class="payee"><?php echo \app\helpers\whb\AccountOperation::getPayeeLabelForDisplay($operation) ?></td>
                 <td class="category"><?php echo $categoryName ? $categoryName : '&nbsp;' ?></td>
                 <td class="tags"><?php echo $operation->getTags() ?></td>
                 <td class="status"><span class="status-icon status-<?php echo $operation->getStatus() ?>"></span></td>

@@ -115,13 +115,7 @@ abstract class App
     public function getCacheInstance() {
         if ($this->_cache === null) {
             if ($cacheClass = $this->getConfig('CACHE_CLASS')) {
-                $cacheParamConfig = $this->getConfig('CACHE_CLASS_PARAMS');
-                $cacheParamConfig = $cacheParamConfig ? explode('|', $cacheParamConfig) : array();
-                $cacheParams = array();
-                foreach($cacheParamConfig as $configParam) {
-                    list($param, $value) = explode('=', $configParam);
-                    $cacheParams[$param] = $value;
-                }
+                $cacheParams = self::configToHashmap($this->getConfig('CACHE_CLASS_PARAMS'), '|', '=');
                 $this->_cache = new $cacheClass($cacheParams);
             }
             else {
@@ -166,5 +160,18 @@ abstract class App
 
     public function getTmpDir() {
         return $this->_tmpDir;
+    }
+
+    /**
+     * @param $config
+     * @return array
+     */
+    public static function configToHashmap($config, $valueSeparator = ';', $keyValueSeparator = ':') {
+        $return = array();
+        foreach(explode($valueSeparator, $config) as $c) {
+            list($key, $value) = explode($keyValueSeparator, $c);
+            $return[$key] = $value;
+        }
+        return $return;
     }
 }
