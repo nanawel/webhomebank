@@ -75,6 +75,9 @@ return array(
 
     'Account Operations' => 'Opérations des comptes',
     'Vehicle Cost' => 'Coût véhicules',
+    'Settings' => 'Configuration',
+    'Locale' => 'Locale',
+    'Currency' => 'Monnaie',
 
     'Vehicle Cost Report' => 'Rapport du coût d\'utilisation des véhicules',
     'No data for this period of time or this category' => 'Pas de données pour cette période ou pour cette catégorie',
