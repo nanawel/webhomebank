@@ -317,7 +317,8 @@ abstract class AbstractController
 
     protected function _getRequestCacheKeyInfo() {
         return array(
-            $this->_fw->get('REALM')
+            $this->_fw->get('REALM'),
+            $this->getSession()->getLocale()
         );
     }
 
