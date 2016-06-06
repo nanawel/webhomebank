@@ -18,7 +18,6 @@ class I18n extends \Prefab
 {
     protected static $_PREFIX;
 
-    protected $_locale;
     protected $_currencyCode;
     protected $_numberFormatter;
     protected $_currencyFormatter;
@@ -34,12 +33,20 @@ class I18n extends \Prefab
     }
 
     public function setLocale($locale) {
-        $this->_locale = $locale;
         \Base::instance()->set('LANGUAGE', $locale);
+    }
+
+    public function getLocale() {
+        list($lang) = explode(',', \Base::instance()->get('LANGUAGE'));
+        return $lang;
     }
 
     public function setCurrencyCode($currencyCode) {
         $this->_currencyCode = $currencyCode;
+    }
+
+    public function getCurrencyCode() {
+        return $this->_currencyCode;
     }
 
     public function getAvailableLocales()
@@ -134,7 +141,7 @@ class I18n extends \Prefab
     public function getNumberFormatterInstance() {
         if (class_exists('NumberFormatter') && !$this->_numberFormatter) {
             $this->_numberFormatter = new \NumberFormatter(
-                $this->_locale,
+                $this->getLocale(),
                 \NumberFormatter::DECIMAL
             );
         }
@@ -144,7 +151,7 @@ class I18n extends \Prefab
     public function getCurrencyFormatterInstance() {
         if (class_exists('NumberFormatter') && !$this->_currencyFormatter) {
             $this->_currencyFormatter = new \NumberFormatter(
-                $this->_locale,
+                $this->getLocale(),
                 \NumberFormatter::CURRENCY
             );
         }
@@ -154,7 +161,7 @@ class I18n extends \Prefab
     public function getDateFormatterInstance() {
         if (class_exists('IntlDateFormatter') && !$this->_dateFormatter) {
             $this->_dateFormatter = new \IntlDateFormatter(
-                $this->_locale,
+                $this->getLocale(),
                 \IntlDateFormatter::SHORT,
                 \IntlDateFormatter::NONE
             );
@@ -163,7 +170,7 @@ class I18n extends \Prefab
     }
 
     public function getLocaleCountryCodeISO2() {
-        return substr($this->_locale, 0, 2);
+        return substr($this->getLocale(), 0, 2);
     }
 
     public function set($key, $value) {
