@@ -12,6 +12,7 @@ use app\helpers\core\Output;
 use app\helpers\whb\AccountOperation;
 use app\helpers\whb\Chart;
 use app\models\core\Chart\Donut;
+use app\models\core\Main;
 use app\models\whb\Chart\Scatter;
 use app\models\core\Design;
 use app\models\core\I18n;
@@ -99,7 +100,8 @@ class AccountController extends WhbController
                 'data_url' => $this->getUrl('*/topSpendingChartData'),
                 'filters'  => array(
                     new PeriodFilter($xhb, array(
-                        'name' => 'period'
+                        'name'  => 'period',
+                        'value' => Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
                     ))
                 )
             )))
@@ -109,7 +111,8 @@ class AccountController extends WhbController
                 'data_url' => $this->getUrl('*/balanceReportChartData'),
                 'filters'  => array(
                     new PeriodFilter($xhb, array(
-                        'name' => 'period'
+                        'name' => 'period',
+                        'value' => Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
                     ))
                 ),
                 'class'       => 'toolbar-top-right',
@@ -123,7 +126,7 @@ class AccountController extends WhbController
     public function topSpendingChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
         $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_MONTH
+            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
         );
 
         $sumsData = Chart\Operation::getTopSpendingReportData($xhb, $collFilters);
@@ -138,7 +141,7 @@ class AccountController extends WhbController
     public function balanceReportChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
         $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_MONTH
+            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
         );
 
         $accountCollection = $xhb->getAccountCollection()
@@ -151,9 +154,6 @@ class AccountController extends WhbController
                 'template' => 'data/json.phtml',
                 'mime'     => 'application/json'
             ));
-        $this->getView()->setData('DATA', $chartData)
-            //DEBUG
-            ->setData('OPTIONS', JSON_PRETTY_PRINT);
-        //DEBUG
+        $this->getView()->setData('DATA', $chartData);
     }
 } 
