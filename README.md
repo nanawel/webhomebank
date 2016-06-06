@@ -5,10 +5,6 @@ accounting, released under the GPL v2 license.
 
 Please visit [http://homebank.free.fr/]([http://homebank.free.fr/]) for more information about the original software.
 
-# Demo
-
-An online demo is available at [http://webhomebank-demo.sloppy.zone/](http://webhomebank-demo.sloppy.zone/), check it out!
-
 # Previews
 
 ![Preview 1](/resources/screenshots/home_en_modern_600px.png "Preview 1")
