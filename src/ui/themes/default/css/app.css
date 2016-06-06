@@ -67,7 +67,7 @@ table {
 
 .header .separator {
     display: inline-block;
-    min-width: 2em;
+    /*min-width: 2em;*/
 }
 
 .header .nav-menu {
@@ -121,6 +121,10 @@ table {
 
 .header .nav-menu li.vehiclecost-link::before {
     background-image: url(../images/hicolor_actions_24x24_hb-rep-vehicle.png);
+}
+
+.header .nav-menu li.settings-links {
+    content: ".";
 }
 
 .header .nav-menu li.settings-links::before {

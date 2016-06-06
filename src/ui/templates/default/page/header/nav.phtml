@@ -20,10 +20,11 @@ $i18n = \app\models\core\I18n::instance();
     <li class="level-1 vehiclecost-link">
         <a href="<?php echo $url->getUrl('report_vehiclecost/index') ?>"><?php echo $this->__('Vehicle Cost') ?></a>
     </li>
-    <li class="level-1 settings-link dir">
+    <li class="level-1 settings-links dir">
         <?php echo $this->__('Settings') ?>
         <ul class="dir">
             <li class="level-2 settings-currency-link dir">
+                <?php echo $this->__('Currency') ?>
                 <ul class="dir">
                     <?php foreach($i18n->getAvailableCurrencies() as $code): ?>
                         <li class="level-3 set-currency-link currency-<?php echo strtolower($code) ?>">
@@ -33,6 +34,7 @@ $i18n = \app\models\core\I18n::instance();
                 </ul>
             </li>
             <li class="level-2 settings-locale-link dir">
+                <?php echo $this->__('Locale') ?>
                 <ul class="dir">
                     <?php foreach($i18n->getAvailableLocales() as $code): ?>
                         <li class="level-3 set-locale-link currency-<?php echo strtolower($code) ?>">
