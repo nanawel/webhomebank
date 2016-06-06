@@ -8754,6 +8754,9 @@ td.date, td.currency {
 .operations-table tr.paymode-directdebit td.info {
   background-image: url(../images/hicolor_status_16x16_pm-directdebit.png);
 }
+.operations-table tr.future {
+  font-style: italic;
+}
 
 .status-icon {
   height: 16px;

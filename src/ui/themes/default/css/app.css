@@ -383,6 +383,10 @@ span .mono {
     background-image: url(../images/hicolor_status_16x16_pm-directdebit.png);
 }
 
+.operations-table tr.future {
+    font-style: italic;
+}
+
 .operations-table td.status {
     text-align: center;
 }

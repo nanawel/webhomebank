@@ -349,6 +349,10 @@ td.date, td.currency {
     tr.paymode-directdebit td.info {
         background-image: url(../images/hicolor_status_16x16_pm-directdebit.png);
     }
+
+    tr.future {
+        font-style: italic;
+    }
 }
 
 
