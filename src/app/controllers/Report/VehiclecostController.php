@@ -102,7 +102,7 @@ class VehiclecostController extends WhbController
     public function fuelPriceChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
 
-        $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_YEAR;
+        $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_VEHICLES_PERIOD');
         $period = $xhb->getDateHelper()->getPeriodFromConstant($periodCode);
         $category = $this->getRequestQuery('category') ? $this->getRequestQuery('category') : $xhb->getCarCategory();
 
@@ -123,7 +123,7 @@ class VehiclecostController extends WhbController
     public function distanceTraveledChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
 
-        $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_YEAR;
+        $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_VEHICLES_PERIOD');
         $period = $xhb->getDateHelper()->getPeriodFromConstant($periodCode);
         $category = $this->getRequestQuery('category') ? $this->getRequestQuery('category') : $xhb->getCarCategory();
 
@@ -144,7 +144,7 @@ class VehiclecostController extends WhbController
     public function consumptionChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
 
-        $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_YEAR;
+        $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_VEHICLES_PERIOD');
         $period = $xhb->getDateHelper()->getPeriodFromConstant($periodCode);
         $category = $this->getRequestQuery('category') ? $this->getRequestQuery('category') : $xhb->getCarCategory();
 
