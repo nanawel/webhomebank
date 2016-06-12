@@ -44,7 +44,7 @@ class Design extends \Prefab
         try {
             \View::instance()->render('init.php', 'text/html', array());
         }
-         catch (\Exception $e) {}
+        catch (\Exception $e) {}
     }
 
     public function addBodyClass($class) {

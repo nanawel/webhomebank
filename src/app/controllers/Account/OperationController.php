@@ -40,7 +40,7 @@ class OperationController extends WhbController
 
     public function _initAccount() {
         $accountId = $this->_getRequestParam('account_id');
-        $account = $this->getSession('xhb')->getModel()->getAccount($accountId);
+        $account = $this->getXhbSession()->getModel()->getAccount($accountId);
         if (empty($account)) {
             $message = 'Missing or invalid account ID.';
             Log::instance()->log($message . ' (' . $this->getFullActionName() . ')');

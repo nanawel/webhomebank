@@ -27,6 +27,10 @@ class App extends \app\models\core\App
     protected function _setup() {
         ini_set('max_execution_time', 0);
 
+        if ($this->_fw->get('DEBUG')) {
+            ini_set('display_errors', 1);
+        }
+
         // Setup i18n
         $i18n = I18n::instance();
         $i18n->setLocale($this->getSession()->getLocale());
@@ -34,6 +38,10 @@ class App extends \app\models\core\App
 
         // Set HTML lang according to defined locale
         $this->_fw->set('HTML_LANG', $i18n->getLocaleCountryCodeISO2());
+
+        // Load XHB
+        $xhbSession = $this->getSession('xhb')
+            ->set('xhb_file', $this->_fw->get('app.BUDGET_FILE'));
 
         // Avoid decimal separator issues when casting double and float values to strings
         setlocale(LC_NUMERIC, 'C');

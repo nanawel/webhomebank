@@ -14,13 +14,12 @@ use app\models\core\Session;
 use DB\SQL;
 use xhb\adapters\Db\Sqlite;
 use xhb\adapters\Db;
-use xhb\models\Resource\Manager;
+use xhb\models\Resource\Manager as ResourceManager;
 use xhb\Parser;
 use Zend\Db\Adapter\Adapter;
 
 class Xhb extends Session
 {
-    protected $_xhbFile = null;
     protected $_xhbModel = null;
 
     /**
@@ -49,7 +48,11 @@ class Xhb extends Session
     }
 
     public function _initXhbModel() {
-        $parser = new Parser($this->get('xhb_file'));
+        $xhbFile = $this->get('xhb_file');
+        if (!$xhbFile) {
+            throw new \Exception('No XHB file defined! Set one in config.ini > BUDGET_FILE first');
+        }
+        $parser = new Parser($xhbFile);
         $xhbParams = $this->_getXhbConfig();
         $xhbId = $this->_generateXhbId($parser->getUniqueKey());
 
@@ -85,7 +88,7 @@ class Xhb extends Session
         }
 
         // Init resource manager
-        Manager::instance()->setData($resourceParams, null, $xhbId);
+        ResourceManager::instance()->setData($resourceParams, null, $xhbId);
 
         $xhb = new \xhb\models\Xhb($xhbParams);
         return $xhb->load($xhbId);
