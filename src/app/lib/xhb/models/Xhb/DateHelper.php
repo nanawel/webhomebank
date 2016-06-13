@@ -37,32 +37,39 @@ class DateHelper extends XhbModel
         if (!$this->_periods) {
             $this->_periods = array();
             $this->_periods[self::TIME_PERIOD_THIS_MONTH] = array(
-                'start' => gmmktime(0, 0, 0, date('m'), 1, date('Y')),
-                'end'   => gmmktime(0, 0, 0, date('m') + 1, 0, date('Y'))
-            );
-            $this->_periods[self::TIME_PERIOD_LAST_MONTH] = array(
-                'start' => gmmktime(0, 0, 0, date('m') - 1, 1, date('Y')),
-                'end'   => gmmktime(0, 0, 0, date('m'), 0, date('Y'))
+                'start' => gmmktime(0, 0, 0, $this->date('m'), 1, $this->date('Y')),
+                'end'   => gmmktime(0, 0, 0, $this->date('m') + 1, 0, $this->date('Y'))
             );
 
-            $firstMonthOfQuarter = ((int)date('m') / 3) * 3;
-            $firstMonthOfLastQuarter = (((int)date('m') - 3) / 3) * 3;
-            $this->_periods[self::TIME_PERIOD_THIS_QUARTER] = array(
-                'start' => gmmktime(0, 0, 0, $firstMonthOfQuarter, 1, date('Y')),
-                'end'   => gmmktime(0, 0, 0, $firstMonthOfQuarter + 3, 0, date('Y'))
+            $lastMonthYear = $this->date('m') > 1 ? $this->date('Y') : $this->date('Y') - 1;
+            $this->_periods[self::TIME_PERIOD_LAST_MONTH] = array(
+                'start' => gmmktime(0, 0, 0, ($this->date('m') + 10) % 12 + 1, 1, $lastMonthYear),
+                'end'   => gmmktime(0, 0, 0, $this->date('m'), 0, $this->date('Y'))
             );
+
+            $thisQuarter = ceil(($this->date('m') / 3));
+            $firstMonthOfQuarter = $thisQuarter * 3 - 2;
+            $this->_periods[self::TIME_PERIOD_THIS_QUARTER] = array(
+                'start' => gmmktime(0, 0, 0, $firstMonthOfQuarter, 1, $this->date('Y')),
+                'end'   => gmmktime(0, 0, 0, $firstMonthOfQuarter + 3, 0, $this->date('Y'))
+            );
+
+            $lastQuarter = ($thisQuarter + 6) % 4 + 1;
+            $firstMonthOfLastQuarter = $lastQuarter * 3 - 2;
+            $lastQuarterYear = $thisQuarter > 1 ? $this->date('Y') : $this->date('Y') - 1;
             $this->_periods[self::TIME_PERIOD_LAST_QUARTER] = array(
-                'start' => gmmktime(0, 0, 0, $firstMonthOfLastQuarter, 1, date('Y')),
-                'end'   => gmmktime(0, 0, 0, $firstMonthOfLastQuarter + 3, 0, date('Y'))
+                'start' => gmmktime(0, 0, 0, $firstMonthOfLastQuarter, 1, $lastQuarterYear),
+                'end'   => gmmktime(0, 0, 0, $firstMonthOfLastQuarter + 3, 0, $lastQuarterYear)
             );
 
             $this->_periods[self::TIME_PERIOD_THIS_YEAR] = array(
-                'start' => gmmktime(0, 0, 0, 1, 1, date('Y')),
-                'end'   => gmmktime(0, 0, 0, 1, 0, date('Y') + 1)
+                'start' => gmmktime(0, 0, 0, 1, 1, $this->date('Y')),
+                'end'   => gmmktime(0, 0, 0, 1, 0, $this->date('Y') + 1)
             );
+
             $this->_periods[self::TIME_PERIOD_LAST_YEAR] = array(
-                'start' => gmmktime(0, 0, 0, 1, 1, date('Y') - 1),
-                'end'   => gmmktime(0, 0, 0, 1, 0, date('Y'))
+                'start' => gmmktime(0, 0, 0, 1, 1, $this->date('Y') - 1),
+                'end'   => gmmktime(0, 0, 0, 1, 0, $this->date('Y'))
             );
 
             $lastDaysPeriods = array(
@@ -74,8 +81,8 @@ class DateHelper extends XhbModel
             foreach($lastDaysPeriods as $ldp) {
                 $days = preg_replace('/[^0-9]/', '', $ldp);
                 $this->_periods[$ldp] = array(
-                    'start' => gmmktime(0, 0, 0, date('m'), date('d') - $days, date('Y')),
-                    'end'   => gmmktime(0, 0, 0, date('m'), date('d'), date('Y'))
+                    'start' => gmmktime(0, 0, 0, $this->date('m'), $this->date('d') - $days, $this->date('Y')),
+                    'end'   => gmmktime(0, 0, 0, $this->date('m'), $this->date('d'), $this->date('Y'))
                 );
             }
 
@@ -139,5 +146,36 @@ class DateHelper extends XhbModel
         }
         $datePeriod = new \DatePeriod($startDate, $interval, $endDate);
         return $datePeriod;
+    }
+
+    /**
+     * @param $format
+     * @param null $timestamp
+     * @return bool|string
+     */
+    public function date($format, $timestamp = null) {
+        if ($timestamp === null) {
+            if (! is_object($rd = $this->getReferenceDate())) {
+                throw new \Exception('Invalid reference date');
+            }
+            $timestamp = $rd->getTimestamp();
+        }
+        return date($format, $timestamp);
+    }
+
+    public function setReferenceDate(\DateTime $referenceDate) {
+        $this->setData('reference_date', $referenceDate);
+        $this->_periods = null;
+        return $this;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getReferenceDate() {
+        if (!$this->hasData('reference_date')) {
+            $this->setReferenceDate(new \DateTime('today 00:00:00', new \DateTimeZone('UTC')));
+        }
+        return $this->getData('reference_date');
     }
 } 
