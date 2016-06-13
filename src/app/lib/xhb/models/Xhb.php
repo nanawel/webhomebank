@@ -128,8 +128,11 @@ class Xhb extends XhbModel
         return $this->_getPayeeCollection()->getItem($id);
     }
 
-    public function getDateHelper() {
-        if (!$this->_dateHelper) {
+    public function getDateHelper($singleton = true) {
+        if (! $singleton) {
+            return new DateHelper(array('xhb' => $this));
+        }
+        if (! $this->_dateHelper) {
             $this->_dateHelper = new DateHelper(array('xhb' => $this));
         }
         return $this->_dateHelper;
