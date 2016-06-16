@@ -103,7 +103,8 @@ class AccountController extends WhbController
                         'name'  => 'period',
                         'value' => Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
                     ))
-                )
+                ),
+                'class' => 'toolbar-right'
             )))
             ->setData('BALANCE_REPORT_CHART', new Scatter(array(
                 'id'       => 'balanceReportChart',

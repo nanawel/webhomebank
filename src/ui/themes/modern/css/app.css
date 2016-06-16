@@ -8572,10 +8572,6 @@ input[type='text'].search {
   clear: both;
 }
 .chart .canvas-container {
-  padding-left: 0.9375rem;
-  padding-right: 0.9375rem;
-  width: 66.66667%;
-  float: left;
   position: relative;
   min-height: 300px;
   text-align: center;
@@ -8584,12 +8580,6 @@ input[type='text'].search {
   position: absolute;
   top: 10%;
   left: 10%;
-}
-.chart .toolbar {
-  padding-left: 0.9375rem;
-  padding-right: 0.9375rem;
-  width: 33.33333%;
-  float: left;
 }
 .chart .toolbar .filter-label {
   border-style: solid;
@@ -8623,7 +8613,7 @@ input[type='text'].search {
 .chart .legend {
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
-  width: 33.33333%;
+  width: 50%;
   float: left;
 }
 .chart .legend li {
@@ -8634,6 +8624,18 @@ input[type='text'].search {
   height: 10px;
   margin-right: 20px;
   display: inline-block;
+}
+.chart.toolbar-right .canvas-container {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  width: 50%;
+  float: left;
+}
+.chart.toolbar-right .toolbar {
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+  width: 50%;
+  float: left;
 }
 .chart.toolbar-top-right .toolbar {
   float: right;

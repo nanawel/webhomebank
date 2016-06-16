@@ -64,9 +64,9 @@ $chartVar = 'chart_' . $chartId . '_';
                         }
                     }
                     <?php echo $chartVar ?> = <?php echo $chartVar ?>Canvas.Scatter(data, {
-                        /*responsive: true,*/
-                        scaleType: 'date',
                         animation: false,
+                        responsive: true,
+                        scaleType: 'date',
                         scaleBeginAtZero: true,
                         datasetFill: false,
                         pointHitDetectionRadius: 3,

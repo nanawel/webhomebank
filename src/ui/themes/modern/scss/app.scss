@@ -195,8 +195,6 @@ input[type='text'].search {
     @include grid-row();
 
     .canvas-container {
-        @include grid-column($columns:8);
-
         position: relative;
         min-height: 300px;
         text-align: center;
@@ -209,8 +207,6 @@ input[type='text'].search {
     }
 
     .toolbar {
-        @include grid-column($columns:4);
-
         .filter-label {
             @include prefix-postfix-base();
             @include prefix();
@@ -225,7 +221,7 @@ input[type='text'].search {
     }
 
     .legend {
-        @include grid-column($columns:4);
+        @include grid-column($columns:6);
 
         li {
             list-style: none;
@@ -236,6 +232,16 @@ input[type='text'].search {
                 margin-right: 20px;
                 display: inline-block;
             }
+        }
+    }
+
+    &.toolbar-right {
+        .canvas-container {
+            @include grid-column($columns:6);
+        }
+
+        .toolbar {
+            @include grid-column($columns:6);
         }
     }
 

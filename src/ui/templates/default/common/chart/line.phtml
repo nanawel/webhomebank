@@ -58,6 +58,7 @@ $chartVar = 'chart_' . $chartId . '_';
                     }
                     <?php echo $chartVar ?> = <?php echo $chartVar ?>Canvas.Line(data, {
                         animation: false,
+                        responsive: true,
                         scaleBeginAtZero: true,
                         datasetFill : false,
                         pointHitDetectionRadius: 3,

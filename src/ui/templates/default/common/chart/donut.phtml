@@ -41,6 +41,7 @@ $chartVar = 'chart_' . $chartId . '_';
             var <?php echo $chartVar ?>Canvas = new Chart($('#<?php echo $chartId ?> canvas').get(0).getContext('2d'));
             <?php echo $chartVar ?>Canvas = <?php echo $chartVar ?>Canvas.Doughnut({}, {
                 animation: false,
+                responsive: true,
                 datasetFill : false,
                 /*animateScale: true,*/
                 legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\">"+
