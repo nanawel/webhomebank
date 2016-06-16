@@ -49,34 +49,18 @@ span.mono {
 .header-container {
     @extend .contain-to-grid;
 
-    .header {
-        @extend .top-bar;
-
-        .brand {
-            @extend .title-area;
-
-            div {
-                @extend .name;
-
-                h1 {
-                    display: inline-block;
-                    a { font-weight: normal; }
-                }
+    .top-bar {
+        .title-area {
+            img {
+                margin-left: 10px;
+            }
+            h1 {
+                display: inline-block;
+                a { font-weight: normal; }
             }
         }
 
         .nav-menu {
-            @extend .top-bar-section;
-            @extend .right;
-
-            li.dir {
-                @extend .has-dropdown;
-
-                ul.dir {
-                    @extend .dropdown;
-                }
-            }
-
             li.level-1 > a::before {
                 content: " ";
                 width: 24px;
