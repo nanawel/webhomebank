@@ -8,7 +8,6 @@
 
 namespace xhb\models\Resource\Db;
 
-use app\models\core\Log;
 use xhb\models\Resource\Closure;
 use xhb\models\Resource\Manager;
 use Zend\Db\Adapter\Adapter;
@@ -112,8 +111,8 @@ abstract class AbstractCollection extends \xhb\models\Resource\AbstractCollectio
 
     protected function _execLoadQuery() {
         $sql = $this->getSql()->buildSqlString($this->getSelect());
-        if (\Base::instance()->get('DEBUG') > 1) {
-            Log::instance()->log($sql, LOG_DEBUG);
+        if ($this->hasData('sql_dumper') && is_callable($dumper = $this->getData('sql_dumper'))) {
+            call_user_func($dumper, $sql);
         }
         $items = $this->getDb()->query($sql, Adapter::QUERY_MODE_EXECUTE);
         return $items->toArray();

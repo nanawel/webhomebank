@@ -8,7 +8,6 @@
 
 namespace xhb\adapters;
 
-use app\models\core\Log;
 use app\models\Zend\Db\Sql\InsertMultiple;
 use DB\SQL;
 use xhb\models\Resource\Db\Account;

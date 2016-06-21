@@ -8,7 +8,6 @@
 
 namespace xhb\models\Resource\Memory;
 
-use app\models\core\Log;
 use DB\SQL;
 use xhb\models\Resource\Closure;
 use xhb\models\Resource\Memory\Operation\Collection;
@@ -135,7 +134,7 @@ abstract class AbstractCollection extends \xhb\models\Resource\AbstractCollectio
                         break;
 
                     default:
-                        Log::instance()->log('Unknown operator "' . $operator . '", ignoring.', LOG_WARNING);
+                        throw new \Exception('Unknown operator "' . $operator . '".');
                 }
             }
 
