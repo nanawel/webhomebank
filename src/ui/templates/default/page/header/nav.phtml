@@ -43,6 +43,16 @@ $i18n = \app\models\core\I18n::instance();
                     <?php endforeach; ?>
                 </ul>
             </li>
+            <li class="level-2 settings-theme-link dir">
+                <?php echo $this->__('Theme') ?>
+                <ul class="dir">
+                    <?php foreach($design->getAvailableThemes() as $code): ?>
+                        <li class="level-3 set-theme-link theme-<?php echo strtolower($code) ?>">
+                            <a href="<?php echo $url->getUrl('settings/setTheme', array('_query' => array('code' => $code))) ?>"><?php echo $code ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
         </ul>
     </li>
 </ul>
