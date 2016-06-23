@@ -11,6 +11,8 @@ src/etc/local.ini
 src/var/cache
 src/var/tmp
 src/var/log
+src/var/sessions
 src/tmp
 src/ui/themes/modern/.sass-cache
 src/ui/themes/modern/node_modules
+src/app/tests/var
