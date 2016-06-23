@@ -8,6 +8,7 @@
 
 namespace app\models\whb;
 
+use app\models\core\Design;
 use app\models\core\I18n;
 use app\models\core\Session;
 
@@ -25,7 +26,7 @@ class App extends \app\models\core\App
     }
 
     protected function _setup() {
-        ini_set('max_execution_time', 0);
+        ini_set('max_execution_time', 60);
 
         if ($this->_fw->get('DEBUG')) {
             ini_set('display_errors', 1);
@@ -45,6 +46,11 @@ class App extends \app\models\core\App
 
         // Avoid decimal separator issues when casting double and float values to strings
         setlocale(LC_NUMERIC, 'C');
+
+        if ($theme = $this->getSession()->getTheme()) {
+            Design::instance()->setTheme($theme);
+        }
+        Design::instance()->init();
 
         if ($this->_xhbFile == 'data/example.xhb') {
             $this->getSession()->addMessage($i18n->tr(

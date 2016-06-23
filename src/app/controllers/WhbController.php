@@ -65,6 +65,8 @@ class WhbController extends AbstractController
         $cacheKeyInfo[] = $this->getXhbSession()->getId();
         $cacheKeyInfo[] = $this->getXhbSession()->getModel()->getUniqueKey();
         $cacheKeyInfo[] = $this->getXhbSession()->getCurrencyCode();
+        $cacheKeyInfo[] = $this->getSession()->getTheme();
+        $cacheKeyInfo[] = $this->getSession()->getLocale();
         return $cacheKeyInfo;
     }
 }

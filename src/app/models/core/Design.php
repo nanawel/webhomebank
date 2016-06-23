@@ -14,6 +14,7 @@ class Design extends \Prefab
     const DEFAULT_THEMES_DIR    = 'ui/themes/';
 
     protected $_themesDir = null;
+    protected $_themes = null;
 
     protected $_bodyClass = '';
     protected $_externals = array(
@@ -26,18 +27,27 @@ class Design extends \Prefab
         if (!$this->_themesDir) {
             $this->_themesDir = self::DEFAULT_THEMES_DIR;
         }
-        $this->_appendThemesToUi();
-        $this->_runThemeInit();
+        $this->_appendThemesToUi()
+            ->_runThemeInit();
     }
 
     protected function _appendThemesToUi() {
-        $uiPaths = explode(';', \Base::instance()->get('UI'));
+        $fw = \Base::instance();
+        if (!$fw->get('UI_ORIG')) {
+            $ui = $fw->get('UI');
+            $fw->set('UI_ORIG', $ui);
+        }
+        else {
+            $ui = $fw->get('UI_ORIG');
+        }
+        $uiPaths = explode(';', $ui);
         $newUiPaths = array();
         foreach($uiPaths as $uiPath) {
             $newUiPaths[] = $uiPath . DIRECTORY_SEPARATOR . $this->getTheme() . DIRECTORY_SEPARATOR;
             $newUiPaths[] = $uiPath . DIRECTORY_SEPARATOR . self::DEFAULT_THEME . DIRECTORY_SEPARATOR;
         }
-        \Base::instance()->set('UI', implode(';', $newUiPaths));
+        $fw->set('UI', implode(';', $newUiPaths));
+        return $this;
     }
 
     protected function _runThemeInit() {
@@ -45,6 +55,7 @@ class Design extends \Prefab
             \View::instance()->render('init.php', 'text/html', array());
         }
         catch (\Exception $e) {}
+        return $this;
     }
 
     public function addBodyClass($class) {
@@ -65,8 +76,33 @@ class Design extends \Prefab
         return $this->getImageUrl(Main::app()->getConfig('FAVICON'));
     }
 
+    public function setTheme($theme) {
+        Main::app()->setConfig('THEME', $theme);
+        return $this;
+    }
+
     public function getTheme() {
         return Main::app()->getConfig('THEME');
+    }
+
+    public function getAvailableThemes() {
+        if (!$this->_themes) {
+            $uiDirs = \Base::instance()->get('UI_ORIG') ?: \Base::instance()->get('UI');
+            $themes = array();
+            foreach(explode(';', $uiDirs) as $uiDir) {
+                $dir = new \DirectoryIterator($uiDir);
+                foreach ($dir as $themeDir) {
+                    if($themeDir->isDot()) {
+                        continue;
+                    }
+                    if ($themeDir->isDir()) {
+                        $themes[] = $themeDir->getFilename();
+                    }
+                }
+            }
+            $this->_themes = array_unique($themes);
+        }
+        return $this->_themes;
     }
 
     public function getThemePath($path, $theme = null) {

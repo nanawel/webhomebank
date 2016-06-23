@@ -40,7 +40,6 @@ abstract class App
      */
     public final function setup() {
         $this->_useCache = \Base::instance()->get('CACHE') ? true : false;
-        Design::instance()->init();
         $this->_setup();
         $this->_initTmpDir();
     }
@@ -50,6 +49,10 @@ abstract class App
      */
     protected function _setup() {
         // to be overridden
+    }
+
+    public function setConfig($key, $value) {
+        return \Base::instance()->set(self::CONFIG_KEY_PREFIX . $key, $value);
     }
 
     public function getConfig($key) {
