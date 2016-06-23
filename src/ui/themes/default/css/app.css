@@ -307,12 +307,17 @@ span .mono {
     margin-right: 20px;
     display: inline-block;
 }
-.chart canvas {
+.chart .canvas-container {
     float: left;
 }
 
 .chart-footer p {
     font-size: 10px;
+}
+
+.chart.donut .canvas-container {
+    width: 300px;
+    height: 300px;
 }
 
 .canvas-container .no-data-message {
