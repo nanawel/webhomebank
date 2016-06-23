@@ -102,6 +102,7 @@ abstract class App
      */
     public function setCurrentController(AbstractController $currentController) {
         $this->_currentController = $currentController;
+        return $this;
     }
 
     /**
