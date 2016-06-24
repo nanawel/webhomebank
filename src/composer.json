@@ -18,7 +18,7 @@
 
 	},
     "suggest": {
-        "php": ">=5.6.0"
+        "php": ">=5.5.0"
     },
 	"repositories": [
         {
