@@ -16,6 +16,7 @@ $chartVar = 'chart_' . $chartId . '_';
     </div>
     <div class="chart-body">
         <div class="canvas-container">
+            <div class="loading-anim"></div>
             <canvas width="<?php echo $width ?>" height="<?php echo $height ?>"></canvas>
         </div>
         <div class="toolbar">
@@ -53,8 +54,14 @@ $chartVar = 'chart_' . $chartId . '_';
             });
 
             function update<?php echo $chartVar ?>() {
+                <?php echo $chartVar ?>Canvas.clear();
+                $('#<?php echo $chartId ?> .legend').empty();
+
+                $('#<?php echo $chartId ?> .loading-anim').show();
+
                 var filters = $('#<?php echo $chartId ?>_form').serialize();
                 $.getJSON("<?php echo $data_url ?>", filters, function(data) {
+                    $('#<?php echo $chartId ?> .loading-anim').hide();
                     $('#<?php echo $chartId ?> .no-data-message').remove();
                     while (<?php echo $chartVar ?>Canvas.segments.length) {
                         <?php echo $chartVar ?>Canvas.removeData();

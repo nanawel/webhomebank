@@ -204,6 +204,17 @@ input[type='text'].search {
             top: 10%;
             left: 10%;
         }
+
+        .loading-anim {
+            content: " ";
+            width: 130px;
+            height: 130px;
+            display: inline-block;
+            position: absolute;
+            top: 30%;
+            left: 40%;
+            background: transparent url(../images/loading-pie.gif) no-repeat no-repeat;
+        }
     }
 
     .toolbar {

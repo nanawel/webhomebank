@@ -35,6 +35,7 @@ $chartVar = 'chart_' . $chartId . '_';
         <?php endif; ?>
 
         <div class="canvas-container">
+            <div class="loading-anim"></div>
             <canvas width="<?php echo $width ?>" height="<?php echo $height ?>"></canvas>
         </div>
 
@@ -43,12 +44,19 @@ $chartVar = 'chart_' . $chartId . '_';
             var <?php echo $chartVar ?>Canvas;
             var <?php echo $chartVar ?>;
             function update<?php echo $chartVar ?>Chart() {
+                if (typeof <?php echo $chartVar ?>Canvas != "undefined") {
+                    <?php echo $chartVar ?>Canvas.clear();
+                }
+
+                $('#<?php echo $chartId ?> .loading-anim').show();
+
                 var filters = $('#<?php echo $chartId ?>_form').serialize();
                 if (typeof(<?php echo $chartVar ?>) != "undefined") {
                     <?php echo $chartVar ?>.destroy();
                 }
                 <?php echo $chartVar ?>Canvas = new Chart($('#<?php echo $chartId ?> canvas').get(0).getContext('2d'));
                 $.getJSON("<?php echo $data_url ?>", filters, function(data) {
+                    $('#<?php echo $chartId ?> .loading-anim').hide();
                     $('#<?php echo $chartId ?> .no-data-message').remove();
                     if (data == null || data.datasets.length == 0) {
                         if (typeof <?php echo $chartVar ?> != "undefined") {

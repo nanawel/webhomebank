@@ -8581,6 +8581,16 @@ input[type='text'].search {
   top: 10%;
   left: 10%;
 }
+.chart .canvas-container .loading-anim {
+  content: " ";
+  width: 130px;
+  height: 130px;
+  display: inline-block;
+  position: absolute;
+  top: 30%;
+  left: 40%;
+  background: transparent url(../images/loading-pie.gif) no-repeat no-repeat;
+}
 .chart .toolbar .filter-label {
   border-style: solid;
   border-width: 1px;

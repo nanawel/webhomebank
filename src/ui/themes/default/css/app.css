@@ -311,6 +311,17 @@ span .mono {
     float: left;
 }
 
+.chart .canvas-container .loading-anim {
+    content: " ";
+    width: 130px;
+    height: 130px;
+    display: inline-block;
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    background: transparent url(../images/loading-pie.gif) no-repeat no-repeat;
+}
+
 .chart-footer p {
     font-size: 10px;
 }
