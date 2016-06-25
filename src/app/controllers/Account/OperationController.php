@@ -146,8 +146,7 @@ class OperationController extends WhbController
         $chartData = Chart\Operation::getBalanceReportData(
             $this->getXhbSession()->getModel(),
             $collFilters,
-            array($this->getAccount()->getId()),
-            $this->__('Balance Report')
+            array($this->getAccount()->getId())
         );
 
         $this->setPageConfig(array(

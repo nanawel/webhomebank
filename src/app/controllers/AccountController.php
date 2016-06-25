@@ -149,7 +149,7 @@ class AccountController extends WhbController
             ->addFieldToFilter('type', Constants::ACC_TYPE_BANK);
         $accountIds = $accountCollection->getAllIds();
 
-        $chartData = Chart\Operation::getBalanceReportData($xhb, $collFilters, $accountIds, $this->__('Balance Report'));
+        $chartData = Chart\Operation::getBalanceReportData($xhb, $collFilters, $accountIds, true);
 
         $this->setPageConfig(array(
                 'template' => 'data/json.phtml',

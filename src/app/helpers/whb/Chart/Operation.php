@@ -59,7 +59,7 @@ class Operation
      * @param array $accountIds
      * @return array
      */
-    public static function getBalanceReportData(Xhb $xhb, array $collectionFilters, array $accountIds) {
+    public static function getBalanceReportData(Xhb $xhb, array $collectionFilters, array $accountIds, $withGrandTotal = false) {
         $return = array(
             'labels'   => array(),
             'datasets' => array()
@@ -129,26 +129,28 @@ class Operation
             $addLabels = false;
             $idx++;
         }
-        $return['datasets'][$idx] = array(
-            'label'                => I18n::instance()->tr('Grand Total'),
-            'strokeColor'          => Output::rgbToCss(array(0, 0, 0)),
-            'pointColor'           => Output::rgbToCss(array(0, 0, 0)),
-            'pointHighlightFill'   => '#fff',
-            'pointHighlightStroke' => '#bbb',
-            'data'                 => array()
-        );
-        $periodIdx = 0;
-        foreach($grandTotal as $periodAccountsBalance) {
-            $balance = array_sum(array_column($periodAccountsBalance, 'y'));
-            $date = current($periodAccountsBalance)['x'];
-            $balanceData = array(
-                'x' => $date->getTimestamp()
+        if ($withGrandTotal) {
+            $return['datasets'][$idx] = array(
+                'label'                => I18n::instance()->tr('Grand Total'),
+                'strokeColor'          => Output::rgbToCss(array(0, 0, 0)),
+                'pointColor'           => Output::rgbToCss(array(0, 0, 0)),
+                'pointHighlightFill'   => '#fff',
+                'pointHighlightStroke' => '#bbb',
+                'data'                 => array()
             );
-            if ($date < $now) {
-                $balanceData['y'] = $balance;
+            $periodIdx = 0;
+            foreach($grandTotal as $periodAccountsBalance) {
+                $balance = array_sum(array_column($periodAccountsBalance, 'y'));
+                $date = current($periodAccountsBalance)['x'];
+                $balanceData = array(
+                    'x' => $date->getTimestamp()
+                );
+                if ($date < $now) {
+                    $balanceData['y'] = $balance;
+                }
+                $return['datasets'][$idx]['data'][$periodIdx] = $balanceData;
+                $periodIdx++;
             }
-            $return['datasets'][$idx]['data'][$periodIdx] = $balanceData;
-            $periodIdx++;
         }
         return $return;
     }
