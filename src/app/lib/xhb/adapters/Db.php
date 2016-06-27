@@ -8,7 +8,6 @@
 
 namespace xhb\adapters;
 
-use app\models\Zend\Db\Sql\InsertMultiple;
 use DB\SQL;
 use xhb\models\Resource\Db\Account;
 use xhb\models\Resource\Db\Category;
@@ -30,6 +29,7 @@ use Zend\Db\Sql\Ddl\DropTable;
 use Zend\Db\Sql\Ddl\Index\Index;
 use Zend\Db\Sql\Delete;
 use Zend\Db\Sql\Insert;
+use Zend\Db\Sql\InsertMultiple;
 use Zend\Db\TableGateway\TableGateway;
 
 class Db

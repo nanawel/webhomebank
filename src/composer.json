@@ -14,7 +14,8 @@
 	"require": {
 		"php": ">=5.5.0",
         "bcosca/fatfree-core": "dev-master",
-        "zendframework/zend-db": "2.5.1"
+        "zendframework/zend-db": "2.5.1",
+        "nanawel/zend-db-sql-insertmultiple": "dev-master"
 
 	},
     "suggest": {
@@ -24,6 +25,14 @@
         {
             "type": "composer",
             "url": "https://packages.zendframework.com/"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/nanawel/zend-db-sql-insertmultiple"
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/bcosca/fatfree-core"
         }
 	],
     "config": {
