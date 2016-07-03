@@ -13,7 +13,7 @@ class Category extends AbstractModel
 {
     const MAIN_TABLE = 'category';
 
-    public function __construct($params = array()) {
+    public function __construct(array $params = array()) {
         parent::__construct($params);
         $this->_init(array('xhb_id', 'key'), self::MAIN_TABLE);
     }

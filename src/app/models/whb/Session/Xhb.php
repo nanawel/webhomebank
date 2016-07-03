@@ -11,22 +11,37 @@ namespace app\models\whb\Session;
 use app\models\core\I18n;
 use app\models\core\Main;
 use app\models\core\Session;
+use app\models\whb\Xhb\Adapter as XhbAdapter;
 use DB\SQL;
 use xhb\adapters\Db\Sqlite;
 use xhb\adapters\Db;
-use xhb\models\Resource\Manager as ResourceManager;
 use xhb\Parser;
 use Zend\Db\Adapter\Adapter;
 
 class Xhb extends Session
 {
+    protected $_model;
+
     /**
-     * Backward-compatibility method
-     *
      * @return \xhb\models\Xhb
      */
     public function getModel() {
-        return $this->get('model');
+        if (!$this->_model) {
+            if (!$xhbFile = $this->get('xhb_file')) {
+                throw new \Exception('Missing XHB file');
+            }
+            $adapter = new XhbAdapter(\Base::instance(), $xhbFile, Main::app()->getConfig('XHB'));
+            $this->_model = $adapter->loadXhb();
+        }
+        return $this->_model;
+    }
+
+    /**
+     * @param $model \xhb\models\Xhb
+     */
+    public function setModel($model) {
+        $this->_model = $model;
+        return $this;
     }
 
     public function getCarDistanceUnit() {

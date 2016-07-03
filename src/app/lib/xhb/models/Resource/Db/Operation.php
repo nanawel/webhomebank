@@ -14,7 +14,7 @@ class Operation extends AbstractModel
     const MAIN_TABLE = 'operation';
     const SPLIT_AMOUNT_TABLE = 'operation_split_amount';
 
-    public function __construct($params = array()) {
+    public function __construct(array $params = array()) {
         parent::__construct($params);
         $this->_init(array('xhb_id', 'id'), self::MAIN_TABLE);
     }

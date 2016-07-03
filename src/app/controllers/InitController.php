@@ -14,7 +14,7 @@ use app\models\core\I18n;
 use app\models\core\Main;
 use app\models\core\Session;
 use app\models\whb\View;
-use app\models\whb\Xhb\Adapter;
+use app\models\whb\Xhb\Adapter as XhbAdapter;
 
 class InitController extends WhbController
 {
@@ -62,7 +62,7 @@ class InitController extends WhbController
         ));
         try {
             $config = Main::app()->getConfig('XHB');
-            $adapter = new Adapter($this->_fw, Main::app()->getConfig('BUDGET_FILE'), $config);
+            $adapter = new XhbAdapter($this->_fw, $this->getXhbSession()->get('xhb_file'), $config);
             $xhb = $adapter->loadXhb();
             $this->getSession('xhb')
                 ->set('model', $xhb)
@@ -74,10 +74,14 @@ class InitController extends WhbController
             ));
         }
         catch(\Exception $e) {
-            $this->getView()->setData('DATA', array(
+            $response = array(
                 'status'  => 'error',
                 'message' => $e->getMessage()
-            ));
+            );
+            if ($this->_fw->get('DEBUG') > 0) {
+                $response['trace'] = $e->getTraceAsString();
+            }
+            $this->getView()->setData('DATA', $response);
         }
     }
 }

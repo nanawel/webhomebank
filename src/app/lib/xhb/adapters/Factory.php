@@ -3,7 +3,6 @@
 namespace xhb\adapters;
 
 use xhb\adapters\Db\Sqlite;
-use xhb\models\Resource\Manager as ResourceManager;
 use Zend\Db\Adapter\Adapter;
 
 class Factory
@@ -15,7 +14,6 @@ class Factory
      * @return AdapterInterface
      */
     public static function create(array $xhbConfig, $xhbId) {
-        var_dump(__METHOD__);
         if (!isset($xhbConfig['resource_config']['type'])) {
             throw new \Exception('Missing resource type in configuration');
         }
@@ -28,8 +26,6 @@ class Factory
                 switch ($xhbConfig['resource_config']['db']['driver']) {
                     case 'Pdo_Sqlite':
                         $adapter = new Sqlite($xhbConfig['resource_config']);
-                        var_dump(get_class($adapter->getConnection()));
-                        $xhbConfig['resource_config']['connection'] = $adapter->getConnection();    //FIXME Remove that
                         break 2;
 
                     case 'Pdo_Mysql':
@@ -48,11 +44,6 @@ class Factory
             default:
                 throw new \Exception('Unsupported resource type "' . $xhbConfig['resource_config']['type'] . '"');
         }
-
-        // Init resource manager
-        // FIXME : really necessary? can't it be handled with appropriate __sleep() in classes?
-        ResourceManager::instance()->setData($xhbConfig['resource_config'], null, $xhbId);
-
         return $adapter;
     }
 }

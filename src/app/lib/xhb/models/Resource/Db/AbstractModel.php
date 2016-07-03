@@ -9,8 +9,7 @@
 namespace xhb\models\Resource\Db;
 
 use DB\SQL;
-use xhb\models\Resource\Manager;
-use xhb\models\Resource\Iface\Model;
+use xhb\models\Resource\Iface\Model as ResourceModel;
 use xhb\util\MagicObject;
 use Zend\Db\Adapter\Adapter;
 
@@ -22,7 +21,7 @@ use Zend\Db\Adapter\Adapter;
  *
  * @package xhb\models\Resource\Db
  */
-abstract class AbstractModel extends MagicObject implements Model
+abstract class AbstractModel extends MagicObject implements ResourceModel
 {
     /**
      * @var string
@@ -34,11 +33,22 @@ abstract class AbstractModel extends MagicObject implements Model
      */
     protected $_keyField;
 
+    public function __construct(array $params = array()) {
+        parent::__construct($params);
+        if (!isset($params['resource_config']['db'])) {
+            throw new \Exception('Missing DB config');
+        }
+        $this->setDb(new Adapter($params['resource_config']['db']));
+    }
+
     /**
      * @return \Zend\Db\Adapter\Adapter
      */
     public function getDb() {
-        return Manager::instance()->getData('connection', $this->getXhb()->getId());
+        if (! $db = $this->getData('db')) {
+            throw new \Exception('Missing DB adapter');
+        }
+        return $db;
     }
 
     /**
@@ -52,7 +62,9 @@ abstract class AbstractModel extends MagicObject implements Model
     }
 
     function __sleep() {
-        $this->unsetData('sql');    // Remove objects linked to PDO (not serializable)
+        // Remove objects linked to PDO (not serializable)
+        $this->unsetData('db');
+        $this->unsetData('sql');
     }
 
     protected function _init($keyField, $tableName) {

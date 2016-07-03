@@ -9,7 +9,6 @@
 namespace xhb\models\Resource\Db;
 
 use xhb\models\Resource\Closure;
-use xhb\models\Resource\Manager;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Predicate\In;
 use Zend\Db\Sql\Predicate\IsNull;
@@ -46,6 +45,14 @@ abstract class AbstractCollection extends \xhb\models\Resource\AbstractCollectio
      */
     protected $_columns = array(Select::SQL_STAR);
 
+    public function __construct(array $params = array()) {
+        parent::__construct($params);
+        if (!isset($params['resource_config']['db'])) {
+            throw new \Exception('Missing DB config');
+        }
+        $this->setDb(new Adapter($params['resource_config']['db']));
+    }
+
     protected function _init($itemClass, $keyField, $tableName = '') {
         parent::_init($itemClass, $keyField);
         $this->_table = $tableName;
@@ -57,7 +64,10 @@ abstract class AbstractCollection extends \xhb\models\Resource\AbstractCollectio
      * @return \Zend\Db\Adapter\Adapter
      */
     public function getDb() {
-        return Manager::instance()->getData('connection', $this->getXhb()->getId());
+        if (! $db = $this->getData('db')) {
+            throw new \Exception('Missing DB adapter');
+        }
+        return $db;
     }
 
     /**

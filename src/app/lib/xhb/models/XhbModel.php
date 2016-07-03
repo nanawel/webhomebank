@@ -33,7 +33,11 @@ abstract class XhbModel extends MagicObject
         return get_class($this) . ': ' . implode('|', $data);
     }
 
-    public function getResource($singleton = true, $params = array()) {
+    public function getResource($singleton = true, array $params = array()) {
+        $params = array_merge(
+            array('resource_config' => $this->getXhb()->getResourceConfig()),
+            $params
+        );
         $namespace = isset($params['_namespace']) ? $params['_namespace'] : self::MODEL_CLASS_NAMESPACE;
         $class = substr(get_class($this), strlen($namespace) + 1);
         if (!isset($params['xhb'])) {

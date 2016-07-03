@@ -15,11 +15,6 @@ use Zend\Db\Adapter\Adapter;
 
 class Sqlite extends Db
 {
-//    public function xhbExists($xhbId)
-//    {
-//        return parent::xhbExists($xhbId);
-//    }
-
     public function __construct(array $config) {
         parent::__construct($config);
         if (!isset($config['db']['database'])) {

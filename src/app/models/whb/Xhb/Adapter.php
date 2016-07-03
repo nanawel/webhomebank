@@ -99,8 +99,8 @@ class Adapter
         return $this->getResourceAdapter()->xhbExists($this->getXhbId());
     }
 
-    public function loadXhb() {
-        if (!$this->isXhbLoaded()) {
+    public function loadXhb($force = false) {
+        if ($force || !$this->isXhbLoaded()) {
             $this->getResourceAdapter()->importXhbData(
                 $this->_parser->getXhbData(),
                 $this->getXhbId()

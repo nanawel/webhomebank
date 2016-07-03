@@ -8,7 +8,7 @@ class Xhb extends AbstractModel implements \xhb\models\Resource\Iface\Xhb
 {
     const MAIN_TABLE = 'xhb';
 
-    public function __construct($params = array()) {
+    public function __construct(array $params = array()) {
         parent::__construct($params);
         $this->_init('id', self::MAIN_TABLE);
     }

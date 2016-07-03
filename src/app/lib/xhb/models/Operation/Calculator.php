@@ -35,7 +35,7 @@ class Calculator extends XhbModel
      */
     protected $_cache = array();
 
-    public function __construct(Xhb $xhb, $account = null, $data = array()) {
+    public function __construct(Xhb $xhb, $account = null, array $data = array()) {
         parent::__construct($data);
         $this->setXhb($xhb);
         if (is_numeric($account)) {

@@ -11,6 +11,7 @@ namespace app\models\whb;
 use app\models\core\Design;
 use app\models\core\I18n;
 use app\models\core\Session;
+use app\models\whb\Xhb\Adapter;
 
 class App extends \app\models\core\App
 {
@@ -41,8 +42,8 @@ class App extends \app\models\core\App
         $this->_fw->set('HTML_LANG', $i18n->getLocaleCountryCodeISO2());
 
         // Load XHB
-        $xhbSession = $this->getSession('xhb')
-            ->set('xhb_file', $this->_fw->get('app.BUDGET_FILE'));
+        $this->getSession('xhb')
+            ->set('xhb_file', $this->_xhbFile);
 
         // Avoid decimal separator issues when casting double and float values to strings
         setlocale(LC_NUMERIC, 'C');
