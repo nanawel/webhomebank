@@ -8,12 +8,11 @@ use Zend\Db\Adapter\Adapter;
 class Factory
 {
     /**
-     * FIXME Remove $xhbId
      *
      * @param $xhbConfig
      * @return AdapterInterface
      */
-    public static function create(array $xhbConfig, $xhbId) {
+    public static function create(array $xhbConfig) {
         if (!isset($xhbConfig['resource_config']['type'])) {
             throw new \Exception('Missing resource type in configuration');
         }

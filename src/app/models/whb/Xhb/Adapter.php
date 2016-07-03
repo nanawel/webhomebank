@@ -115,7 +115,7 @@ class Adapter
      */
     public function getResourceAdapter() {
         if (!$this->_resourceAdater) {
-            $this->_resourceAdapter = XhbAdapterFactory::create($this->_getConfig(), $this->getXhbId());  //FIXME Remove $this->getXhbId()
+            $this->_resourceAdapter = XhbAdapterFactory::create($this->_getConfig());
         }
         return $this->_resourceAdapter;
     }
