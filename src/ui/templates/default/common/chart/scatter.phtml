@@ -44,10 +44,6 @@ $chartVar = 'chart_' . $chartId . '_';
             var <?php echo $chartVar ?>Canvas;
             var <?php echo $chartVar ?>;
             function update<?php echo $chartVar ?>Chart() {
-                if (typeof <?php echo $chartVar ?>Canvas != "undefined") {
-                    <?php echo $chartVar ?>Canvas.clear();
-                }
-
                 $('#<?php echo $chartId ?> .loading-anim').show();
 
                 var filters = $('#<?php echo $chartId ?>_form').serialize();
