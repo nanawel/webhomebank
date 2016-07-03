@@ -20,18 +20,37 @@ use Zend\Db\Adapter\Adapter;
 
 class Xhb extends Session
 {
+    /**
+     * @var XhbAdapter
+     */
+    protected $_xhbAdapter;
+
     protected $_model;
+
+    /**
+     * @return XhbAdapter
+     * @throws \Exception
+     */
+    protected function _getXhbAdapter() {
+        if (!$this->_xhbAdapter) {
+            if (!$xhbFile = $this->get('xhb_file')) {
+                throw new \Exception('Missing XHB file');
+            }
+            $this->_xhbAdapter = new XhbAdapter(\Base::instance(), $xhbFile, Main::app()->getConfig('XHB'));
+        }
+        return $this->_xhbAdapter;
+    }
+
+    public function isModelLoaded() {
+        return $this->_getXhbAdapter()->isXhbLoaded();
+    }
 
     /**
      * @return \xhb\models\Xhb
      */
     public function getModel() {
         if (!$this->_model) {
-            if (!$xhbFile = $this->get('xhb_file')) {
-                throw new \Exception('Missing XHB file');
-            }
-            $adapter = new XhbAdapter(\Base::instance(), $xhbFile, Main::app()->getConfig('XHB'));
-            $this->_model = $adapter->loadXhb();
+            $this->_model = $this->_getXhbAdapter()->loadXhb();
         }
         return $this->_model;
     }

@@ -63,9 +63,8 @@ class InitController extends WhbController
         try {
             $config = Main::app()->getConfig('XHB');
             $adapter = new XhbAdapter($this->_fw, $this->getXhbSession()->get('xhb_file'), $config);
-            $xhb = $adapter->loadXhb();
-            $this->getSession('xhb')
-                ->set('model', $xhb)
+            $xhb = $adapter->loadXhb(true);
+            $this->getSession()
                 ->addMessage(I18n::instance()->tr('XHB imported to database successfully!'), Session::MESSAGE_INFO);
 
             $this->getView()->setData('DATA', array(
