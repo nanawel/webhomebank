@@ -19,6 +19,11 @@ class WhbController extends AbstractController
         parent::_beforeRoute($fw, $args);
         $this->_viewInstance = View::instance();
 
+        if (!$this->getXhbSession()->exists('model')) {
+            $this->_reroute('/init/load');
+            return false;
+        }
+
         $xhb = $this->getXhbSession()->getModel();
         $this->setPageTitle($xhb->getTitle());
 

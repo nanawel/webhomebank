@@ -8,7 +8,7 @@
 
 namespace xhb\models\Resource\Memory;
 
-use xhb\models\Resource\Model;
+use xhb\models\Resource\Iface\Model;
 use xhb\util\MagicObject;
 
 /**

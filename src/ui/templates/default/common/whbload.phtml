@@ -1,0 +1,22 @@
+<?php
+$i18n = \app\models\core\I18n::instance();
+$design = \app\models\core\Design::instance();
+?>
+
+<div>
+    <p class="text"><?php echo $i18n->tr('Loading XHB, please wait...') ?></p>
+    <p class="loading-anim">
+        <img src="<?php echo $design->getImageUrl('loading-pie.gif') ?>" />
+    </p>
+</div>
+
+<script type="application/javascript">
+    //<![CDATA[
+    $.ajax("<?php echo $AJAX_PROGRESS_URL ?>", {
+        dataType: 'json',
+        success: function(result) {
+            document.location = '<?php echo $REDIRECT_URL ?>';
+        }
+    });
+    //]]>
+</script>

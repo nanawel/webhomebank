@@ -52,7 +52,7 @@ class Design extends \Prefab
 
     protected function _runThemeInit() {
         try {
-            \View::instance()->render('init.php', 'text/html', array());
+            \View::instance()->render('_init.php', 'text/html', array());
         }
         catch (\Exception $e) {}
         return $this;

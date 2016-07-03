@@ -385,9 +385,16 @@ abstract class AbstractController
         return $this;
     }
 
-    protected function _redirectReferer() {
+    protected function _getReferer() {
         $referrer = $this->_fw->get('SERVER.HTTP_REFERER');
         if ($referrer && $referrer != $this->_fw->get('REALM')) {
+            return $referrer;
+        }
+        return null;
+    }
+
+    protected function _redirectReferer() {
+        if ($referrer = $this->_getReferer()) {
             $this->_rerouteUrl($referrer);
         }
         else {

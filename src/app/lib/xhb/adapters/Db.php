@@ -60,13 +60,16 @@ class Db
     /**
      * @var array
      */
-    protected $_options;
+    protected $_config;
 
-    public function __construct(Adapter $db, $options = array()) {
-        $this->_db = $db;
-        $this->_sql = new \Zend\Db\Sql\Sql($db);
-        $this->_metadata = new \Zend\Db\Metadata\Metadata($db);
-        $this->_options = $options;
+    public function __construct(array $config) {
+        if (!isset($config['db'])) {
+            throw new \Exception('Missing DB config');
+        }
+        $this->_db = new Adapter($config['db']);
+        $this->_sql = new \Zend\Db\Sql\Sql($this->_db);
+        $this->_metadata = new \Zend\Db\Metadata\Metadata($this->_db);
+        $this->_config = $config;
     }
 
     /**

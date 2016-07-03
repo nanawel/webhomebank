@@ -15,15 +15,15 @@ class Xhb extends XhbModel
 
     protected $_dateHelper  = null;
 
-    public function __construct($params = array()) {
-        parent::__construct($params);
-        $this->_resourceType = ucfirst(isset($params['RESOURCE_CONFIG']['TYPE']) && $params['RESOURCE_CONFIG']['TYPE']
-                ? $params['RESOURCE_CONFIG']['TYPE']
+    public function __construct($data = array()) {
+        parent::__construct($data);
+        $this->_resourceType = ucfirst(isset($data['resource_config']['type']) && $data['resource_config']['type']
+                ? $data['resource_config']['type']
                 : 'memory');
         $this->setXhb($this);
 
         // Init own resource instance
-        $this->getResource(true, $params);
+        $this->getResource(true, $data);
     }
 
     public function getXhbId() {
