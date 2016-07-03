@@ -25,14 +25,6 @@
         {
             "type": "composer",
             "url": "https://packages.zendframework.com/"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/nanawel/zend-db-sql-insertmultiple"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/bcosca/fatfree-core"
         }
 	],
     "config": {
