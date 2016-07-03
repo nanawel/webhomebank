@@ -9,6 +9,11 @@ return array(
 
     "It seems you're using the default <span class=\"mono\">example.xhb</span> file. You may want to change it by editing <span class=\"mono\">etc/local.ini</span>."
         => "Il semble que vous utilisiez actuellement le fichier <span class=\"mono\">example.xhb</span> fourni par défaut. Vous pouvez le changer en éditant <span class=\"mono\">etc/local.ini</span>",
+
+    'Loading XHB, please wait...' => 'Chargement du fichier XHB, veuillez patienter...',
+    'Success, redirecting...' => 'Terminé ! Redirection...',
+    'Oops! Something went wrong: ' => 'Oups ! Une erreur est survenue : ',
+    'Error! Try to reload the page.' => 'Erreur ! Essayez de rafraîchir la page',
     'XHB imported to database successfully!' => 'Fichier XHB importé en base avec succès !',
 
     'Where your money goes' => 'Où va votre argent',
