@@ -278,7 +278,7 @@ body.init-load .content>div {
 }
 
 body.init-load .content>div .text {
-    margin-bottom: 2em;
+    margin: 2em;
 }
 
 /*****************************************************************************/

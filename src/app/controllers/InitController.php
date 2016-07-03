@@ -33,6 +33,7 @@ class InitController extends WhbController
         $this->_setupLayoutBlocks();
     }
 
+
     protected function _setupLayoutBlocks() {
         $this->getView()
             ->setBlockTemplate('head', 'page/head.phtml')
@@ -60,6 +61,7 @@ class InitController extends WhbController
             'mime'     => 'application/json'
         ));
         try {
+        throw new \Exception('test');
             $config = Main::app()->getConfig('XHB');
             $adapter = new Adapter($this->_fw, Main::app()->getConfig('BUDGET_FILE'), $config);
             $xhb = $adapter->loadXhb();

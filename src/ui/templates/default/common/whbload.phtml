@@ -8,6 +8,7 @@ $design = \app\models\core\Design::instance();
     <p class="loading-anim">
         <img src="<?php echo $design->getImageUrl('loading-pie.gif') ?>" />
     </p>
+    <p id="loading-status" class="text"></p>
 </div>
 
 <script type="application/javascript">
@@ -15,7 +16,20 @@ $design = \app\models\core\Design::instance();
     $.ajax("<?php echo $AJAX_PROGRESS_URL ?>", {
         dataType: 'json',
         success: function(result) {
-            document.location = '<?php echo $REDIRECT_URL ?>';
+            console.log(result.status);
+            console.log($('#loading-status'));
+            if (result.status == 'success') {
+                $('#loading-status').text('<?php echo \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Success, redirecting...')) ?>');
+                document.location = '<?php echo $REDIRECT_URL ?>';
+            }
+            else {
+                $('#loading-status').text('<?php echo \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Oops! Something went wrong: ')) ?>' + result.message);
+            }
+        },
+        error: function(result) {
+            var msg = result.status + " " + result.statusText;
+            msg = msg.replace('\'', '\\\'');
+            $('#loading-status').text('<?php echo \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Error! Try to reload the page.')) ?> (' + msg + ')');
         }
     });
     //]]>
