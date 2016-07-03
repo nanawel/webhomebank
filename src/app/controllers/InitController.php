@@ -61,7 +61,6 @@ class InitController extends WhbController
             'mime'     => 'application/json'
         ));
         try {
-        throw new \Exception('test');
             $config = Main::app()->getConfig('XHB');
             $adapter = new Adapter($this->_fw, Main::app()->getConfig('BUDGET_FILE'), $config);
             $xhb = $adapter->loadXhb();
