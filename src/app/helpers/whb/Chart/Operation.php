@@ -15,6 +15,7 @@ use app\models\core\I18n;
 use xhb\models\Constants;
 use xhb\models\Operation\Calculator;
 use xhb\models\Xhb;
+use xhb\util\Date;
 
 class Operation
 {
@@ -27,7 +28,9 @@ class Operation
         $i18n = I18n::instance();
         $opColl = $xhb->getOperationCollection();
         AccountOperation::applyFiltersOnCollection($opColl, $collectionFilters);
-        $opColl->addFieldToFilter('paymode', array('neq' => Constants::PAYMODE_INTXFER));
+        $opColl->addFieldToFilter('paymode', array('neq' => Constants::PAYMODE_INTXFER))
+            ->addFieldToFilter('amount', array('lt' => 0))
+            ->addFieldToFilter('date', array('lt' => Date::dateToJd(Date::getDate())));
 
         // FIXME does not handle split amounts yet
         $maxResults = 6;

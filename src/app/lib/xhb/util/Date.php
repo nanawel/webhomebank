@@ -61,4 +61,12 @@ class Date
         }
         return self::$_utcTZ;
     }
+
+    /**
+     * @param string|int $time
+     * @return \DateTime
+     */
+    public static function getDate($time = 'now') {
+        return new \DateTime($time, self::getUTCTimeZone());
+    }
 }
