@@ -23,7 +23,7 @@ class DateHelper extends XhbModel
     const TIME_PERIOD_LAST_30D      = 'last_30d';
     const TIME_PERIOD_LAST_60D      = 'last_60d';
     const TIME_PERIOD_LAST_90D      = 'last_90d';
-    const TIME_PERIOD_LAST_120D     = 'last_120d';
+    const TIME_PERIOD_LAST_12M      = 'last_12m';
     const TIME_PERIOD_ALL_DATE      = 'all_date';
     const TIME_PERIOD_DEFAULT       = self::TIME_PERIOD_THIS_MONTH;
 
@@ -76,14 +76,24 @@ class DateHelper extends XhbModel
                 self::TIME_PERIOD_LAST_30D,
                 self::TIME_PERIOD_LAST_60D,
                 self::TIME_PERIOD_LAST_90D,
-                self::TIME_PERIOD_LAST_120D
+                self::TIME_PERIOD_LAST_12M
             );
             foreach($lastDaysPeriods as $ldp) {
-                $days = preg_replace('/[^0-9]/', '', $ldp);
-                $this->_periods[$ldp] = array(
-                    'start' => gmmktime(0, 0, 0, $this->date('m'), $this->date('d') - $days, $this->date('Y')),
-                    'end'   => gmmktime(0, 0, 0, $this->date('m'), $this->date('d'), $this->date('Y'))
-                );
+                $units = preg_replace('/[^0-9]/', '', $ldp);
+                switch (substr($ldp, -1)) {
+                    case 'd':
+                    $this->_periods[$ldp] = array(
+                        'start' => gmmktime(0, 0, 0, $this->date('m'), $this->date('d') - $units, $this->date('Y')),
+                        'end'   => gmmktime(0, 0, 0, $this->date('m'), $this->date('d'), $this->date('Y'))
+                    );
+                    break;
+
+                    case 'm':
+                    $this->_periods[$ldp] = array(
+                        'start' => gmmktime(0, 0, 0, $this->date('m') - $units, $this->date('d'), $this->date('Y')),
+                        'end'   => gmmktime(0, 0, 0, $this->date('m'), $this->date('d'), $this->date('Y'))
+                    );
+                }
             }
 
             $operations = $this->getXhb()->getOperationCollection()->getItems();

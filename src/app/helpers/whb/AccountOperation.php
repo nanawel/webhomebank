@@ -31,12 +31,12 @@ class AccountOperation
                     DateHelper::TIME_PERIOD_LAST_QUARTER    => 'Last Quarter',
                     DateHelper::TIME_PERIOD_THIS_YEAR       => 'This Year',
                     DateHelper::TIME_PERIOD_LAST_YEAR       => 'Last Year',
-                    '-sep1-'                          => '-',
+                    '-sep1-'                                => '-',
                     DateHelper::TIME_PERIOD_LAST_30D        => 'Last 30 Days',
                     DateHelper::TIME_PERIOD_LAST_60D        => 'Last 60 Days',
                     DateHelper::TIME_PERIOD_LAST_90D        => 'Last 90 Days',
-                    DateHelper::TIME_PERIOD_LAST_120D       => 'Last 120 Days',
-                    '-sep2-'                          => '-',
+                    DateHelper::TIME_PERIOD_LAST_12M        => 'Last 12 Months',
+                    '-sep2-'                                => '-',
                     //TODO Custom range
                     DateHelper::TIME_PERIOD_ALL_DATE        => 'All Date'
                 )

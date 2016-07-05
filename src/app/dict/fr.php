@@ -42,7 +42,7 @@ return array(
     'Last 30 Days' => 'Les 30 derniers jours',
     'Last 60 Days' => 'Les 60 derniers jours',
     'Last 90 Days' => 'Les 90 derniers jours',
-    'Last 120 Days' => 'Les 120 derniers jours',
+    'Last 12 Months' => 'Les 12 derniers mois',
     'All Date'     => 'Toutes les dates',
 
     'Type'     => 'Type',
