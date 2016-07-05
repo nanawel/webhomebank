@@ -83,10 +83,9 @@ class Adapter
 
     protected function _getConfig() {
         if (!$this->_config) {
-            $this->_hive = $this->_fw->hive();
-            $this->_hive['xhbid'] = $this->getXhbId();
-            $this->_rawConfig['id'] = $this->getXhbId();
-            $this->_processConfig();
+            $hive = $this->_fw->hive();
+            $hive['xhbid'] = $this->getXhbId();
+            $this->_processConfig($hive);
         }
         return $this->_config;
     }
@@ -120,16 +119,14 @@ class Adapter
         return $this->_resourceAdapter;
     }
 
-    protected function _processConfig() {
+    protected function _processConfig($hive) {
         $this->_config = $this->_rawConfig;
-        array_walk_recursive($this->_config, array($this, '_filterConfig'));
+        array_walk_recursive($this->_config, array($this, '_filterConfig'), $hive);
     }
 
-    protected function _filterConfig(&$val) {
-        $val = preg_replace_callback('/({)?@([a-z\._]+)(?(1)})/i', array($this, '_replaceVar'), $val);
+    protected function _filterConfig(&$val, $key, $hive) {
+        $val = preg_replace_callback('/({)?@([a-z\._]+)(?(1)})/i', function ($var) use ($hive) {
+            return isset($hive[$var[2]]) ? $hive[$var[2]] : $var;
+        }, $val);
     }
-
-    protected function _replaceVar($var) {
-        return isset($this->_hive[$var[2]]) ? $this->_hive[$var[2]] : $var;
-    }
-} 
+}
