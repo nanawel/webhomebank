@@ -44,10 +44,6 @@ class InitController extends WhbController
         return $this;
     }
 
-    public function indexAction() {
-        return $this->runAction();
-    }
-
     public function loadAction() {
         $this->getView()
             ->setBlockTemplate('content', 'common/whbload.phtml')
