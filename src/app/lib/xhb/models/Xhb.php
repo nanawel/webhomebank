@@ -17,9 +17,12 @@ class Xhb extends XhbModel
 
     public function __construct($data = array()) {
         parent::__construct($data);
-        $this->_resourceType = ucfirst(isset($data['resource_config']['type']) && $data['resource_config']['type']
-                ? $data['resource_config']['type']
-                : 'memory');
+        if (isset($data['resource_config']['type']) && $data['resource_config']['type']) {
+            $this->_resourceType = ucfirst($data['resource_config']['type']);
+        }
+        else {
+            throw new \Exception('Missing resource configuration');
+        }
         $this->setXhb($this);
 
         // Init own resource instance
