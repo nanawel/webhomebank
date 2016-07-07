@@ -12,13 +12,14 @@ use app\helpers\core\Output;
 use app\helpers\whb\AccountOperation;
 use app\helpers\whb\Chart;
 use app\models\core\Chart\Donut;
+use app\models\core\Main;
 use app\models\whb\Chart\Scatter;
 use app\models\core\Design;
 use app\models\core\I18n;
 use app\models\whb\Form\Element\PeriodFilter;
-use xhb\models\Constants;
-use xhb\models\Operation\Collection;
-use xhb\models\Xhb\DateHelper;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation\Collection;
+use Xhb\Model\Xhb\DateHelper;
 
 class AccountController extends WhbController
 {
@@ -46,7 +47,7 @@ class AccountController extends WhbController
         if (!($gridData = $this->_loadCache($gridDataCacheKey)) || !($totalData = $this->_loadCache($totalDataCacheKey))) {
             $gridData = array();
             $totalData = array();
-            /* @var $account \xhb\models\Account */
+            /* @var $account \Xhb\Model\Account */
             foreach($xhb->getAccountCollection() as $account) {
                 $type = $account->getType(true);
                 $accountData = array(
@@ -99,9 +100,11 @@ class AccountController extends WhbController
                 'data_url' => $this->getUrl('*/topSpendingChartData'),
                 'filters'  => array(
                     new PeriodFilter($xhb, array(
-                        'name' => 'period'
+                        'name'  => 'period',
+                        'value' => Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
                     ))
-                )
+                ),
+                'class' => 'toolbar-right'
             )))
             ->setData('BALANCE_REPORT_CHART', new Scatter(array(
                 'id'       => 'balanceReportChart',
@@ -109,7 +112,8 @@ class AccountController extends WhbController
                 'data_url' => $this->getUrl('*/balanceReportChartData'),
                 'filters'  => array(
                     new PeriodFilter($xhb, array(
-                        'name' => 'period'
+                        'name' => 'period',
+                        'value' => Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
                     ))
                 ),
                 'class'       => 'toolbar-top-right',
@@ -123,7 +127,7 @@ class AccountController extends WhbController
     public function topSpendingChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
         $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_MONTH
+            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
         );
 
         $sumsData = Chart\Operation::getTopSpendingReportData($xhb, $collFilters);
@@ -138,22 +142,19 @@ class AccountController extends WhbController
     public function balanceReportChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
         $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_MONTH
+            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
         );
 
         $accountCollection = $xhb->getAccountCollection()
             ->addFieldToFilter('type', Constants::ACC_TYPE_BANK);
         $accountIds = $accountCollection->getAllIds();
 
-        $chartData = Chart\Operation::getBalanceReportData($xhb, $collFilters, $accountIds, $this->__('Balance Report'));
+        $chartData = Chart\Operation::getBalanceReportData($xhb, $collFilters, $accountIds, true);
 
         $this->setPageConfig(array(
                 'template' => 'data/json.phtml',
                 'mime'     => 'application/json'
             ));
-        $this->getView()->setData('DATA', $chartData)
-            //DEBUG
-            ->setData('OPTIONS', JSON_PRETTY_PRINT);
-        //DEBUG
+        $this->getView()->setData('DATA', $chartData);
     }
 } 

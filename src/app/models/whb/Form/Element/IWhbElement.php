@@ -8,7 +8,7 @@
 
 namespace app\models\whb\Form\Element;
 
-use xhb\models\Xhb;
+use Xhb\Model\Xhb;
 
 interface IWhbElement
 {

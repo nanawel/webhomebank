@@ -11,6 +11,11 @@ namespace app\helpers\core;
 
 class Output
 {
+    /**
+     * @param string $string
+     * @param int $flags Flags for htmlspecialchars (default if null: ENT_COMPAT | ENT_HTML401)
+     * @return string
+     */
     public static function htmlspecialchars($string, $flags = null) {
         if ($flags === null) {
             $flags = ENT_COMPAT | ENT_HTML401;
@@ -18,6 +23,12 @@ class Output
         return htmlspecialchars($string, $flags, \Base::instance()->get('ENCODING'));
     }
 
+    /**
+     * @param array $color
+     * @param bool $hex
+     * @param bool $alpha
+     * @return string
+     */
     public static function rgbToCss(array $color, $hex = false, $alpha = null) {
         if ($hex) {
             if ($alpha) {

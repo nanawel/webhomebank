@@ -9,6 +9,11 @@ return array(
 
     "It seems you're using the default <span class=\"mono\">example.xhb</span> file. You may want to change it by editing <span class=\"mono\">etc/local.ini</span>."
         => "Il semble que vous utilisiez actuellement le fichier <span class=\"mono\">example.xhb</span> fourni par défaut. Vous pouvez le changer en éditant <span class=\"mono\">etc/local.ini</span>",
+
+    'Loading XHB, please wait...' => 'Chargement du fichier XHB, veuillez patienter...',
+    'Success, redirecting...' => 'Terminé ! Redirection...',
+    'Oops! Something went wrong: ' => 'Oups ! Une erreur est survenue : ',
+    'Error! Try to reload the page.' => 'Erreur ! Essayez de rafraîchir la page',
     'XHB imported to database successfully!' => 'Fichier XHB importé en base avec succès !',
 
     'Where your money goes' => 'Où va votre argent',
@@ -37,7 +42,7 @@ return array(
     'Last 30 Days' => 'Les 30 derniers jours',
     'Last 60 Days' => 'Les 60 derniers jours',
     'Last 90 Days' => 'Les 90 derniers jours',
-    'Last 120 Days' => 'Les 120 derniers jours',
+    'Last 12 Months' => 'Les 12 derniers mois',
     'All Date'     => 'Toutes les dates',
 
     'Type'     => 'Type',
@@ -75,6 +80,9 @@ return array(
 
     'Account Operations' => 'Opérations des comptes',
     'Vehicle Cost' => 'Coût véhicules',
+    'Settings' => 'Configuration',
+    'Locale' => 'Locale',
+    'Currency' => 'Monnaie',
 
     'Vehicle Cost Report' => 'Rapport du coût d\'utilisation des véhicules',
     'No data for this period of time or this category' => 'Pas de données pour cette période ou pour cette catégorie',

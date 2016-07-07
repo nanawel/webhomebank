@@ -7,9 +7,11 @@
 
 [app]
 ; Uncomment BUDGET_FILE and make it point to your XHB
-; Path can be relative to WHB root directory, or absoloute
+; Path can be relative to WHB root directory, or absolute
 ; For now, budget file is declared here, but it should soon be handled differently to be more dynamic (session, etc.)
 ;BUDGET_FILE=../resources/budget.xhb
 
 ;CAR_DISTANCE_UNIT=km
 ;CAR_VOLUME_UNIT=L
+
+; Override any configuration from *.ini files below

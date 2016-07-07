@@ -46,7 +46,7 @@ abstract class AbstractController
 
     public final function __construct($fw) {
         $this->_fw = $fw;
-        Main::instance($fw)->setup();
+        Main::instance()->setup();
         Main::app()->setCurrentController($this);
         $this->setPageTemplate(self::PAGE_TEMPLATE_DEFAULT);
         $this->_init();
@@ -317,7 +317,8 @@ abstract class AbstractController
 
     protected function _getRequestCacheKeyInfo() {
         return array(
-            $this->_fw->get('REALM')
+            $this->_fw->get('REALM'),
+            $this->getSession()->getLocale()
         );
     }
 
@@ -384,17 +385,30 @@ abstract class AbstractController
         return $this;
     }
 
-    protected function _redirectReferer() {
+    protected function _getReferer() {
         $referrer = $this->_fw->get('SERVER.HTTP_REFERER');
         if ($referrer && $referrer != $this->_fw->get('REALM')) {
-            $this->_reroute($referrer);
+            return $referrer;
         }
-        $this->_reroute('/');
+        return null;
+    }
+
+    protected function _redirectReferer() {
+        if ($referrer = $this->_getReferer()) {
+            $this->_rerouteUrl($referrer);
+        }
+        else {
+            $this->_reroute('/');
+        }
         return $this;
     }
 
     protected function _reroute($path, $permanent = false) {
         $url = $this->getUrl($path, array('_force_scheme' => true));
+        $this->_rerouteUrl($url, $permanent);
+    }
+
+    protected function _rerouteUrl($url, $permanent = false) {
         $this->_fw->reroute($url, $permanent);
     }
 

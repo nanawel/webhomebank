@@ -1,13 +1,9 @@
 [![WebHomeBank](src/ui/themes/default/images/logo.png)](http://https://github.com/nanawel/webhomebank/)
 
-A simple web-viewer for Homebank XML files. HomeBank is a free software that will assist you to manage your personal
-accounting, released under the GPL v2 license.
+A simple web-viewer for Homebank XML files. HomeBank is a free software developed by Maxime Doyen that will assist you
+to manage your personal accounting, released under the GPL v2 license.
 
 Please visit [http://homebank.free.fr/]([http://homebank.free.fr/]) for more information about the original software.
-
-# Demo
-
-An online demo is available at [http://webhomebank-demo.sloppy.zone/](http://webhomebank-demo.sloppy.zone/), check it out!
 
 # Previews
 
@@ -150,6 +146,8 @@ See LICENSE
 
 - [Grunt](http://gruntjs.com/) (MIT license)
 
+The "loading pie" has been created with [loading.io](http://loading.io/)
+
 # Legal Notice
 
-Copyright (c) 2015 Anaël Ollier &lt;nanawel&#64;gmail&#46;com&gt;
+Copyright (c) 2015 Anaël Ollier &lt;nanawel+DONT.SPAM.ME&#64;gmail&#46;com&gt;

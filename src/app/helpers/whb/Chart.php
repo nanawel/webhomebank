@@ -8,10 +8,10 @@
 
 namespace app\helpers\whb;
 
-use xhb\models\Constants;
-use xhb\models\Operation\Collection;
-use xhb\models\Xhb;
-use xhb\models\Resource\AbstractCollection;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation\Collection;
+use Xhb\Model\Xhb;
+use Xhb\Model\Resource\AbstractCollection;
 
 class Chart
 {
@@ -27,7 +27,7 @@ class Chart
      */
     public static function sumBy(AbstractCollection $collection, $labelField, $valueField, $initial = 0.0, $maxResults = 0) {
         $sums = array();
-        /* @var $item \xhb\util\MagicObject */
+        /* @var $item \Xhb\Util\MagicObject */
         foreach($collection as $item) {
             $label = $item->getDataUsingMethod($labelField);
             if (!isset($sums[$label])) {

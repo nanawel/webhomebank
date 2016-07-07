@@ -18,7 +18,6 @@ class I18n extends \Prefab
 {
     protected static $_PREFIX;
 
-    protected $_locale;
     protected $_currencyCode;
     protected $_numberFormatter;
     protected $_currencyFormatter;
@@ -28,18 +27,38 @@ class I18n extends \Prefab
         $fw = \Base::instance();
         self::$_PREFIX = $fw->get('PREFIX');
 
-
         if (!extension_loaded('intl')) {
             throw new \Exception('Missing "intl" extension.');
         }
     }
 
     public function setLocale($locale) {
-        $this->_locale = $locale;
+        \Base::instance()->set('LANGUAGE', $locale);
+        return $this;
+    }
+
+    public function getLocale() {
+        list($lang) = explode(',', \Base::instance()->get('LANGUAGE'));
+        return $lang;
     }
 
     public function setCurrencyCode($currencyCode) {
         $this->_currencyCode = $currencyCode;
+        return $this;
+    }
+
+    public function getCurrencyCode() {
+        return $this->_currencyCode;
+    }
+
+    public function getAvailableLocales()
+    {
+        return Main::app()->getConfig('LANGUAGES');
+    }
+
+    public function getAvailableCurrencies()
+    {
+        return Main::app()->getConfig('CURRENCIES');
     }
 
     /**
@@ -73,12 +92,15 @@ class I18n extends \Prefab
      * @param $value
      * @return string
      */
-    public function currency($value, $withContainer = false) {
+    public function currency($value, $withContainer = false, $currencyCode = null) {
+        if ($currencyCode === null) {
+            $currencyCode = $this->_currencyCode;
+        }
         if ($formatter = $this->getCurrencyFormatterInstance()) {
-            $return = $formatter->formatCurrency($value, $this->_currencyCode);
+            $return = $formatter->formatCurrency($value, $currencyCode);
         }
         else {
-            $return = \Base::instance()->format('{0,number,currency}', $value);
+            $return = \Base::instance()->format("{0,number,currency,$currencyCode}", $value);
         }
 
         if ($withContainer) {
@@ -121,7 +143,7 @@ class I18n extends \Prefab
     public function getNumberFormatterInstance() {
         if (class_exists('NumberFormatter') && !$this->_numberFormatter) {
             $this->_numberFormatter = new \NumberFormatter(
-                $this->_locale,
+                $this->getLocale(),
                 \NumberFormatter::DECIMAL
             );
         }
@@ -131,7 +153,7 @@ class I18n extends \Prefab
     public function getCurrencyFormatterInstance() {
         if (class_exists('NumberFormatter') && !$this->_currencyFormatter) {
             $this->_currencyFormatter = new \NumberFormatter(
-                $this->_locale,
+                $this->getLocale(),
                 \NumberFormatter::CURRENCY
             );
         }
@@ -141,7 +163,7 @@ class I18n extends \Prefab
     public function getDateFormatterInstance() {
         if (class_exists('IntlDateFormatter') && !$this->_dateFormatter) {
             $this->_dateFormatter = new \IntlDateFormatter(
-                $this->_locale,
+                $this->getLocale(),
                 \IntlDateFormatter::SHORT,
                 \IntlDateFormatter::NONE
             );
@@ -150,7 +172,7 @@ class I18n extends \Prefab
     }
 
     public function getLocaleCountryCodeISO2() {
-        return substr($this->_locale, 0, 2);
+        return substr($this->getLocale(), 0, 2);
     }
 
     public function set($key, $value) {

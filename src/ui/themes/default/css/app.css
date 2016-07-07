@@ -67,7 +67,7 @@ table {
 
 .header .separator {
     display: inline-block;
-    min-width: 2em;
+    /*min-width: 2em;*/
 }
 
 .header .nav-menu {
@@ -121,6 +121,14 @@ table {
 
 .header .nav-menu li.vehiclecost-link::before {
     background-image: url(../images/hicolor_actions_24x24_hb-rep-vehicle.png);
+}
+
+.header .nav-menu li.settings-links {
+    content: ".";
+}
+
+.header .nav-menu li.settings-links::before {
+    background-image: url(../images/categories_24x24_gtk-preferences.png);
 }
 
 .header h1 {
@@ -260,6 +268,20 @@ span .mono {
 }
 
 /*****************************************************************************/
+/*                     INIT                                                  */
+/*****************************************************************************/
+
+body.init-load .content>div {
+    margin-top: 10%;
+    margin-bottom: 10%;
+    text-align: center;
+}
+
+body.init-load .content>div .text {
+    margin: 2em;
+}
+
+/*****************************************************************************/
 /*                     ACCOUNTS                                              */
 /*****************************************************************************/
 
@@ -299,12 +321,28 @@ span .mono {
     margin-right: 20px;
     display: inline-block;
 }
-.chart canvas {
+.chart .canvas-container {
     float: left;
+}
+
+.chart .canvas-container .loading-anim {
+    content: " ";
+    width: 130px;
+    height: 130px;
+    display: inline-block;
+    position: absolute;
+    top: 30%;
+    left: 40%;
+    background: transparent url(../images/loading-pie.gif) no-repeat no-repeat;
 }
 
 .chart-footer p {
     font-size: 10px;
+}
+
+.chart.donut .canvas-container {
+    width: 300px;
+    height: 300px;
 }
 
 .canvas-container .no-data-message {
@@ -373,6 +411,10 @@ span .mono {
 }
 .operations-table tr.paymode-directdebit td.info {
     background-image: url(../images/hicolor_status_16x16_pm-directdebit.png);
+}
+
+.operations-table tr.future {
+    font-style: italic;
 }
 
 .operations-table td.status {

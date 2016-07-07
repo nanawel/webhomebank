@@ -1,8 +1,8 @@
 {
-	"name": "nanawel/webhomebank",
-	"description": "",
-	"homepage": "https://github.com/nanawel/webhomebank",
-	"license": "AGPL-3.0",
+    "name": "nanawel/webhomebank",
+    "description": "",
+    "homepage": "https://github.com/nanawel/webhomebank",
+    "license": "AGPL-3.0",
     "authors": [
         {
             "name": "Anael Ollier",
@@ -11,25 +11,26 @@
             "role": "Developer"
         }
     ],
-	"require": {
-		"php": ">=5.5.0",
+    "require": {
+        "php": ">=5.5.0",
         "bcosca/fatfree-core": "dev-master",
-        "zendframework/zend-db": "2.5.1"
+        "zendframework/zend-db": "2.5.1",
+        "nanawel/zend-db-sql-insertmultiple": "dev-master"
 
-	},
-    "suggest": {
-        "php": ">=5.6.0"
     },
-	"repositories": [
+    "suggest": {
+        "php": ">=5.5.0"
+    },
+    "repositories": [
         {
             "type": "composer",
             "url": "https://packages.zendframework.com/"
         }
-	],
+    ],
     "config": {
         "vendor-dir": "app/vendor"
     },
-	"autoload": {
-		"files": ["app/vendor/bcosca/fatfree-core/base.php"]
-	}
+    "autoload": {
+        "files": ["app/vendor/bcosca/fatfree-core/base.php"]
+    }
 }

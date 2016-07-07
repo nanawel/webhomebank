@@ -10,7 +10,7 @@ namespace app\models\whb\Form\Element;
 
 use app\models\core\Form\Element\Textfield;
 use app\models\core\I18n;
-use xhb\models\Xhb;
+use Xhb\Model\Xhb;
 
 class SearchFilter extends Textfield implements IWhbElement
 {

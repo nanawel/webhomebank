@@ -3,6 +3,8 @@
 $fw = \Base::instance();
 $design = \app\models\core\Design::instance();
 $url = \app\models\core\Url::instance();
+$session = $this->getSession();
+$i18n = \app\models\core\I18n::instance();
 ?>
 <ul class="nav-menu dropdown dropdown-horizontal" id="nav">
     <li class="level-1 account-operations-links dir">
@@ -17,5 +19,40 @@ $url = \app\models\core\Url::instance();
     </li>
     <li class="level-1 vehiclecost-link">
         <a href="<?php echo $url->getUrl('report_vehiclecost/index') ?>"><?php echo $this->__('Vehicle Cost') ?></a>
+    </li>
+    <li class="level-1 settings-links dir">
+        <?php echo $this->__('Settings') ?>
+        <ul class="dir">
+            <li class="level-2 settings-currency-link dir">
+                <?php echo $this->__('Currency') ?>
+                <ul class="dir">
+                    <?php foreach($i18n->getAvailableCurrencies() as $code): ?>
+                        <li class="level-3 set-currency-link currency-<?php echo strtolower($code) ?>">
+                            <a href="<?php echo $url->getUrl('settings/setCurrency', array('_query' => array('code' => $code))) ?>"><?php echo $code ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
+            <li class="level-2 settings-locale-link dir">
+                <?php echo $this->__('Locale') ?>
+                <ul class="dir">
+                    <?php foreach($i18n->getAvailableLocales() as $code): ?>
+                        <li class="level-3 set-locale-link currency-<?php echo strtolower($code) ?>">
+                            <a href="<?php echo $url->getUrl('settings/setLocale', array('_query' => array('code' => $code))) ?>"><?php echo $code ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
+            <li class="level-2 settings-theme-link dir">
+                <?php echo $this->__('Theme') ?>
+                <ul class="dir">
+                    <?php foreach($design->getAvailableThemes() as $code): ?>
+                        <li class="level-3 set-theme-link theme-<?php echo strtolower($code) ?>">
+                            <a href="<?php echo $url->getUrl('settings/setTheme', array('_query' => array('code' => $code))) ?>"><?php echo $code ?></a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </li>
+        </ul>
     </li>
 </ul>

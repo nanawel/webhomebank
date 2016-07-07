@@ -3,6 +3,7 @@
 $account = \Base::instance()->get('current_account');
 $noResults = count($OPERATION_COLLECTION) == 0;
 $gridHelper = \app\models\core\Grid::instance();
+$now = new \DateTime();
 ?>
 
 <div class="back-link top">
@@ -40,7 +41,7 @@ $gridHelper = \app\models\core\Grid::instance();
             <td colspan="10"><?php echo $this->__('No data for this period of time') ?></td>
         </tr>
         <?php else: ?>
-            <?php foreach($OPERATION_COLLECTION as $operation): ?>
+            <?php foreach($OPERATION_COLLECTION as $operation): /* @var $operation \Xhb\Model\Operation */?>
             <?php
                 $outcome = $operation->getAmount() < 0 ? $this->i18n()->currency($operation->getAmount(), true) : '';
                 $income = $operation->getAmount() >= 0 ? $this->i18n()->currency($operation->getAmount(), true) : '';
@@ -53,7 +54,7 @@ $gridHelper = \app\models\core\Grid::instance();
                     $categoryName = false;
                 }
             ?>
-            <tr class="operation<?php if ($paymode = $operation->getPaymodeCode()) echo ' paymode-' . $paymode; ?>">
+            <tr class="operation<?php if ($paymode = $operation->getPaymodeCode()) echo ' paymode-' . $paymode; ?><?php if ($operation->getDateModel() > $now) echo ' future'; ?>">
                 <td class="date"><?php echo $this->i18n()->date($operation->getDateModel()) ?></td>
                 <td class="info"><?php echo $operation->getInfo() ?></td>
                 <td class="payee"><?php echo \app\helpers\whb\AccountOperation::getPayeeLabelForDisplay($operation) ?></td>

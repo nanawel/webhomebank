@@ -16,6 +16,7 @@ class Session extends \Magic
 
     const MESSAGES_KEY = '__messages';
 
+    protected static $_cacheInstance;
     protected static $_session;
 
     protected $_name;
@@ -23,13 +24,11 @@ class Session extends \Magic
 
     public function __construct($name) {
         if (!self::$_session) {
-            self::$_session = new \Session();
+            self::$_cacheInstance = new \Cache(Main::app()->getConfig('SESSIONS'));
+            self::$_session = new \Session(null, null, self::$_cacheInstance);
         }
         $this->_name = $name;
-        $this->_data =& $_SESSION[$name];
-        if (!is_array($this->_data)) {
-            $this->_data = array();
-        }
+        $this->_data =& \Base::instance()->ref('SESSION.' . $name);
     }
 
     public function getId() {
@@ -106,20 +105,29 @@ class Session extends \Magic
         return $messages;
     }
 
-    /**
-     * For now, it just returns the global locale based on F3's LANGUAGE and ENCODING variables.
-     * No validation is performed on the data. Later we can imagine a locale per session and a
-     * more robust way to retrieve it.
-     *
-     * @return string
-     */
     public function getLocale() {
-        list($lang) = explode(',', \Base::instance()->get('LANGUAGE'));
-        $encoding = \Base::instance()->get('ENCODING');
-        return str_replace('-', '_', $lang) . ".$encoding";
+        if (!$locale = $this->get('locale')) {
+            list($locale) = explode(',', \Base::instance()->get('LANGUAGE'));
+        }
+        if (strpos($locale, '.') === false) {
+            $locale .= '.' . \Base::instance()->get('ENCODING');
+        }
+        $this->setLocale($locale);
+        return $locale;
     }
 
-    public function getCurrencyCode() {
-        return Main::app()->getConfig('CURRENCY');
+    public function setLocale($locale) {
+        return $this->set('locale', $locale);
+    }
+
+    public function getTheme() {
+        if ($theme = $this->get('theme')) {
+            return $theme;
+        }
+        return null;
+    }
+
+    public function setTheme($theme) {
+        return $this->set('theme', $theme);
     }
 }
