@@ -16,9 +16,9 @@ use app\models\whb\Chart\Scatter;
 use app\models\core\Design;
 use app\models\whb\Form\Element\CategoryFilter;
 use app\models\whb\Form\Element\PeriodFilter;
-use xhb\models\Category;
-use xhb\models\Operation;
-use xhb\models\Xhb\DateHelper;
+use Xhb\Model\Category;
+use Xhb\Model\Operation;
+use Xhb\Model\Xhb\DateHelper;
 
 class VehiclecostController extends WhbController
 {
@@ -31,7 +31,7 @@ class VehiclecostController extends WhbController
 
     public function indexAction() {
         $xhb = $this->getXhbSession()->getModel();
-        $vehicleCostReport = new \xhb\models\Report\VehicleCost($xhb);
+        $vehicleCostReport = new \Xhb\Model\Report\VehicleCost($xhb);
 
         $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_VEHICLES_PERIOD');
         $periodObject = $xhb->getDateHelper()->getPeriodFromConstant($periodCode);

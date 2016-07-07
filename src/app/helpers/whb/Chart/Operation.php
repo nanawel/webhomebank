@@ -12,10 +12,10 @@ use app\helpers\core\Output;
 use app\helpers\whb\AccountOperation;
 use app\helpers\whb\Chart;
 use app\models\core\I18n;
-use xhb\models\Constants;
-use xhb\models\Operation\Calculator;
-use xhb\models\Xhb;
-use xhb\util\Date;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation\Calculator;
+use Xhb\Model\Xhb;
+use Xhb\Util\Date;
 
 class Operation
 {

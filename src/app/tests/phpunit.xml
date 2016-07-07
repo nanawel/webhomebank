@@ -6,7 +6,7 @@
          stopOnFailure="false">
     <testsuites>
         <testsuite name="xhb">
-            <directory>xhb</directory>
+            <directory>Xhb</directory>
         </testsuite>
     </testsuites>
 </phpunit>

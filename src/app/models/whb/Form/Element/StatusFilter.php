@@ -11,7 +11,7 @@ namespace app\models\whb\Form\Element;
 use app\helpers\whb\AccountOperation;
 use app\models\core\Form\Element\Select;
 use app\models\core\I18n;
-use xhb\models\Xhb;
+use Xhb\Model\Xhb;
 
 class StatusFilter extends Select implements IWhbElement
 {

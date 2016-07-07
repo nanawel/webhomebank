@@ -41,7 +41,7 @@ $now = new \DateTime();
             <td colspan="10"><?php echo $this->__('No data for this period of time') ?></td>
         </tr>
         <?php else: ?>
-            <?php foreach($OPERATION_COLLECTION as $operation): /* @var $operation \xhb\models\Operation */?>
+            <?php foreach($OPERATION_COLLECTION as $operation): /* @var $operation \Xhb\Model\Operation */?>
             <?php
                 $outcome = $operation->getAmount() < 0 ? $this->i18n()->currency($operation->getAmount(), true) : '';
                 $income = $operation->getAmount() >= 0 ? $this->i18n()->currency($operation->getAmount(), true) : '';

@@ -10,9 +10,9 @@ namespace app\models\whb\Xhb;
 
 
 use app\models\core\Main;
-use xhb\adapters\AdapterInterface as XhbAdapterInterface;
-use xhb\adapters\Factory as XhbAdapterFactory;
-use xhb\Parser as XhbParser;
+use Xhb\Adapter\AdapterInterface as XhbAdapterInterface;
+use Xhb\Adapter\Factory as XhbAdapterFactory;
+use Xhb\Parser as XhbParser;
 
 class Adapter
 {
@@ -105,7 +105,7 @@ class Adapter
                 $this->getXhbId()
             );
         }
-        $xhb = new \xhb\models\Xhb($this->_getConfig());
+        $xhb = new \Xhb\Model\Xhb($this->_getConfig());
         return $xhb->load($this->getXhbId());
     }
 

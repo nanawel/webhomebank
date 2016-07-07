@@ -13,7 +13,7 @@ use app\models\core\Form\Element\AbstractElement;
 use app\models\core\I18n;
 use app\models\core\Log;
 use app\models\core\View;
-use xhb\util\MagicObject;
+use Xhb\Util\MagicObject;
 
 /**
  * Class AbstractChart

@@ -13,9 +13,8 @@ use app\models\core\Main;
 use app\models\core\Session;
 use app\models\whb\Xhb\Adapter as XhbAdapter;
 use DB\SQL;
-use xhb\adapters\Db\Sqlite;
-use xhb\adapters\Db;
-use xhb\Parser;
+use Xhb\Adapter\Db\Sqlite;
+use Xhb\Adapter\Db;
 use Zend\Db\Adapter\Adapter;
 
 class Xhb extends Session
@@ -46,7 +45,7 @@ class Xhb extends Session
     }
 
     /**
-     * @return \xhb\models\Xhb
+     * @return \Xhb\Model\Xhb
      */
     public function getModel() {
         if (!$this->_model) {
@@ -56,7 +55,7 @@ class Xhb extends Session
     }
 
     /**
-     * @param $model \xhb\models\Xhb
+     * @param $model \Xhb\Model\Xhb
      */
     public function setModel($model) {
         $this->_model = $model;

@@ -23,11 +23,11 @@ use app\models\whb\Form\Element\PeriodFilter;
 use app\models\whb\Form\Element\SearchFilter;
 use app\models\whb\Form\Element\StatusFilter;
 use app\models\whb\Form\Element\TypeFilter;
-use xhb\models\Account;
-use xhb\models\Category;
-use xhb\models\Constants;
-use xhb\models\Operation;
-use xhb\models\Xhb\DateHelper;
+use Xhb\Model\Account;
+use Xhb\Model\Category;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation;
+use Xhb\Model\Xhb\DateHelper;
 
 class OperationController extends WhbController
 {

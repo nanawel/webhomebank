@@ -17,9 +17,9 @@ use app\models\whb\Chart\Scatter;
 use app\models\core\Design;
 use app\models\core\I18n;
 use app\models\whb\Form\Element\PeriodFilter;
-use xhb\models\Constants;
-use xhb\models\Operation\Collection;
-use xhb\models\Xhb\DateHelper;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation\Collection;
+use Xhb\Model\Xhb\DateHelper;
 
 class AccountController extends WhbController
 {
@@ -47,7 +47,7 @@ class AccountController extends WhbController
         if (!($gridData = $this->_loadCache($gridDataCacheKey)) || !($totalData = $this->_loadCache($totalDataCacheKey))) {
             $gridData = array();
             $totalData = array();
-            /* @var $account \xhb\models\Account */
+            /* @var $account \Xhb\Model\Account */
             foreach($xhb->getAccountCollection() as $account) {
                 $type = $account->getType(true);
                 $accountData = array(

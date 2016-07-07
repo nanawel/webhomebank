@@ -8,11 +8,11 @@
 
 namespace app\helpers\whb;
 
-use xhb\models\Constants;
-use xhb\models\Operation;
-use xhb\models\Resource\AbstractCollection;
-use xhb\models\Xhb\DateHelper;
-use xhb\util\Date;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation;
+use Xhb\Model\Resource\AbstractCollection;
+use Xhb\Model\Xhb\DateHelper;
+use Xhb\Util\Date;
 
 class AccountOperation
 {
