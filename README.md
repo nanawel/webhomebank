@@ -5,6 +5,14 @@ to manage your personal accounting, released under the GPL v2 license.
 
 Please visit [http://homebank.free.fr/]([http://homebank.free.fr/]) for more information about the original software.
 
+# Demo
+
+An online demo is available at [http://webhomebank-demo.dyndns.org/](http://webhomebank-demo.dyndns.org/), check it out!
+
+Notice: it uses the example XHB file provided by HomeBank, with operations dated between 2003 and 2004. As a consequence,
+some filters based on current date might not seem really relevant...
+
+
 # Previews
 
 ![Preview 1](/resources/screenshots/home_en_modern_600px.png "Preview 1")
