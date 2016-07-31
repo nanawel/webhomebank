@@ -108,11 +108,11 @@ class Session extends \Magic
     public function getLocale() {
         if (!$locale = $this->get('locale')) {
             list($locale) = explode(',', \Base::instance()->get('LANGUAGE'));
+            if (strpos($locale, '.') === false) {
+                $locale .= '.' . \Base::instance()->get('ENCODING');
+            }
+            $this->setLocale($locale);
         }
-        if (strpos($locale, '.') === false) {
-            $locale .= '.' . \Base::instance()->get('ENCODING');
-        }
-        $this->setLocale($locale);
         return $locale;
     }
 
