@@ -171,7 +171,7 @@ abstract class AbstractController
      * @param string $template
      */
     public function setPageConfig($config) {
-        $this->getView()->setBlockConfig(self::PAGE_BLOCK_NAME, null, $config);
+        $this->getView()->setBlockConfig(self::PAGE_BLOCK_NAME, $config);
         return $this;
     }
 

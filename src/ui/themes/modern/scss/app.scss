@@ -305,9 +305,9 @@ td.date, td.currency {
 
     .account-balance-summary {
         .label-value-group {
-            @include grid-column($columns:3, $float: right);
+            @include grid-column($columns:4);
 
-            label {
+            > label {
                 line-height: 1.5;
             }
         }

@@ -8696,10 +8696,10 @@ td.date, td.currency {
 .account-summary .account-balance-summary .label-value-group {
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
-  width: 25%;
-  float: right;
+  width: 33.33333%;
+  float: left;
 }
-.account-summary .account-balance-summary .label-value-group label {
+.account-summary .account-balance-summary .label-value-group > label {
   line-height: 1.5;
 }
 
