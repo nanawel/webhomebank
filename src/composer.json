@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=5.5.0",
-        "bcosca/fatfree-core": "dev-master",
+        "bcosca/fatfree-core": "3.5.*",
         "zendframework/zend-db": "2.5.1",
         "nanawel/zend-db-sql-insertmultiple": "dev-master"
 
