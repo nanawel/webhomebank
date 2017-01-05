@@ -88,13 +88,19 @@ class VehiclecostController extends WhbController
                 'show_legend' => false,
                 'axis_type'   => Scatter::AXIS_TYPE_DATE_CURRENCY
             )))
-            ->setData('DISTANCE_TRAVELED_CHART', new Scatter(array(
+            ->setData('TOTAL_DISTANCE_TRAVELED_CHART', new Scatter(array(
                 'id'          => 'distanceTraveledChart',
                 'title'       => 'Distance Traveled',
                 'data_url'    => $this->getUrl('*/distanceTraveledChartData', array('_query' => '*')),
                 'class'       => 'toolbar-top-right',
                 'show_legend' => false,
-                //'axis_type'   => Scatter::AXIS_TYPE_DATE_CURRENCY
+            )))
+            ->setData('DISTANCE_TRAVELED_BY_PERIOD_CHART', new Scatter(array(
+                'id'          => 'distanceTraveledByPeriodChart',
+                'title'       => 'Distance Traveled by Period',
+                'data_url'    => $this->getUrl('*/distanceTraveledByPeriodChartData', array('_query' => '*')),
+                'class'       => 'toolbar-top-right',
+                'show_legend' => false,
             )))
         ;
     }
@@ -132,13 +138,13 @@ class VehiclecostController extends WhbController
             ->getAllIds();
         $categoryIds = array_merge(array($category), $childrenIds);
 
-        $fuelCostData = \app\helpers\whb\Chart\Vehiclecost::getDistanceTraveledData($xhb, $period, $categoryIds);
+        $distanceTraveledData = \app\helpers\whb\Chart\Vehiclecost::getDistanceTraveledData($xhb, $period, $categoryIds);
 
         $this->setPageConfig(array(
             'template' => 'data/json.phtml',
             'mime'     => 'application/json'
         ));
-        $this->getView()->setData('DATA', $fuelCostData);
+        $this->getView()->setData('DATA', $distanceTraveledData);
     }
 
     public function consumptionChartDataAction() {
@@ -160,5 +166,26 @@ class VehiclecostController extends WhbController
             'mime'     => 'application/json'
         ));
         $this->getView()->setData('DATA', $fuelCostData);
+    }
+
+    public function distanceTraveledByPeriodChartDataAction() {
+        $xhb = $this->getXhbSession()->getModel();
+
+        $periodCode = $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_VEHICLES_PERIOD');
+        $period = $xhb->getDateHelper()->getPeriodFromConstant($periodCode, 'P1W'); //TODO Handle dynamic interval
+        $category = $this->getRequestQuery('category') ? $this->getRequestQuery('category') : $xhb->getCarCategory();
+
+        /* @var $category Category */
+        $childrenIds = $xhb->getCategory($category)->getChildrenCategories()
+            ->getAllIds();
+        $categoryIds = array_merge(array($category), $childrenIds);
+
+        $distanceTraveledByPeriodData = \app\helpers\whb\Chart\Vehiclecost::getDistanceTraveledByPeriodData($xhb, $period, $categoryIds);
+
+        $this->setPageConfig(array(
+            'template' => 'data/json.phtml',
+            'mime'     => 'application/json'
+        ));
+        $this->getView()->setData('DATA', $distanceTraveledByPeriodData);
     }
 }

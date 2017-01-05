@@ -62,7 +62,7 @@ class VehicleCost extends XhbModel
      * @param $categoryIds int[]
      * @return array
      */
-    public function getPeriodConsumptionSummaryData($period, $categoryIds = null) {
+    public function getPeriodConsumptionSummaryData(\DatePeriod $period, $categoryIds = null) {
         $startDate = $period->start;
         $endDate = $period->end;
         $periodConsumptionSummaryData = array(
@@ -106,7 +106,7 @@ class VehicleCost extends XhbModel
      * @param $categoryIds int[]
      * @return array
      */
-    public function getPeriodConsumptionData($period, $categoryIds = null) {
+    public function getPeriodConsumptionData(\DatePeriod $period, $categoryIds = null) {
         $startDate = $period->start;
         $endDate = $period->end;
         $periodConsumptionData = array();
@@ -223,5 +223,46 @@ class VehicleCost extends XhbModel
             }
         }
         return $consumptionData;
+    }
+
+    public function getDistanceTraveledByPeriod(\DatePeriod $period, $categoryIds = null) {
+        $startDate = $period->getStartDate();
+        $endDate = $period->getEndDate();
+        $interval = $period->getDateInterval();
+
+        $consumptionData = $this->getConsumptionData($categoryIds);
+        $distanceByPeriod = array();
+        $nonNullPeriodFound = false;
+
+        // Find first operation after start date
+        while($cd = next($consumptionData)) {
+            if ($cd['operation']->getDateModel() >= $startDate) {
+                break;
+            }
+        }
+
+        // Sum traveled distances for each period
+        foreach ($period as $date) {
+            $currentPeriodDistance = 0;
+            do {
+                if ($cd) {
+                    if ($cd['operation']->getDateModel() < $date) {
+                        $nonNullPeriodFound = true;
+                        $currentPeriodDistance += $cd['dist'];
+                    }
+                    else {
+                        $distanceByPeriod[] = [
+                            'date' => $date,
+                            'distance' => $currentPeriodDistance
+                        ];
+                        continue 2;
+                    }
+                }
+            } while ($cd = next($consumptionData));
+        }
+        if ($nonNullPeriodFound) {
+            return $distanceByPeriod;
+        }
+        return [];
     }
 }

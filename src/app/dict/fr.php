@@ -100,6 +100,7 @@ return array(
 
     'Consumption' => 'Consommation',
     'Distance Traveled' => 'Distance parcourue',
+    'Distance Traveled by Period' => 'Distance parcourue par période',
     'Fuel Price Evolution' => 'Évolution du prix du carburant',
     'Price per vol.' => 'Prix/vol.',
 

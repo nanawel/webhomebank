@@ -77,6 +77,33 @@ class Vehiclecost
         return $return;
     }
 
+    public static function getDistanceTraveledByPeriodData(Xhb $xhb, \DatePeriod $period, $categoryIds) {
+        $vehicleCostReport = new \Xhb\Model\Report\VehicleCost($xhb);
+        $distanceTraveledByPeriod = $vehicleCostReport->getDistanceTraveledByPeriod($period, $categoryIds);
+
+        $return = array(
+            'labels'   => array(),
+            'datasets' => array()
+        );
+
+        $return['datasets'][0] = array(
+            'label'                => I18n::instance()->tr('Distance Traveled by Period'),
+            'strokeColor'          => Output::rgbToCss(Chart::getColor(self::METER_CHART_COLOR_IDX)),
+            'pointColor'           => Output::rgbToCss(Chart::getColor(self::METER_CHART_COLOR_IDX)),
+            'pointHighlightFill'   => '#fff',
+            'pointHighlightStroke' => '#bbb',
+            'data'                 => array()
+        );
+
+        foreach($distanceTraveledByPeriod as $dtbp) {
+            $return['datasets'][0]['data'][] = array(
+                'x' => $dtbp['date']->getTimestamp(),
+                'y' => $dtbp['distance']
+            );
+        }
+        return $return;
+    }
+
     public static function getConsumptionData(Xhb $xhb, \DatePeriod $period, $categoryIds) {
         $vehicleCostReport = new \Xhb\Model\Report\VehicleCost($xhb);
         $consumptionData = $vehicleCostReport->getPeriodConsumptionData($period, $categoryIds);
