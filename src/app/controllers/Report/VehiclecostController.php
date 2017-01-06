@@ -11,6 +11,7 @@ namespace app\controllers\Report;
 use app\controllers\WhbController;
 use app\helpers\whb\Chart;
 use app\helpers\whb\VehicleCost;
+use app\models\core\Chart\Bar;
 use app\models\core\Main;
 use app\models\whb\Chart\Scatter;
 use app\models\core\Design;
@@ -61,7 +62,7 @@ class VehiclecostController extends WhbController
         ));
         $filters['period'] = $periodFilter;
 
-        Design::instance()->addJs('chartjs/Chart.min.js')
+        Design::instance()->addJs('chartjs/Chart.js')
             ->addJs('chartjs/Chart.Scatter.js');    //FIXME Scale is buggy with minified JS
         $this->getView()
             ->setBlockTemplate('toolbar', 'common/toolbar.phtml')
@@ -95,7 +96,7 @@ class VehiclecostController extends WhbController
                 'class'       => 'toolbar-top-right',
                 'show_legend' => false,
             )))
-            ->setData('DISTANCE_TRAVELED_BY_PERIOD_CHART', new Scatter(array(
+            ->setData('DISTANCE_TRAVELED_BY_PERIOD_CHART', new Bar(array(
                 'id'          => 'distanceTraveledByPeriodChart',
                 'title'       => 'Distance Traveled by Period',
                 'data_url'    => $this->getUrl('*/distanceTraveledByPeriodChartData', array('_query' => '*')),

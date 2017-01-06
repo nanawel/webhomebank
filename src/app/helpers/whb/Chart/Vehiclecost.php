@@ -89,17 +89,15 @@ class Vehiclecost
         $return['datasets'][0] = array(
             'label'                => I18n::instance()->tr('Distance Traveled by Period'),
             'strokeColor'          => Output::rgbToCss(Chart::getColor(self::METER_CHART_COLOR_IDX)),
-            'pointColor'           => Output::rgbToCss(Chart::getColor(self::METER_CHART_COLOR_IDX)),
-            'pointHighlightFill'   => '#fff',
-            'pointHighlightStroke' => '#bbb',
+            'fillColor'            => Output::rgbToCss(Chart::getColor(self::METER_CHART_COLOR_IDX)),
+            'highlightFill'        => '#fff',
+            'highlightStroke'      => '#bbb',
             'data'                 => array()
         );
 
         foreach($distanceTraveledByPeriod as $dtbp) {
-            $return['datasets'][0]['data'][] = array(
-                'x' => $dtbp['date']->getTimestamp(),
-                'y' => $dtbp['distance']
-            );
+            $return['labels'][] = $dtbp['date']->getTimestamp();
+            $return['datasets'][0]['data'][] = $dtbp['distance'];
         }
         return $return;
     }
