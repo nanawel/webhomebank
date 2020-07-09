@@ -7,7 +7,7 @@ Please visit [http://homebank.free.fr/]([http://homebank.free.fr/]) for more inf
 
 # Demo
 
-An online demo is available at [http://webhomebank-demo.dyndns.org/](http://webhomebank-demo.dyndns.org/), check it out!
+~An online demo is available at <http://webhomebank-demo.dyndns.org/>, check it out!~ **Demo is offline as of June 2020**
 
 Notice: it uses the example XHB file provided by HomeBank, with operations dated between 2003 and 2004. As a consequence,
 some filters based on current date might not seem really relevant...
