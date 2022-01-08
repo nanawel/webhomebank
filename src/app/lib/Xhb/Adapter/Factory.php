@@ -3,7 +3,7 @@
 namespace Xhb\Adapter;
 
 use Xhb\Adapter\Db\Sqlite;
-use Zend\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\Adapter;
 
 class Factory
 {

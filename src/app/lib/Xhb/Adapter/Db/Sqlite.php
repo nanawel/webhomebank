@@ -1,17 +1,11 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anael
- * Date: 28/06/16
- * Time: 13:21
- */
 
 namespace Xhb\Adapter\Db;
 
 
 use Xhb\Adapter\Db;
 use Xhb\Model\Resource\Db\Xhb;
-use Zend\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\Adapter;
 
 class Sqlite extends Db
 {

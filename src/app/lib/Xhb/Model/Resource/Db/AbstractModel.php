@@ -11,12 +11,12 @@ namespace Xhb\Model\Resource\Db;
 use DB\SQL;
 use Xhb\Model\Resource\Iface\Model as ResourceModel;
 use Xhb\Util\MagicObject;
-use Zend\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\Adapter;
 
 /**
  * Class AbstractModel
  *
- * @method \Zend\Db\Adapter\Adapter getConnection()
+ * @method \Laminas\Db\Adapter\Adapter getConnection()
  * @method \Xhb\Model\Xhb getXhb()
  *
  * @package Xhb\Model\Resource\Db
@@ -42,7 +42,7 @@ abstract class AbstractModel extends MagicObject implements ResourceModel
     }
 
     /**
-     * @return \Zend\Db\Adapter\Adapter
+     * @return \Laminas\Db\Adapter\Adapter
      */
     public function getDb() {
         if (! $db = $this->getData('db')) {
@@ -52,11 +52,11 @@ abstract class AbstractModel extends MagicObject implements ResourceModel
     }
 
     /**
-     * @return \Zend\Db\Sql\Sql
+     * @return \Laminas\Db\Sql\Sql
      */
     public function getSql() {
         if (!$this->getData('sql')) {
-            $this->setSql(new \Zend\Db\Sql\Sql($this->getDb(), $this->_mainTable));
+            $this->setSql(new \Laminas\Db\Sql\Sql($this->getDb(), $this->_mainTable));
         }
         return $this->getData('sql');
     }

@@ -7,19 +7,16 @@
         {
             "name": "Anael Ollier",
             "email": "nanawel@gmail.com",
-            "homepage": "http://www.lanterne-rouge.info/",
+            "homepage": "https://lanterne-rouge.info/",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": ">=5.5.0",
-        "bcosca/fatfree-core": "3.5.*",
-        "zendframework/zend-db": "2.5.1",
+        "php": "~7.3",
+        "bcosca/fatfree-core": "^3.7.3",
+        "laminas/laminas-db": "2.13.4",
         "nanawel/zend-db-sql-insertmultiple": "dev-master"
 
-    },
-    "suggest": {
-        "php": ">=5.5.0"
     },
     "repositories": [
         {

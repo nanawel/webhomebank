@@ -1,38 +1,33 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anael
- * Date: 27/08/15
- * Time: 11:28
- */
 
 namespace Xhb\Adapter;
 
+use app\models\core\Log;
 use DB\SQL;
 use Xhb\Model\Resource\Db\Account;
 use Xhb\Model\Resource\Db\Category;
 use Xhb\Model\Resource\Db\Operation;
 use Xhb\Model\Resource\Db\Payee;
 use Xhb\Model\Resource\Db\Xhb;
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\Metadata\Metadata;
-use Zend\Db\Sql\Ddl\Column\Column;
-use Zend\Db\Sql\Ddl\Column\Date;
-use Zend\Db\Sql\Ddl\Column\Floating;
-use Zend\Db\Sql\Ddl\Column\Integer;
-use Zend\Db\Sql\Ddl\Column\Timestamp;
-use Zend\Db\Sql\Ddl\Column\Varchar;
-use Zend\Db\Sql\Ddl\Constraint\ForeignKey;
-use Zend\Db\Sql\Ddl\Constraint\PrimaryKey;
-use Zend\Db\Sql\Ddl\CreateTable;
-use Zend\Db\Sql\Ddl\DropTable;
-use Zend\Db\Sql\Ddl\Index\Index;
-use Zend\Db\Sql\Delete;
-use Zend\Db\Sql\Insert;
-use Zend\Db\Sql\InsertMultiple;
-use Zend\Db\TableGateway\TableGateway;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Metadata\Metadata;
+use Laminas\Db\Sql\Ddl\Column\Column;
+use Laminas\Db\Sql\Ddl\Column\Date;
+use Laminas\Db\Sql\Ddl\Column\Floating;
+use Laminas\Db\Sql\Ddl\Column\Integer;
+use Laminas\Db\Sql\Ddl\Column\Timestamp;
+use Laminas\Db\Sql\Ddl\Column\Varchar;
+use Laminas\Db\Sql\Ddl\Constraint\ForeignKey;
+use Laminas\Db\Sql\Ddl\Constraint\PrimaryKey;
+use Laminas\Db\Sql\Ddl\CreateTable;
+use Laminas\Db\Sql\Ddl\DropTable;
+use Laminas\Db\Sql\Ddl\Index\Index;
+use Laminas\Db\Sql\Delete;
+use Laminas\Db\Sql\Insert;
+use Laminas\Db\Sql\InsertMultiple;
+use Laminas\Db\TableGateway\TableGateway;
 
-class Db
+class Db implements AdapterInterface
 {
     public static $TABLES = array(
         Xhb::MAIN_TABLE,
@@ -43,17 +38,17 @@ class Db
     );
 
     /**
-     * @var \Zend\Db\Adapter\Adapter
+     * @var \Laminas\Db\Adapter\Adapter
      */
     protected $_db;
 
     /**
-     * @var \Zend\Db\Sql\Sql
+     * @var \Laminas\Db\Sql\Sql
      */
     protected $_sql;
 
     /**
-     * @var \Zend\Db\Metadata\Metadata
+     * @var \Laminas\Db\Metadata\Metadata
      */
     protected $_metadata;
 
@@ -67,8 +62,8 @@ class Db
             throw new \Exception('Missing DB config');
         }
         $this->_db = new Adapter($config['db']);
-        $this->_sql = new \Zend\Db\Sql\Sql($this->_db);
-        $this->_metadata = new \Zend\Db\Metadata\Metadata($this->_db);
+        $this->_sql = new \Laminas\Db\Sql\Sql($this->_db);
+        $this->_metadata = new \Laminas\Db\Metadata\Metadata($this->_db);
         $this->_config = $config;
     }
 
@@ -199,8 +194,10 @@ class Db
                 ->addColumn(new Floating('minimum', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
                 ->addConstraint(new PrimaryKey(array('xhb_id', 'key')))
-                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'));
+                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
+            ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
+            $this->_createIndexes($table, ['type', 'name', 'number', 'bankname', 'updated_at']);
         }
 
         // Categories
@@ -215,8 +212,10 @@ class Db
                 ->addColumn(new Floating('b0', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
                 ->addConstraint(new PrimaryKey(array('xhb_id', 'key')))
-                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'));
+                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
+            ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
+            $this->_createIndexes($table, ['parent', 'name', 'flags', 'updated_at']);
         }
 
         // Payees
@@ -228,8 +227,10 @@ class Db
                 ->addColumn(new Varchar('name', 128))
                 ->addColumn(new Timestamp('updated_at'))
                 ->addConstraint(new PrimaryKey(array('xhb_id', 'key')))
-                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'));
+                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
+            ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
+            $this->_createIndexes($table, ['name', 'updated_at']);
         }
 
         // Operations
@@ -258,8 +259,13 @@ class Db
                 ->addColumn(new Floating('general_balance', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
                 ->addConstraint(new PrimaryKey(array('xhb_id', 'id')))
-                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'));
+                ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
+            ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
+            $this->_createIndexes($table, [
+                'date', 'account', 'info', 'amount', 'dst_account', 'st',
+                'flags', 'wording', 'tags', 'scat', 'smem', 'updated_at'
+            ]);
         }
 
         // Operations - Split amount
@@ -272,8 +278,10 @@ class Db
                 ->addColumn(new Integer('category', true))
                 ->addColumn(new Varchar('wording', 128, true))
                 ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
-                ->addConstraint(new ForeignKey('FK_OPERATION_ID', 'operation_id', Operation::MAIN_TABLE, 'id'));
+                ->addConstraint(new ForeignKey('FK_OPERATION_ID', 'operation_id', Operation::MAIN_TABLE, 'id'))
+            ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
+            $this->_createIndexes($table, ['amount', 'category', 'wording']);
         }
     }
 
@@ -308,5 +316,16 @@ class Db
         }
         $sql = $this->_sql->buildSqlString($insertStmt);
         $this->_db->query($sql, Adapter::QUERY_MODE_EXECUTE);
+    }
+
+    protected function _createIndexes($table, array $columns) {
+        foreach ($columns as $column) {
+            $this->_db->query(sprintf(
+                'CREATE INDEX %s ON %s(%s)',
+                "{$table}_{$column}_IDX",
+                $table,
+                is_array($column) ? implode(', ', $column) : $column
+            ), Adapter::QUERY_MODE_EXECUTE);
+        }
     }
 }

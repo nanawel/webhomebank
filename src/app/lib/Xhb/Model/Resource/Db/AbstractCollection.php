@@ -8,35 +8,42 @@
 
 namespace Xhb\Model\Resource\Db;
 
+use app\models\core\Log;
+use Laminas\Db\Adapter\Profiler\Profiler;
 use Xhb\Model\Resource\Closure;
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\Sql\Predicate\In;
-use Zend\Db\Sql\Predicate\IsNull;
-use Zend\Db\Sql\Predicate\Like;
-use Zend\Db\Sql\Predicate\NotIn;
-use Zend\Db\Sql\Predicate\NotLike;
-use Zend\Db\Sql\Predicate\Operator;
-use Zend\Db\Sql\Predicate\Predicate;
-use Zend\Db\Sql\Select;
+use Laminas\Db\Adapter\Adapter;
+use Laminas\Db\Sql\Predicate\In;
+use Laminas\Db\Sql\Predicate\IsNull;
+use Laminas\Db\Sql\Predicate\Like;
+use Laminas\Db\Sql\Predicate\NotIn;
+use Laminas\Db\Sql\Predicate\NotLike;
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Predicate\Predicate;
+use Laminas\Db\Sql\Select;
 
 /**
  * Class AbstractCollection
  *
  * Default in-memory collection implementation.
  *
- * @method \Zend\Db\Adapter\Adapter getConnection()
+ * @method \Laminas\Db\Adapter\Adapter getConnection()
  *
  * @package Xhb\Model\Resource
  */
 abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
 {
     /**
+     * @var Profiler
+     */
+    protected static $_profiler;
+
+    /**
      * @var string
      */
     protected $_table;
 
     /**
-     * @var \Zend\Db\Sql\Select
+     * @var \Laminas\Db\Sql\Select
      */
     protected $_select;
 
@@ -61,7 +68,7 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
     }
 
     /**
-     * @return \Zend\Db\Adapter\Adapter
+     * @return \Laminas\Db\Adapter\Adapter
      */
     public function getDb() {
         if (! $db = $this->getData('db')) {
@@ -71,11 +78,11 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
     }
 
     /**
-     * @return \Zend\Db\Sql\Sql
+     * @return \Laminas\Db\Sql\Sql
      */
     public function getSql() {
         if (!$this->getData('sql')) {
-            $this->setSql(new \Zend\Db\Sql\Sql($this->getDb(), $this->_mainTable));
+            $this->setSql(new \Laminas\Db\Sql\Sql($this->getDb(), $this->_mainTable));
         }
         return $this->getData('sql');
     }
@@ -85,7 +92,7 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
     }
 
     /**
-     * @return \Zend\Db\Sql\Select
+     * @return \Laminas\Db\Sql\Select
      */
     public function getSelect() {
         $this->_select->columns($this->_columns);
@@ -124,7 +131,12 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
         if ($this->hasData('sql_dumper') && is_callable($dumper = $this->getData('sql_dumper'))) {
             call_user_func($dumper, $sql);
         }
+        self::getProfiler()->profilerStart($sql);
         $items = $this->getDb()->query($sql, Adapter::QUERY_MODE_EXECUTE);
+        self::getProfiler()->profilerFinish();
+
+        //Log::instance()->log(print_r(self::getProfiler()->getLastProfile(), true), LOG_DEBUG);
+
         return $items->toArray();
     }
 
@@ -241,5 +253,13 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
             $this->_select->limit($this->_limit);
         }
         return $this;
+    }
+
+    protected static function getProfiler() {
+        if (!self::$_profiler) {
+            self::$_profiler = new Profiler();
+        }
+
+        return self::$_profiler;
     }
 }

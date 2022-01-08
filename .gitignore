@@ -1,10 +1,11 @@
 .idea
+.env
 .svn
 export
 *.sh
 Dockerfile-*
+docker-compose.override.yml
 resources/*.xhb
-src/composer.lock
 src/test.php
 src/app/vendor
 src/etc/local.ini

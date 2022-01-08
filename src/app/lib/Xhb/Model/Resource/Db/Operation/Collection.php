@@ -11,11 +11,11 @@ namespace Xhb\Model\Resource\Db\Operation;
 use Xhb\Model\Resource\Db\Category;
 use Xhb\Model\Resource\Db\Operation;
 use Xhb\Model\Resource\Db\XhbCollection;
-use Zend\Db\Sql\Expression;
-use Zend\Db\Sql\Predicate\Operator;
-use Zend\Db\Sql\Predicate\Predicate;
-use Zend\Db\Sql\Predicate\PredicateSet;
-use Zend\Db\Sql\Select;
+use Laminas\Db\Sql\Expression;
+use Laminas\Db\Sql\Predicate\Operator;
+use Laminas\Db\Sql\Predicate\Predicate;
+use Laminas\Db\Sql\Predicate\PredicateSet;
+use Laminas\Db\Sql\Select;
 
 class Collection extends XhbCollection implements \Xhb\Model\Resource\Iface\Operation\Collection
 {

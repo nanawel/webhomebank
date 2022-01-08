@@ -15,7 +15,7 @@ use app\models\whb\Xhb\Adapter as XhbAdapter;
 use DB\SQL;
 use Xhb\Adapter\Db\Sqlite;
 use Xhb\Adapter\Db;
-use Zend\Db\Adapter\Adapter;
+use Laminas\Db\Adapter\Adapter;
 
 class Xhb extends Session
 {

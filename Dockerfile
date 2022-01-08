@@ -17,13 +17,13 @@
 # NOTICE: The .xhb file must be readable on the host by the UID the webserver of the container uses (www-data => UID 33).
 #
 
-FROM php:7-apache
+FROM php:7.4-apache-buster
 
 RUN apt-get update && apt-get install -y \
         nano \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
-        libpng12-dev \
+        libpng-dev \
         libicu-dev
 RUN docker-php-ext-install -j$(nproc) gd
 RUN docker-php-ext-install -j$(nproc) intl
@@ -36,7 +36,7 @@ RUN a2enmod rewrite
 RUN a2enmod deflate
 RUN a2enmod expires
 
-COPY resources/php.ini /usr/local/etc/php/
+COPY resources/php.ini /usr/local/etc/php/conf.d/zz-webhomebank.ini
 COPY src/ /var/www/html/
 
 RUN mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini

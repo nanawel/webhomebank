@@ -3,6 +3,14 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 
+## [1.1.0] - 2022-01-08
+
+### Added
+- Upgraded to PHP 7.4
+- Migrated from zend-db to laminas-db
+- Bump bcosca/fatfree-core to 3.7.3
+- Added indexes on main columns
+
 ## [1.1.0] - 2016-07-07
 ### Added
 - New "Settings" menu that allows selecting language/currency/theme for the current session

@@ -10,7 +10,7 @@ namespace Xhb\Model\Resource\Db\Operation;
 
 
 use Xhb\Model\Resource\Db\AbstractModel;
-use Zend\Db\Sql\Expression;
+use Laminas\Db\Sql\Expression;
 
 class Calculator extends AbstractModel
 {
