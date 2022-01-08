@@ -171,7 +171,7 @@ abstract class AbstractController
      * @param string $template
      */
     public function setPageConfig($config) {
-        $this->getView()->setBlockConfig(self::PAGE_BLOCK_NAME, null, $config);
+        $this->getView()->setBlockConfig(self::PAGE_BLOCK_NAME, $config);
         return $this;
     }
 
@@ -317,7 +317,8 @@ abstract class AbstractController
 
     protected function _getRequestCacheKeyInfo() {
         return array(
-            $this->_fw->get('REALM')
+            $this->_fw->get('REALM'),
+            $this->getSession()->getLocale()
         );
     }
 
@@ -384,9 +385,16 @@ abstract class AbstractController
         return $this;
     }
 
-    protected function _redirectReferer() {
+    protected function _getReferer() {
         $referrer = $this->_fw->get('SERVER.HTTP_REFERER');
         if ($referrer && $referrer != $this->_fw->get('REALM')) {
+            return $referrer;
+        }
+        return null;
+    }
+
+    protected function _redirectReferer() {
+        if ($referrer = $this->_getReferer()) {
             $this->_rerouteUrl($referrer);
         }
         else {

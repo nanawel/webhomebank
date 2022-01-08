@@ -8,18 +8,6 @@
 
 namespace app\controllers;
 
-use app\helpers\core\Output;
-use app\helpers\whb\AccountOperation;
-use app\helpers\whb\Chart;
-use app\models\core\Chart\Donut;
-use app\models\whb\Chart\Scatter;
-use app\models\core\Design;
-use app\models\core\I18n;
-use app\models\whb\Form\Element\PeriodFilter;
-use xhb\models\Constants;
-use xhb\models\Operation\Collection;
-use xhb\models\Xhb\DateHelper;
-
 class SettingsController extends WhbController
 {
     public function setCurrencyAction() {
@@ -32,6 +20,13 @@ class SettingsController extends WhbController
     public function setLocaleAction() {
         $locale = $this->getRequestQuery('code');
         $this->getSession()->setLocale($locale);
+
+        $this->_redirectReferer();
+    }
+
+    public function setThemeAction() {
+        $theme = $this->getRequestQuery('code');
+        $this->getSession()->setTheme($theme);
 
         $this->_redirectReferer();
     }

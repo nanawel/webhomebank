@@ -59,9 +59,9 @@ class View extends \View
     }
 
 
-    public function setBlockConfig($blockName, $configKey, $value) {
-        if ($configKey === null) {
-            \Base::instance()->set(self::BLOCK_KEY_PREFIX . $blockName, $value);
+    public function setBlockConfig($blockName, $configKey, $value = null) {
+        if ($value === null) {
+            \Base::instance()->set(self::BLOCK_KEY_PREFIX . $blockName, $configKey);
         }
         else {
             \Base::instance()->set(self::BLOCK_KEY_PREFIX . $blockName . '.' . $configKey, $value);

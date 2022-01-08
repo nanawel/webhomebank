@@ -11,11 +11,11 @@ namespace app\helpers\whb\Chart;
 use app\helpers\core\Output;
 use app\helpers\whb\Chart;
 use app\models\core\I18n;
-use xhb\models\Constants;
-use xhb\models\Operation\Calculator;
-use xhb\models\Operation\Collection;
-use xhb\models\Xhb;
-use xhb\models\Resource\AbstractCollection;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation\Calculator;
+use Xhb\Model\Operation\Collection;
+use Xhb\Model\Xhb;
+use Xhb\Model\Resource\AbstractCollection;
 
 class Vehiclecost
 {
@@ -24,7 +24,7 @@ class Vehiclecost
     const CONSUMPTION_CHART_COLOR_IDX = 6;
 
     public static function getFuelPriceData(Xhb $xhb, \DatePeriod $period, $categoryIds) {
-        $vehicleCostReport = new \xhb\models\Report\VehicleCost($xhb);
+        $vehicleCostReport = new \Xhb\Model\Report\VehicleCost($xhb);
         $consumptionData = $vehicleCostReport->getPeriodConsumptionData($period, $categoryIds);
 
         $return = array(
@@ -51,7 +51,7 @@ class Vehiclecost
     }
 
     public static function getDistanceTraveledData(Xhb $xhb, \DatePeriod $period, $categoryIds) {
-        $vehicleCostReport = new \xhb\models\Report\VehicleCost($xhb);
+        $vehicleCostReport = new \Xhb\Model\Report\VehicleCost($xhb);
         $consumptionData = $vehicleCostReport->getPeriodConsumptionData($period, $categoryIds);
 
         $return = array(
@@ -77,8 +77,33 @@ class Vehiclecost
         return $return;
     }
 
+    public static function getDistanceTraveledByPeriodData(Xhb $xhb, \DatePeriod $period, $categoryIds) {
+        $vehicleCostReport = new \Xhb\Model\Report\VehicleCost($xhb);
+        $distanceTraveledByPeriod = $vehicleCostReport->getDistanceTraveledByPeriod($period, $categoryIds);
+
+        $return = array(
+            'labels'   => array(),
+            'datasets' => array()
+        );
+
+        $return['datasets'][0] = array(
+            'label'                => I18n::instance()->tr('Distance Traveled by Period'),
+            'strokeColor'          => Output::rgbToCss(Chart::getColor(self::METER_CHART_COLOR_IDX)),
+            'fillColor'            => Output::rgbToCss(Chart::getColor(self::METER_CHART_COLOR_IDX)),
+            'highlightFill'        => '#fff',
+            'highlightStroke'      => '#bbb',
+            'data'                 => array()
+        );
+
+        foreach($distanceTraveledByPeriod as $dtbp) {
+            $return['labels'][] = $dtbp['date']->getTimestamp();
+            $return['datasets'][0]['data'][] = $dtbp['distance'];
+        }
+        return $return;
+    }
+
     public static function getConsumptionData(Xhb $xhb, \DatePeriod $period, $categoryIds) {
-        $vehicleCostReport = new \xhb\models\Report\VehicleCost($xhb);
+        $vehicleCostReport = new \Xhb\Model\Report\VehicleCost($xhb);
         $consumptionData = $vehicleCostReport->getPeriodConsumptionData($period, $categoryIds);
 
         $return = array(

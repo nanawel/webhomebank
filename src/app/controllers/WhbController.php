@@ -19,16 +19,18 @@ class WhbController extends AbstractController
         parent::_beforeRoute($fw, $args);
         $this->_viewInstance = View::instance();
 
-        $xhbSession = $this->getXhbSession();
-        $xhbSession->set('xhb_file', $fw->get('app.BUDGET_FILE'));
+        if (!$this->getXhbSession()->isModelLoaded()) {
+            $this->_reroute('/init/load');
+            return false;
+        }
 
-        $xhb = $xhbSession->getModel();
+        $xhb = $this->getXhbSession()->getModel();
         $this->setPageTitle($xhb->getTitle());
 
         Design::instance()
             ->addJs('jquery/jquery-2.1.4.min.js', 'header', -100)
             ->addJs('whb/i18n.js')
-            ->addInlineJs("var LANGUAGE='{$fw->get('LANGUAGE')}';\nvar CURRENCY='{$xhbSession->getCurrencyCode()}';\nvar i18n = new I18n(LANGUAGE, CURRENCY);");
+            ->addInlineJs("var LANGUAGE='{$fw->get('LANGUAGE')}';\nvar CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';\nvar i18n = new I18n(LANGUAGE, CURRENCY);");
 
         $this->_setupLayoutBlocks();
     }
@@ -67,6 +69,9 @@ class WhbController extends AbstractController
         $cacheKeyInfo = parent::_getRequestCacheKeyInfo();
         $cacheKeyInfo[] = $this->getXhbSession()->getId();
         $cacheKeyInfo[] = $this->getXhbSession()->getModel()->getUniqueKey();
+        $cacheKeyInfo[] = $this->getXhbSession()->getCurrencyCode();
+        $cacheKeyInfo[] = $this->getSession()->getTheme();
+        $cacheKeyInfo[] = $this->getSession()->getLocale();
         return $cacheKeyInfo;
     }
 }

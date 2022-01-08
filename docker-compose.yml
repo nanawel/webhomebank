@@ -1,0 +1,13 @@
+
+version: '3.2'
+
+services:
+  app:
+    image: ${DOCKER_IMAGE:-nanawel/webhomebank}
+    build:
+      context: './'
+    restart: unless-stopped
+    ports:
+      - '${HOST_PORT:-49080}:80'
+    volumes:
+      - ${BUDGET_FILE}:/budget.xhb:ro

@@ -9,8 +9,8 @@
 namespace app\models\whb\Form\Element;
 
 use app\models\core\Form\Element\Select;
-use xhb\models\Category;
-use xhb\models\Xhb;
+use Xhb\Model\Category;
+use Xhb\Model\Xhb;
 
 class CategoryFilter extends Select implements IWhbElement
 {

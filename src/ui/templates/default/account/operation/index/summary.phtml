@@ -1,5 +1,5 @@
 <?php
-/* @var $account \xhb\models\Account */
+/* @var $account \Xhb\Model\Account */
 $account = \Base::instance()->get('current_account');
 ?>
 <div class="account-balance-summary">
@@ -15,6 +15,5 @@ $account = \Base::instance()->get('current_account');
         <label class="label"><?php echo $this->__('Future: ') ?></label>
         <span class="value balance future-balance last"><?php echo $this->i18n()->currency($account->getFutureBalance(), true) ?></span>
     </div>
-    </ul>
 </div>
 

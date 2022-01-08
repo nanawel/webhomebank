@@ -1,13 +1,9 @@
 [![WebHomeBank](src/ui/themes/default/images/logo.png)](http://https://github.com/nanawel/webhomebank/)
 
-A simple web-viewer for Homebank XML files. HomeBank is a free software that will assist you to manage your personal
-accounting, released under the GPL v2 license.
+A simple web-viewer for Homebank XML files. HomeBank is a free software developed by Maxime Doyen that will assist you
+to manage your personal accounting, released under the GPL v2 license.
 
 Please visit [http://homebank.free.fr/]([http://homebank.free.fr/]) for more information about the original software.
-
-# Demo
-
-An online demo is available at [http://webhomebank-demo.sloppy.zone/](http://webhomebank-demo.sloppy.zone/), check it out!
 
 # Previews
 
@@ -43,7 +39,7 @@ Requirements:
 (should also work with [Lighttpd]([http://www.lighttpd.net/]) or [Nginx]([http://nginx.org/])))
 
 
- * PHP 5.5+ with the following extensions enabled:
+ * PHP 7.3+ with the following extensions enabled:
     * mcrypt
     * pdo_sqlite
     * intl
@@ -85,10 +81,10 @@ Then build the image (based on [php:5.6-apache]([https://github.com/docker-libra
 Run it (you may want to tune some settings)
 
     docker run -it --rm \
-        -p 49080:80 \                                                       # App will be available from host at localhost:49080
-        -v /home/myuser/mybudget.xhb:/var/www/html/data/userfile.xhb:ro \   # Replace first part with the path to your .xhb file
-        --name my-webhomebank \                                             # Name of the new container
-        webhomebank                                                         # Name of the image (above in the build command)
+        -p 49080:80 \                                     # App will be available from host at localhost:49080
+        -v /home/myuser/mybudget.xhb:/budget.xhb:ro \     # Replace first part with the path to your .xhb file
+        --name my-webhomebank \                           # Name of the new container
+        webhomebank                                       # Name of the image (above in the build command)
 
 **Notice (1):** The .xhb file must be readable on the host by the UID the webserver of the container uses (www-data: UID 33).
 
@@ -150,6 +146,8 @@ See LICENSE
 
 - [Grunt](http://gruntjs.com/) (MIT license)
 
+The "loading pie" has been created with [loading.io](http://loading.io/)
+
 # Legal Notice
 
-Copyright (c) 2015 Anaël Ollier &lt;nanawel&#64;gmail&#46;com&gt;
+Copyright (c) 2015-2022 Anaël Ollier &lt;nanawel+DONT.SPAM.ME&#64;gmail&#46;com&gt;

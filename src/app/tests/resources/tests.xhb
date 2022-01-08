@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<homebank v="1.1000000000000001" d="050005">
+<properties title="John Money" car_category="1" auto_smode="1" auto_weekday="1" />
+<account key="1" pos="1" name="Cheque Account" number="01548726554" bankname="Amiga Universal Bank" initial="76.219999999999999" minimum="-30.489999999999998" cheque1="8760951" />
+<account key="2" pos="2" name="Savings Account" number="01524872652" bankname="Amiga Universal Bank" initial="658.78000000000009" minimum="0" />
+<pay key="1" name="Amazon"/>
+<pay key="2" name="Amiga Tech"/>
+<pay key="3" name="Auchan"/>
+<pay key="4" name="Buffalo"/>
+<pay key="5" name="Carrefour"/>
+<pay key="6" name="CIL"/>
+<pay key="7" name="Elf"/>
+<pay key="8" name="Free"/>
+<pay key="9" name="FT"/>
+<pay key="10" name="Gemo"/>
+<pay key="11" name="Gouv"/>
+<pay key="12" name="Jericho"/>
+<pay key="13" name="La redoute"/>
+<pay key="14" name="Lidl"/>
+<pay key="15" name="Mamut"/>
+<pay key="16" name="Me"/>
+<pay key="17" name="Pharmacy"/>
+<pay key="18" name="SFR"/>
+<pay key="19" name="Tokyo"/>
+<pay key="20" name="TSB"/>
+<pay key="21" name="Weynants"/>
+<cat key="1" name="Car" />
+<cat key="2" parent="1" flags="1" name="Fuel" />
+<cat key="3" parent="1" flags="1" name="Maintenance/Repairs" />
+<cat key="4" parent="1" flags="1" name="Refunding of pret" />
+<cat key="5" name="Clothing" />
+<cat key="6" name="Computer" />
+<cat key="7" name="Domestic animals" />
+<cat key="8" parent="7" flags="1" name="Food" />
+<cat key="10" parent="7" flags="1" name="Veterinary surgeon" />
+<cat key="9" parent="7" flags="1" name="Supplies" />
+<cat key="11" name="Food" />
+<cat key="12" parent="11" flags="9" name="Grocer" b0="-40" />
+<cat key="13" parent="11" flags="1" name="Restaurant" />
+<cat key="14" name="Gifts" />
+<cat key="15" name="Hairdresser" />
+<cat key="16" name="Health" />
+<cat key="18" parent="16" flags="1" name="Hospital" />
+<cat key="20" parent="16" flags="1" name="Specialist" />
+<cat key="19" parent="16" flags="1" name="Pharmacy" />
+<cat key="17" parent="16" flags="1" name="Doctor" />
+<cat key="21" name="Holidays" />
+<cat key="22" parent="21" flags="1" name="Housing" />
+<cat key="23" parent="21" flags="1" name="Travel" />
+<cat key="24" name="Insurance" />
+<cat key="27" parent="24" flags="1" name="Dwelling" />
+<cat key="29" parent="24" flags="1" name="Mutual insurance company" />
+<cat key="28" parent="24" flags="1" name="Life" />
+<cat key="25" parent="24" flags="1" name="Car" />
+<cat key="26" parent="24" flags="1" name="Civil liability" />
+<cat key="30" name="Invoices" />
+<cat key="31" parent="30" flags="1" name="Electricity" />
+<cat key="33" parent="30" flags="1" name="Housing" />
+<cat key="37" parent="30" flags="1" name="Water" />
+<cat key="36" parent="30" flags="1" name="Telephone" />
+<cat key="35" parent="30" flags="9" name="Portable" b0="-17.5" />
+<cat key="34" parent="30" flags="9" name="In line service/Internet" b0="-30" />
+<cat key="32" parent="30" flags="1" name="Heating" />
+<cat key="38" name="Leisures/culture" />
+<cat key="39" name="Loan" />
+<cat key="40" parent="39" flags="1" name="Capital" />
+<cat key="41" name="Miscellaneous" />
+<cat key="42" name="Professional expenses" />
+<cat key="43" parent="42" flags="1" name="Refunded" />
+<cat key="44" name="Taxes" />
+<cat key="45" parent="44" flags="9" name="Income taxes" b0="-149" />
+<cat key="47" parent="44" flags="1" name="Rates" />
+<cat key="46" parent="44" flags="1" name="Other taxes" />
+<cat key="48" name="Transport" />
+<cat key="49" flags="8" name="Withdrawal of cash" b0="-5" />
+<cat key="50" flags="2" name="Incomes of placement" />
+<cat key="51" parent="50" flags="3" name="Interests" />
+<cat key="52" flags="2" name="Other incomes" />
+<cat key="53" parent="52" flags="3" name="Capital of received loan" />
+<cat key="54" parent="52" flags="3" name="Family benefits" />
+<cat key="55" flags="2" name="Treatments and wages" />
+<cat key="57" parent="55" flags="3" name="Take-home pay" />
+<cat key="58" parent="55" flags="3" name="Various premiums" />
+<cat key="56" parent="55" flags="3" name="Premiums result" />
+<fav amount="371.79000000000002" account="1" paymode="4" flags="2" wording="Amiga Technologies" nextdate="731341" every="1" unit="2" />
+<fav amount="-3.0499999999999998" account="1" paymode="3" wording="Cash" nextdate="731341" every="1" unit="2" />
+<fav amount="-66.469999999999999" account="1" paymode="2" wording="Home sweet home" nextdate="731341" every="1" unit="2" />
+<fav amount="0" account="1" paymode="1" flags="2" wording="Refuel (d= v=)" nextdate="731341" every="1" unit="2" />
+<fav amount="-121.95999999999999" account="1" dst_account="2" paymode="5" category="5" wording="Savings" nextdate="731341" every="1" unit="2" />
+<fav amount="-32.619999999999997" account="1" paymode="2" wording="Those stupid taxes" nextdate="731341" every="1" unit="2" />
+<ope date="731491" amount="-30" account="1" paymode="1" st="2" payee="8" category="34" wording="Internet DSL" />
+<ope date="731494" amount="-336" account="1" paymode="4" st="2" payee="15" category="1" wording="MATMUT" />
+<ope date="731495" amount="-495" account="1" paymode="2" st="2" payee="6" category="33" wording="Home sweet home" info="2569147" />
+<ope date="731496" amount="-149" account="1" paymode="4" st="2" payee="11" category="45" wording="taxes" />
+<ope date="731496" amount="-27" account="1" paymode="1" st="2" category="13" wording="Restair Brussels Airport" info="04.10" />
+<ope date="731501" amount="-40" account="1" paymode="3" st="2" payee="16" category="49" wording="Cash" />
+<ope date="731513" amount="1371" account="1" paymode="4" st="2" flags="2" payee="2" category="57" wording="Amiga Technologies" />
+<ope date="731522" amount="-64" account="1" paymode="1" st="2" payee="13" category="5" wording="La redoute (duffle)" info="31.10" />
+<ope date="731522" amount="-30" account="1" paymode="1" st="2" payee="8" category="34" wording="Internet DSL" />
+<ope date="731524" amount="-32" account="1" st="2" payee="5" category="12" wording="Carrefour" />
+<ope date="731533" amount="-14" account="1" paymode="1" st="2" category="13" wording="Pizza elena" info="12.11" />
+<ope date="731537" amount="-11" account="1" paymode="1" st="2" payee="17" category="19" wording="Pharmacy" info="17.11" />
+<ope date="731539" amount="-40" account="1" paymode="3" st="2" payee="16" category="49" wording="Cash" />
+<ope date="731544" amount="-495" account="1" paymode="2" st="2" payee="6" category="33" wording="Home sweet home" info="2569153" />
+<ope date="731544" amount="1371" account="1" paymode="4" st="2" flags="2" payee="2" category="57" wording="Amiga Technologies" />
+<ope date="731545" amount="-46" account="1" paymode="1" st="2" payee="5" category="12" wording="Carrefour" info="25.11" />
+<ope date="731547" amount="-94" account="1" paymode="1" st="2" category="6" wording="Golden gate (dd 120Go)" info="27.11" />
+<ope date="731552" amount="-30" account="1" paymode="1" st="2" payee="8" category="34" wording="Internet DSL" />
+<ope date="731555" amount="-81" account="1" paymode="1" st="2" payee="14" category="12" wording="Lidl" info="05.12" />
+<ope date="731557" amount="-25" account="1" paymode="1" st="2" payee="18" category="35" wording="SFR" info="08.12" />
+<ope date="731564" amount="-63" account="1" paymode="1" st="2" payee="4" category="13" wording="Buffalo" info="12.12" />
+<ope date="731564" amount="-21" account="1" paymode="1" st="2" payee="1" category="14" wording="Amazon (dvd ghost)" info="15.12" />
+<ope date="731569" amount="-39" account="1" paymode="1" st="2" payee="9" category="36" wording="France Telecom" info="19.12" />
+<ope date="731570" amount="-17" account="1" paymode="1" st="2" category="13" wording="Venezia" info="02.12" />
+<ope date="731571" amount="-89" account="1" paymode="1" st="2" payee="21" category="1" wording="Weynants (brakes)" info="19.12" />
+<ope date="731574" amount="-495" account="1" paymode="2" st="2" payee="6" category="33" wording="Home sweet home" info="2569155" />
+<ope date="731574" amount="1371" account="1" paymode="4" st="2" flags="2" payee="2" category="57" wording="Amiga Technologies" />
+<ope date="731575" amount="-29" account="1" paymode="1" st="2" payee="19" category="13" wording="Tokyo" info="29.12" />
+<ope date="731583" amount="-46" account="1" paymode="2" st="2" payee="20" category="6" wording="Monitor 1083S" info="8760943" />
+<ope date="731583" amount="-30" account="1" paymode="1" st="2" payee="8" category="34" wording="Internet DSL" />
+<ope date="731594" amount="-1" account="1" paymode="1" st="2" payee="7" category="1" wording="Refuel (d=92340 v=7.7)" info="12.01" />
+<ope date="731595" amount="-66" account="1" paymode="4" st="2" payee="6" category="33" wording="Home sweet home" />
+<ope date="731595" amount="-2" account="1" paymode="1" st="2" payee="7" category="1" wording="Refuel (d=92414 v=16.47)" info="14.01" />
+<ope date="731599" amount="-3" account="1" paymode="3" st="2" payee="16" category="49" wording="Cash" />
+<ope date="731602" amount="-48" account="1" paymode="2" st="2" payee="12" wording="PEAVEY Envoy 110" info="8760944" />
+<ope date="731609" amount="-8" account="1" paymode="1" st="2" payee="10" category="5" wording="Black shoes" info="26.01" />
+<ope date="731610" amount="-121.95999999999999" account="1" dst_account="2" paymode="5" st="2" wording="Savings" kxfer="2" />
+<ope date="731610" amount="-2" account="1" paymode="1" st="2" payee="7" category="1" wording="Refuel (d=92597 v=15.41)" info="30.01" />
+<ope date="731610" amount="121.95999999999999" account="2" dst_account="1" paymode="5" st="2" flags="2" wording="Savings" kxfer="2" />
+<ope date="731610" amount="1371" account="1" paymode="4" st="2" flags="2" payee="2" category="57" wording="Amiga Technologies" />
+<ope date="731614" amount="-46" account="1" paymode="2" st="2" payee="20" category="6" wording="Harddisk 420Mb" info="8760945" />
+<ope date="731614" amount="-30" account="1" paymode="1" st="2" payee="8" category="34" wording="Internet DSL" />
+<ope date="731616" amount="-46" account="1" paymode="2" st="2" payee="3" category="6" wording="Amiga 1200 Explorer" info="8760946" />
+<ope date="731625" amount="-5" account="1" paymode="1" st="2" payee="7" category="1" wording="Refuel (d=92788 v=40)" info="14.02" />
+<ope date="731626" amount="-66" account="1" paymode="4" st="2" payee="6" category="33" wording="Home sweet home" />
+<ope date="731636" amount="-3" account="1" paymode="3" st="2" payee="16" category="49" wording="Cash" />
+<ope date="731638" amount="-121.95999999999999" account="1" dst_account="2" paymode="5" st="2" wording="Savings" kxfer="4" />
+<ope date="731638" amount="121.95999999999999" account="2" dst_account="1" paymode="5" st="2" flags="2" wording="Savings" kxfer="4" />
+<ope date="731638" amount="1371" account="1" paymode="4" st="2" flags="2" payee="2" category="57" wording="Amiga Technologies" />
+<ope date="731640" amount="-10" account="1" category="2" wording="d=93000 v~32.5" />
+<ope date="731641" amount="-11" account="1" paymode="1" st="2" category="5" wording="Levis 501" info="01.03" />
+<ope date="731643" amount="-30" account="1" paymode="1" st="2" payee="8" category="34" wording="Internet DSL" />
+<ope date="731652" amount="-81" account="1" paymode="2" st="2" payee="12" wording="Korg 05R-W" info="8760947" />
+<ope date="731654" amount="-37" account="1" paymode="2" st="2" payee="12" wording="ZOOM Player 2020" info="8760948" />
+<ope date="731654" amount="-3" account="1" paymode="3" st="2" payee="16" category="49" wording="Cash" />
+<ope date="731655" amount="-66" account="1" paymode="4" st="2" payee="6" category="33" wording="Home sweet home" />
+<ope date="731655" amount="-8" account="1" category="2" wording="d=93220 v~12.8" />
+<ope date="731667" amount="1371" account="1" paymode="4" st="2" flags="2" payee="2" category="57" wording="Amiga Technologies" />
+<ope date="731668" amount="18" account="1" paymode="2" st="2" flags="2" wording="BOSS BE-5 Sold" />
+<ope date="731668" amount="-16" account="1" flags="256" scat="2||41" samt="-15||-1" smem="d=93500 v=20.9||Chewing-gums" />
+<ope date="731670" amount="-121.95999999999999" account="1" dst_account="2" paymode="5" st="2" wording="Savings" kxfer="6" />
+<ope date="731670" amount="121.95999999999999" account="2" dst_account="1" paymode="5" st="2" flags="2" wording="Savings" kxfer="6" />
+<ope date="731674" amount="-30" account="1" paymode="1" payee="8" category="34" wording="Internet DSL" />
+<ope date="731675" amount="-31" account="1" paymode="2" category="6" wording="Blizzard 1230-IV-50Mhz-8Mb" info="8760949" />
+<ope date="731676" amount="-65" account="1" paymode="2" payee="21" category="1" wording="Car repair" info="8760950" />
+<ope date="731682" amount="-16" account="1" paymode="3" wording="I Love Techno (advance)" />
+<ope date="731686" amount="-66" account="1" paymode="4" payee="6" category="22" wording="Home sweet home" />
+<ope date="731695" amount="1371" account="1" paymode="4" flags="2" payee="2" category="57" wording="Amiga Technologies" />
+</homebank>

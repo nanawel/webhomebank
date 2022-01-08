@@ -8,7 +8,7 @@
 
 namespace app\models\core\Form\Element;
 
-use xhb\util\MagicObject;
+use Xhb\Util\MagicObject;
 
 class AbstractElement extends MagicObject
 {

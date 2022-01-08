@@ -49,34 +49,18 @@ span.mono {
 .header-container {
     @extend .contain-to-grid;
 
-    .header {
-        @extend .top-bar;
-
-        .brand {
-            @extend .title-area;
-
-            div {
-                @extend .name;
-
-                h1 {
-                    display: inline-block;
-                    a { font-weight: normal; }
-                }
+    .top-bar {
+        .title-area {
+            img {
+                margin-left: 10px;
+            }
+            h1 {
+                display: inline-block;
+                a { font-weight: normal; }
             }
         }
 
         .nav-menu {
-            @extend .top-bar-section;
-            @extend .right;
-
-            li.dir {
-                @extend .has-dropdown;
-
-                ul.dir {
-                    @extend .dropdown;
-                }
-            }
-
             li.level-1 > a::before {
                 content: " ";
                 width: 24px;
@@ -211,8 +195,6 @@ input[type='text'].search {
     @include grid-row();
 
     .canvas-container {
-        @include grid-column($columns:8);
-
         position: relative;
         min-height: 300px;
         text-align: center;
@@ -222,11 +204,20 @@ input[type='text'].search {
             top: 10%;
             left: 10%;
         }
+
+        .loading-anim {
+            content: " ";
+            width: 130px;
+            height: 130px;
+            display: inline-block;
+            position: absolute;
+            top: 30%;
+            left: 40%;
+            background: transparent url(../images/loading-pie.gif) no-repeat no-repeat;
+        }
     }
 
     .toolbar {
-        @include grid-column($columns:4);
-
         .filter-label {
             @include prefix-postfix-base();
             @include prefix();
@@ -241,7 +232,7 @@ input[type='text'].search {
     }
 
     .legend {
-        @include grid-column($columns:4);
+        @include grid-column($columns:6);
 
         li {
             list-style: none;
@@ -255,6 +246,16 @@ input[type='text'].search {
         }
     }
 
+    &.toolbar-right {
+        .canvas-container {
+            @include grid-column($columns:6);
+        }
+
+        .toolbar {
+            @include grid-column($columns:6);
+        }
+    }
+
     &.toolbar-top-right {
         .toolbar {
             float: right;
@@ -263,6 +264,18 @@ input[type='text'].search {
         .canvas-container {
             clear: both;
         }
+    }
+}
+
+/*****************************************************************************/
+/*                     INIT                                                  */
+/*****************************************************************************/
+
+body.init-load {
+    .content>div {
+        margin-top: 10%;
+        margin-bottom: 10%;
+        text-align: center;
     }
 }
 
@@ -292,9 +305,9 @@ td.date, td.currency {
 
     .account-balance-summary {
         .label-value-group {
-            @include grid-column($columns:3, $float: right);
+            @include grid-column($columns:4);
 
-            label {
+            > label {
                 line-height: 1.5;
             }
         }
@@ -348,6 +361,10 @@ td.date, td.currency {
     }
     tr.paymode-directdebit td.info {
         background-image: url(../images/hicolor_status_16x16_pm-directdebit.png);
+    }
+
+    tr.future {
+        font-style: italic;
     }
 }
 

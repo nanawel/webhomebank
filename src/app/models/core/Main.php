@@ -19,7 +19,6 @@ class Main extends \Prefab
 
         // more to come...
 
-        self::app()->setup();
         return $this;
     }
 
@@ -40,6 +39,7 @@ class Main extends \Prefab
                 throw new \Exception('Missing app.APP_CLASS in configuration');
             }
             self::$_app = new $appClass();
+            self::$_app->setup();
         }
         return self::$_app;
     }

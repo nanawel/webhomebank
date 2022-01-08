@@ -11,6 +11,12 @@ return array(
         => "It seems you're using the default <span class=\"mono\">example.xhb</span> file. You may want to change it by editing <span class=\"mono\">etc/local.ini</span>.",
     'XHB imported to database successfully!' => 'XHB imported to database successfully!',
 
+    'Loading XHB, please wait...' => 'Loading XHB, please wait...',
+    'Success, redirecting...' => 'Success, redirecting...',
+    'Oops! Something went wrong: ' => 'Oops! Something went wrong: ',
+    'Error! Try to reload the page.' => 'Error! Try to reload the page.',
+    'XHB imported to database successfully!' => 'XHB imported to database successfully!',
+
     'Where your money goes' => 'Where your money goes',
     'No data for this period' => 'No data for this period',
     'Other' => 'Other',
@@ -37,7 +43,7 @@ return array(
     'Last 30 Days' => 'Last 30 Days',
     'Last 60 Days' => 'Last 60 Days',
     'Last 90 Days' => 'Last 90 Days',
-    'Last 120 Days' => 'Last 120 Days',
+    'Last 12 Months' => 'Last 12 Months',
     'All Date' => 'All Date',
 
     'Type' => 'Type',
@@ -75,6 +81,9 @@ return array(
 
     'Account Operations' => 'Account Operations',
     'Vehicle Cost' => 'Vehicle Cost',
+    'Settings' => 'Settings',
+    'Locale' => 'Locale',
+    'Currency' => 'Currency',
 
     'Vehicle Cost Report' => 'Vehicle Cost Report',
     'No data for this period of time or this category' => 'No data for this period of time or this category',

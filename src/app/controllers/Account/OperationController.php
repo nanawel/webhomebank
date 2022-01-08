@@ -16,16 +16,18 @@ use app\models\core\Chart\Line;
 use app\models\core\Design;
 use app\models\core\I18n;
 use app\models\core\Log;
+use app\models\core\Main;
+use app\models\whb\App;
 use app\models\whb\Chart\Scatter;
 use app\models\whb\Form\Element\PeriodFilter;
 use app\models\whb\Form\Element\SearchFilter;
 use app\models\whb\Form\Element\StatusFilter;
 use app\models\whb\Form\Element\TypeFilter;
-use xhb\models\Account;
-use xhb\models\Category;
-use xhb\models\Constants;
-use xhb\models\Operation;
-use xhb\models\Xhb\DateHelper;
+use Xhb\Model\Account;
+use Xhb\Model\Category;
+use Xhb\Model\Constants;
+use Xhb\Model\Operation;
+use Xhb\Model\Xhb\DateHelper;
 
 class OperationController extends WhbController
 {
@@ -38,7 +40,7 @@ class OperationController extends WhbController
 
     public function _initAccount() {
         $accountId = $this->_getRequestParam('account_id');
-        $account = $this->getSession('xhb')->getModel()->getAccount($accountId);
+        $account = $this->getXhbSession()->getModel()->getAccount($accountId);
         if (empty($account)) {
             $message = 'Missing or invalid account ID.';
             Log::instance()->log($message . ' (' . $this->getFullActionName() . ')');
@@ -73,7 +75,7 @@ class OperationController extends WhbController
 
         $query = $this->getRequestQuery();
         if (!isset($query['period'])) {
-            $query['period'] = DateHelper::TIME_PERIOD_THIS_MONTH;
+            $query['period'] = Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD');
         }
 
         $filters = AccountOperation::applyFiltersOnCollection($coll, $query);
@@ -138,14 +140,13 @@ class OperationController extends WhbController
 
     public function balanceReportChartDataAction() {
         $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : DateHelper::TIME_PERIOD_THIS_MONTH,
+            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD'),
         );
 
         $chartData = Chart\Operation::getBalanceReportData(
             $this->getXhbSession()->getModel(),
             $collFilters,
-            array($this->getAccount()->getId()),
-            $this->__('Balance Report')
+            array($this->getAccount()->getId())
         );
 
         $this->setPageConfig(array(
