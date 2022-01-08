@@ -3,7 +3,7 @@ version: '3.2'
 
 services:
   app:
-    #image: nanawel/webhomebank
+    image: ${DOCKER_IMAGE:-nanawel/webhomebank}
     build:
       context: './'
     restart: unless-stopped
