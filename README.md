@@ -81,10 +81,10 @@ Then build the image (based on [php:5.6-apache]([https://github.com/docker-libra
 Run it (you may want to tune some settings)
 
     docker run -it --rm \
-        -p 49080:80 \                                                       # App will be available from host at localhost:49080
-        -v /home/myuser/mybudget.xhb:/var/www/html/data/userfile.xhb:ro \   # Replace first part with the path to your .xhb file
-        --name my-webhomebank \                                             # Name of the new container
-        webhomebank                                                         # Name of the image (above in the build command)
+        -p 49080:80 \                                     # App will be available from host at localhost:49080
+        -v /home/myuser/mybudget.xhb:/budget.xhb:ro \     # Replace first part with the path to your .xhb file
+        --name my-webhomebank \                           # Name of the new container
+        webhomebank                                       # Name of the image (above in the build command)
 
 **Notice (1):** The .xhb file must be readable on the host by the UID the webserver of the container uses (www-data: UID 33).
 
