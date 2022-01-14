@@ -8,6 +8,7 @@ stages:
   - release
 
 before_script:
+  - env
   - time docker info
   - time docker login ${REGISTRY_SERVER}
 
@@ -30,8 +31,8 @@ push_image_latest:
   tags:
     - shell
     - docker
-  only:
-    - main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
 
 push_image_tagged:
   stage: release
@@ -42,5 +43,5 @@ push_image_tagged:
   tags:
     - shell
     - docker
-  only:
-    - /^\d+\.\d+\.\d+.*
+  rules:
+    - if: '$CI_COMMIT_TAG =~ /^\d+\.\d+\.\d+$/'
