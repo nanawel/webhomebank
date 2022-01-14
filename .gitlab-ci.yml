@@ -10,14 +10,14 @@ stages:
 before_script:
   - time docker info
   - time docker login ${REGISTRY_SERVER}
-  - export WEBAPP_VERSION=${CI_COMMIT_TAG:-latest}
+  - export WEBAPP_VERSION=${CI_COMMIT_TAG:-dev}
   - env
 
 build_image:
   stage: build
   script:
     - time docker build -t ${BUILD_IMAGE} --build-arg appVersion=${WEBAPP_VERSION} .
-    - time docker tag ${BUILD_IMAGE}:${WEBAPP_VERSION} ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - time docker tag ${BUILD_IMAGE}:latest ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
     - time docker push ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
   tags:
     - shell
