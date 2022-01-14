@@ -360,8 +360,12 @@ abstract class AbstractController
         elseif (isset($parts[1]) && $parts[1] == '*') {
             $parts[1] = $this->getActionName();
         }
-        if (count($parts) == 3 && $parts[2] == '*' && isset($this->_rawRequestParams[2])) {
-            $parts[2] = $this->_rawRequestParams[2];
+        if (count($parts) == 3 && $parts[2] == '*') {
+            if (isset($this->_rawRequestParams['*'])) {
+                $parts[2] = $this->_rawRequestParams['*'];
+            } else {
+                unset($parts[2]);
+            }
         }
         return implode('/', $parts);
     }
