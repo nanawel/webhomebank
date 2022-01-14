@@ -39,8 +39,8 @@ push_image_tagged:
   stage: release
   script:
     - time docker pull ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
-    - time docker tag ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA} ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_REF_SLUG}
-    - time docker push ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - time docker tag ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA} ${CONTAINER_RELEASE_IMAGE}:${WEBAPP_VERSION}
+    - time docker push ${CONTAINER_RELEASE_IMAGE}:${WEBAPP_VERSION}
   tags:
     - shell
     - docker
