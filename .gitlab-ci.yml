@@ -1,0 +1,46 @@
+variables:
+  CONTAINER_RELEASE_IMAGE: "nanawel/webhomebank"
+  BUILD_IMAGE: "webhomebank"
+
+stages:
+  - check
+  - build
+  - release
+
+before_script:
+  - time docker info
+  - time docker login ${REGISTRY_SERVER}
+
+build_image:
+  stage: build
+  script:
+    - time docker build -t ${BUILD_IMAGE} .
+    - time docker tag ${BUILD_IMAGE}:${WEBAPP_VERSION:-latest} ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - time docker push ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
+  tags:
+    - shell
+    - docker
+
+push_image_latest:
+  stage: release
+  script:
+    - time docker pull ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - time docker tag ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA} ${CONTAINER_RELEASE_IMAGE}:latest
+    - time docker push ${CONTAINER_RELEASE_IMAGE}:latest
+  tags:
+    - shell
+    - docker
+  only:
+    - main
+
+push_image_tagged:
+  stage: release
+  script:
+    - time docker pull ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
+    - time docker tag ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA} ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - time docker push ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_REF_SLUG}
+  tags:
+    - shell
+    - docker
+  only:
+    - /^\d+\.\d+\.\d+.*

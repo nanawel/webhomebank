@@ -19,29 +19,35 @@
 
 FROM php:7.4-apache-buster
 
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+
 RUN apt-get update && apt-get install -y \
         nano \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-        libicu-dev
-RUN docker-php-ext-install -j$(nproc) gd
-RUN docker-php-ext-install -j$(nproc) intl
+        libicu-dev \
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+RUN docker-php-ext-install -j$(nproc) gd intl
 
 # Log Apache access and errors to STDOUT/STDERR
-RUN ln -sf /dev/stdout /var/log/apache2/access.log
-RUN ln -sf /dev/stderr /var/log/apache2/error.log
+RUN ln -sf /dev/stdout /var/log/apache2/access.log \
+ && ln -sf /dev/stderr /var/log/apache2/error.log
 
-RUN a2enmod rewrite
-RUN a2enmod deflate
-RUN a2enmod expires
+RUN a2enmod rewrite \
+            deflate \
+            expires
 
 COPY resources/php.ini /usr/local/etc/php/conf.d/zz-webhomebank.ini
 COPY src/ /var/www/html/
 
+WORKDIR /var/www/html
+
+RUN composer install
 RUN mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini
 
-RUN chown -R www-data /var/www
-RUN chmod -R 775 /var/www
+RUN chown -R www-data /var/www \
+ && chmod -R 775 /var/www
 
 EXPOSE 80
