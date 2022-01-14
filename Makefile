@@ -18,3 +18,7 @@ stop:
 .PHONY: logs
 logs:
 	docker-compose logs
+
+.PHONY: clear-tmp-database
+clear-tmp-database:
+	docker-compose exec app sh -c 'rm /var/www/html/var/tmp/*.sqlite'

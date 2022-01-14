@@ -148,7 +148,7 @@ class AccountOperation
                 case 'search':
                     $value = trim($value);
                     if ($value) {
-                        $collection->addFieldToFilter('aggregate_search', array('like' => "%$value%"));
+                        $collection->addFieldToFilter('text_search', array('like' => "%$value%"));
                         $processedFilters['search'] = $value;
                     }
                     break;

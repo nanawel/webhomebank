@@ -78,43 +78,37 @@ class OperationController extends WhbController
             $query['period'] = Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD');
         }
 
-        $filters = AccountOperation::applyFiltersOnCollection($coll, $query);
+        AccountOperation::applyFiltersOnCollection($coll, $query);
 
-        // Speed up collection loading by not setting aggregated fields if not needed
-        if (empty($filters['search'])) {
-            $coll->setFlag('skip_aggregated_fields');
-        }
-
-        $filters = array();
+        $filterFormElements = array();
         $periodFilter = new PeriodFilter($xhb, array(
             'name'          => 'period',
             'id'            => 'filter-period',
             'value'         => $query['period'],
             'class'         => 'filter-input'
         ));
-        $filters['period'] = $periodFilter;
+        $filterFormElements['period'] = $periodFilter;
         $typeFilter = new TypeFilter($xhb, array(
             'name'          => 'type',
             'id'            => 'filter-type',
             'value'         => isset($query['type']) ? $query['type'] : null,
             'class'         => 'filter-input'
         ));
-        $filters['type'] = $typeFilter;
+        $filterFormElements['type'] = $typeFilter;
         $statusFilter = new StatusFilter($xhb, array(
             'name'          => 'status',
             'id'            => 'filter-status',
             'value'         => isset($query['status']) ? $query['status'] : null,
             'class'         => 'filter-input'
         ));
-        $filters['status'] = $statusFilter;
+        $filterFormElements['status'] = $statusFilter;
         $searchFilter = new SearchFilter($xhb, array(
             'name'          => 'search',
             'id'            => 'filter-search',
             'value'         => isset($query['search']) ? $query['search'] : null,
             'class'         => 'filter-input'
         ));
-        $filters['search'] = $searchFilter;
-
+        $filterFormElements['search'] = $searchFilter;
 
         Design::instance()->addJs('chartjs/Chart.min.js')
             ->addJs('chartjs/Chart.Scatter.js');    //FIXME Scale is buggy with minified JS
@@ -125,7 +119,7 @@ class OperationController extends WhbController
             ->setData('OPERATION_COLLECTION', $coll)
             ->setData('FILTER_FORM_ACTION', $this->getUrl('*/*/*'))
             ->setData('RESET_FILTERS_URL', $this->getUrl('*/*/*'))
-            ->setData('FILTERS', $filters)
+            ->setData('FILTERS', $filterFormElements)
             ->setData('CURRENT_ORDER', $currentOrder)
             ->setData('BALANCE_REPORT_CHART', new Scatter(array(
                 'id'       => 'balanceReportChart',
@@ -140,7 +134,9 @@ class OperationController extends WhbController
 
     public function balanceReportChartDataAction() {
         $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD'),
+            'period' => $this->getRequestQuery('period')
+                ? $this->getRequestQuery('period')
+                : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD'),
         );
 
         $chartData = Chart\Operation::getBalanceReportData(
@@ -155,4 +151,4 @@ class OperationController extends WhbController
         ));
         $this->getView()->setData('DATA', $chartData);
     }
-} 
+}

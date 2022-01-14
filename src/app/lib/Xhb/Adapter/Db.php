@@ -4,6 +4,7 @@ namespace Xhb\Adapter;
 
 use app\models\core\Log;
 use DB\SQL;
+use Laminas\Db\Sql\Ddl\Column\Text;
 use Xhb\Model\Resource\Db\Account;
 use Xhb\Model\Resource\Db\Category;
 use Xhb\Model\Resource\Db\Operation;
@@ -118,8 +119,10 @@ class Db implements AdapterInterface
             $this->_insertInto(Account::MAIN_TABLE, $this->_addAdditionalFields($data['accounts'], $xhbId), null);
             $this->_insertInto(Category::MAIN_TABLE, $this->_addAdditionalFields($data['categories'], $xhbId), null);
             $this->_insertInto(Payee::MAIN_TABLE, $this->_addAdditionalFields($data['payees'], $xhbId), null);
-            $this->_insertInto(Operation::MAIN_TABLE, $this->_addAdditionalFields($data['operations'], $xhbId), null);
-            $this->_insertOperationSplitAmount($data['operations'], $xhbId);
+
+            $operationsData = $this->_prepareOperationsData($data, $xhbId);
+            $this->_insertInto(Operation::MAIN_TABLE, $operationsData, null);
+            $this->_insertOperationSplitAmount($operationsData, $xhbId);
 
             // Insert XHB row at the end, so that in case something's gone wrong before, next request may try to
             // create schema and insert data again, without risking to use invalid or incomplete data instead
@@ -145,6 +148,43 @@ class Db implements AdapterInterface
             $row['updated_at'] = $now;
         }
         return $data;
+    }
+
+    protected function _prepareOperationsData($xhbData, $xhbId) {
+        $recordsByKey = [];
+        foreach ($xhbData as $type => $records) {
+            if (is_array($records)) {
+                foreach ($records as $record) {
+                    if (!empty($record['key'])) {
+                        $recordsByKey[$type][$record['key']] = $record;
+                    }
+                }
+            }
+        }
+
+        foreach ($xhbData['operations'] as &$operation) {
+            $searchText = [
+                $operation['info'],
+                $operation['wording'],
+                $operation['smem'],
+                $operation['tags'],
+            ];
+            if (!empty($operation['category'])) {
+                $searchText[] = $recordsByKey['categories'][$operation['category']]['name'];
+            }
+            if (!empty($operation['payee'])) {
+                $searchText[] = $recordsByKey['payees'][$operation['payee']]['name'];
+            }
+            if (!empty($operation['scat'])) {
+                foreach (explode('||', $operation['scat']) as $categoryKey) {
+                    $searchText[] = $recordsByKey['categories'][$categoryKey]['name'];
+                }
+            }
+
+            $operation['text_search'] = implode('|', array_filter($searchText));
+        }
+
+        return $this->_addAdditionalFields($xhbData['operations'], $xhbId);
     }
 
     protected function _insertOperationSplitAmount($operationData, $xhbId) {
@@ -258,6 +298,7 @@ class Db implements AdapterInterface
                 ->addColumn(new Floating('account_balance', 10, 4, false, 0))
                 ->addColumn(new Floating('general_balance', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
+                ->addColumn(new Text('text_search'))
                 ->addConstraint(new PrimaryKey(array('xhb_id', 'id')))
                 ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
             ;

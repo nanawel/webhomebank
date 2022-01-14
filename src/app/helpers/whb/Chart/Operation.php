@@ -67,8 +67,7 @@ class Operation
             'labels'   => array(),
             'datasets' => array()
         );
-        $operationCollection = $xhb->getOperationCollection()
-            ->setFlag('skip_aggregated_fields', true);
+        $operationCollection = $xhb->getOperationCollection();
         $processedFilters = AccountOperation::applyFiltersOnCollection($operationCollection, $collectionFilters);
         $firstOp = $operationCollection->getFirstItem();
         if (!$firstOp) {
@@ -166,4 +165,4 @@ class Operation
     public static function getDatePeriod(Xhb $xhb, \DateTime $startDate, \DateTime $endDate, \DateInterval $interval = null) {
         return $xhb->getDateHelper()->getDatePeriod($startDate, $endDate, $interval);
     }
-} 
+}

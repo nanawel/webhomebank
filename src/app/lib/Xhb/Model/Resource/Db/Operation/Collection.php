@@ -24,29 +24,6 @@ class Collection extends XhbCollection implements \Xhb\Model\Resource\Iface\Oper
         $this->_init(\Xhb\Model\Xhb::MODEL_CLASS_NAMESPACE . 'Operation', 'id', Operation::MAIN_TABLE);
     }
 
-    protected function _beforeLoad() {
-        if (!$this->getFlag('skip_aggregated_fields')) {
-            $cols = array(
-                'main_table.info',
-                'main_table.wording',
-                'main_table.smem',
-                '(SELECT IFNULL((SELECT name FROM category AS parent_category WHERE key = category.parent), "") || ":" || name
-                    FROM category WHERE key = main_table.category)',
-                '(SELECT name FROM payee WHERE key = main_table.payee)',
-                '(SELECT GROUP_CONCAT(c.name, "|") FROM category c WHERE c.key IN
-                    (SELECT osa.category FROM ' . Operation::SPLIT_AMOUNT_TABLE . ' osa WHERE osa.operation_id = main_table.id))'
-            );
-            $colsSep = array();
-            foreach($cols as $c) {
-                $colsSep[] = "IFNULL($c, \"\")";
-                $colsSep[] = ' "|" ';
-            }
-            $expr = new Expression(implode(' || ', $colsSep));
-            $this->addFieldToSelect(array('aggregate_search' => $expr));
-        }
-        return parent::_beforeLoad();
-    }
-
     public function getBalance() {
         $balance = 0;
         foreach($this as $op) {

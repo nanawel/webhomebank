@@ -25,7 +25,6 @@ class Calculator extends AbstractModel
         else {
             $operationCollection = $object->getXhb()->getOperationCollection();
         }
-        $operationCollection->setFlag('skip_aggregated_fields');
         return $operationCollection;
     }
 
