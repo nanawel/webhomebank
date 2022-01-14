@@ -17,6 +17,8 @@
 # NOTICE: The .xhb file must be readable on the host by the UID the webserver of the container uses (www-data => UID 33).
 #
 
+ARG appVersion=dev
+
 FROM php:7.4-apache-buster
 
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
@@ -48,7 +50,8 @@ COPY src/ /var/www/html/
 WORKDIR /var/www/html
 
 RUN composer install
-RUN mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini
+RUN mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini \
+ && sed -i "s/^VERSION=.*/VERSION=${appVersion}/" /var/www/html/etc/app.ini
 
 RUN chown -R www-data /var/www \
  && chmod -R 775 /var/www
