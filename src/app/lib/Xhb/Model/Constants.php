@@ -17,6 +17,8 @@ class Constants
     const ACC_TYPE_ASSET      = 3;    //Actif (avoir)
     const ACC_TYPE_CREDITCARD = 4;    //Carte crédit
     const ACC_TYPE_LIABILITY  = 5;    //Passif (dettes)
+    const ACC_TYPE_CHECKING	  = 6; 	  //OFX A standard checking account
+    const ACC_TYPE_SAVINGS    = 7;    //OFX A standard savings account
     //    const ACC_TYPE_STOCK      = 6;    //Actions
     //    const ACC_TYPE_MUTUALFUND = 7;    //Fond de placement
     //    const ACC_TYPE_INCOME     = 8;    //Revenus
@@ -30,7 +32,9 @@ class Constants
         'cash'       => self::ACC_TYPE_CASH,
         'asset'      => self::ACC_TYPE_ASSET,
         'creditcard' => self::ACC_TYPE_CREDITCARD,
-        'liability'  => self::ACC_TYPE_LIABILITY
+        'liability'  => self::ACC_TYPE_LIABILITY,
+        'checking'   => self::ACC_TYPE_CHECKING,
+        'savings'    => self::ACC_TYPE_SAVINGS,
     );
 
     const PAYMODE_NONE          = 0;
@@ -69,13 +73,14 @@ class Constants
     const TXN_STATUS_CLEARED    = 1;
     const TXN_STATUS_RECONCILED = 2;
     const TXN_STATUS_REMIND     = 3;
-    //const TXN_VOID
+    const TXN_STATUS_VOID       = 4;
 
     public static $TXN_STATUS = array(
         'none'       => self::TXN_STATUS_NONE,
         'cleared'    => self::TXN_STATUS_CLEARED,
         'reconciled' => self::TXN_STATUS_RECONCILED,
-        'remind'     => self::TXN_STATUS_REMIND
+        'remind'     => self::TXN_STATUS_REMIND,
+        'void'       => self::TXN_STATUS_VOID
     );
 
     const BALANCE_TYPE_TODAY        = 'today';

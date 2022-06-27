@@ -107,6 +107,8 @@ return array(
 
     'ACCOUNT_TYPE.bank' => 'Banque',
     'ACCOUNT_TYPE.cash' => 'Espèces',
+    'ACCOUNT_TYPE.checking' => 'Chèque',
+    'ACCOUNT_TYPE.savings' => 'Épargne',
     'ACCOUNT_TYPE.other' => 'Autre',
     'ACCOUNT_TYPE.none' => '(sans type)',
 

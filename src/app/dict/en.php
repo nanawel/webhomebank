@@ -107,6 +107,8 @@ return array(
 
     'ACCOUNT_TYPE.bank' => 'Bank',
     'ACCOUNT_TYPE.cash' => 'Cash',
+    'ACCOUNT_TYPE.checking' => 'Checking',
+    'ACCOUNT_TYPE.savings' => 'Savings',
     'ACCOUNT_TYPE.other' => 'Other',
     'ACCOUNT_TYPE.none' => '(no type)',
 
