@@ -2,7 +2,7 @@
 namespace Xhb;
 
 use SimpleXMLElement as SimpleXMLElement;
-
+use Xhb\Model\Constants;
 
 /**
  * Read XHB files and return data as arrays
@@ -117,6 +117,10 @@ class Parser
             $accountBalances[$account['key']] = $account['initial'];
         }
         foreach($this->_data['operations'] as &$operation) {
+            if ($operation['st'] == Constants::TXN_STATUS_VOID) {
+                // Ignore void operations for balances
+                continue;
+            }
             $generalBalance += $operation['amount'];
             $accountBalances[$operation['account']] += $operation['amount'];
 
