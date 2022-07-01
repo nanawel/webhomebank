@@ -117,12 +117,10 @@ class Parser
             $accountBalances[$account['key']] = $account['initial'];
         }
         foreach($this->_data['operations'] as &$operation) {
-            if ($operation['st'] == Constants::TXN_STATUS_VOID) {
-                // Ignore void operations for balances
-                continue;
+            if ($operation['st'] != Constants::TXN_STATUS_VOID) {
+                $generalBalance += $operation['amount'];
+                $accountBalances[$operation['account']] += $operation['amount'];
             }
-            $generalBalance += $operation['amount'];
-            $accountBalances[$operation['account']] += $operation['amount'];
 
             $operation['general_balance'] = $generalBalance;
             $operation['account_balance'] = $accountBalances[$operation['account']];
