@@ -97,14 +97,25 @@ class DateHelper extends XhbModel
             }
 
             $operations = $this->getXhb()->getOperationCollection()->getItems();
-            /* @var $firstItem Operation */
-            $firstItem = current($operations);
-            end($operations);
-            /* @var $lastItem Operation */
-            $lastItem = current($operations);
+            /* @var $firstOperation Operation */
+            /* @var $lastOperation Operation */
+            list($firstOperation, $lastOperation) = array_reduce($operations, function($carry, $op) {
+                if (empty($carry[0])
+                    || $op->getDateModel()->getTimestamp() < $carry[0]->getDateModel()->getTimestamp()
+                ) {
+                    $carry[0] = $op;
+                }
+                if (empty($carry[1])
+                    || $op->getDateModel()->getTimestamp() > $carry[1]->getDateModel()->getTimestamp()
+                ) {
+                    $carry[1] = $op;
+                }
+
+                return $carry;
+            }, []);
             $this->_periods[self::TIME_PERIOD_ALL_DATE] = array(
-                'start' => $firstItem->getDateModel()->getTimestamp(),
-                'end'   => $lastItem->getDateModel()->getTimestamp()
+                'start' => $firstOperation->getDateModel()->getTimestamp(),
+                'end'   => $lastOperation->getDateModel()->getTimestamp()
             );
 
             $utcTZ = new \DateTimeZone('UTC');
@@ -188,4 +199,4 @@ class DateHelper extends XhbModel
         }
         return $this->getData('reference_date');
     }
-} 
+}
