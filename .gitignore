@@ -8,6 +8,7 @@ docker-compose.override.yml
 resources/*.xhb
 src/test.php
 src/app/vendor
+src/data/budget.xhb
 src/etc/local.ini
 src/var/cache
 src/var/tmp
