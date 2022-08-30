@@ -139,7 +139,8 @@ class VehicleCost extends XhbModel
                 ->addFieldToFilter(
                     'categories',
                     array('in' => $carCategoryIds)
-                );
+                )
+                ->orderBy('date', SORT_ASC);
 
             $consumptionData = array();
             $lastMeter = false;
