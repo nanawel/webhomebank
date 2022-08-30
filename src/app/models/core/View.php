@@ -137,12 +137,10 @@ class View extends \View
                     }
                 }
                 else {
-                    if (\Base::instance()->get('DEBUG') > 1) {
-                        Log::instance()->log(
-                            'Invalid placeholder callback for block "' . $blockName . '": ' .
-                            \Base::instance()->stringify($placeholderConfig[0])
-                        );
-                    }
+                    Log::instance()->log(
+                        'Invalid placeholder callback for block "' . $blockName . '": ' .
+                        \Base::instance()->stringify($placeholderConfig[0])
+                    );
                 }
             }
         }
@@ -185,9 +183,7 @@ class View extends \View
                 $exClass = get_class($e);
                 $output = "<!-- {$exClass} [{$e->getCode()}] {$e->getMessage()} -->";
             }*/
-            if (\Base::instance()->get('DEBUG') > 1) {
-                Log::instance()->logException($e);
-            }
+            Log::instance()->logException($e);
         }
         return $output;
     }

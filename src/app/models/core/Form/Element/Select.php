@@ -29,14 +29,14 @@ class Select extends AbstractElement
                         $optEl->setAttribute('disabled', 'disabled');
                     }
                     else {
-                        $optEl->nodeValue = $a;
+                        $optEl->nodeValue = htmlspecialchars($a);
                     }
                 }
                 else {
-                    $optEl->setAttribute($n, $a);
+                    $optEl->setAttribute(htmlspecialchars($n), htmlspecialchars($a));
                 }
             }
-            $optEl->setAttribute('value', $value);
+            $optEl->setAttribute('value', htmlspecialchars($value));
             if ($value == $this->getValue()) {
                 $optEl->setAttribute('selected', 'selected');
             }
