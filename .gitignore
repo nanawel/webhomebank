@@ -2,7 +2,7 @@
 .env
 .svn
 export
-*.sh
+/*.sh
 Dockerfile-*
 docker-compose.override.yml
 resources/*.xhb
