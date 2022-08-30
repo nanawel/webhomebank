@@ -10,4 +10,4 @@ services:
     ports:
       - '${HOST_PORT:-49080}:80'
     volumes:
-      - ${BUDGET_FILE}:/budget.xhb:ro
+      - ${DATA_DIR}:/data:ro

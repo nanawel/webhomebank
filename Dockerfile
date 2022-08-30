@@ -44,7 +44,11 @@ RUN a2enmod rewrite \
     deflate \
     expires
 
-COPY resources/php.ini /usr/local/etc/php/conf.d/zz-webhomebank.ini
+RUN pecl install xdebug
+ENV XDEBUG=0
+
+COPY resources/php.ini    /usr/local/etc/php/conf.d/zz-webhomebank.ini
+COPY resources/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY src/ /var/www/html/
 
 WORKDIR /var/www/html
@@ -55,5 +59,10 @@ RUN mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini \
 
 RUN chown -R www-data /var/www \
  && chmod -R 775 /var/www
+
+# Override entrypoint to add conditional XDebug support
+COPY resources/docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["apache2-foreground"]
 
 EXPOSE 80
