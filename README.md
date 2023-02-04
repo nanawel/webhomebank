@@ -33,13 +33,13 @@ Requirements:
 
  * [Apache 2.x]([http://httpd.apache.org/]) with the following modules enabled:
     * rewrite
-    * php5
+    * php7
     * expires (optional)
 
 (should also work with [Lighttpd]([http://www.lighttpd.net/]) or [Nginx]([http://nginx.org/])))
 
 
- * PHP 7.3+ with the following extensions enabled:
+ * PHP 7.4+ with the following extensions enabled:
     * mcrypt
     * pdo_sqlite
     * intl
@@ -81,10 +81,10 @@ Then build the image (based on [php:5.6-apache]([https://github.com/docker-libra
 Run it (you may want to tune some settings)
 
     docker run -it --rm \
-        -p 49080:80 \                                     # App will be available from host at localhost:49080
-        -v /home/myuser/mybudget.xhb:/budget.xhb:ro \     # Replace first part with the path to your .xhb file
-        --name my-webhomebank \                           # Name of the new container
-        webhomebank                                       # Name of the image (above in the build command)
+        -p 49080:80 \                               # App will be available from host at localhost:49080
+        -v /home/myuser/mybudgetdir:/data:ro \      # Replace the first part with the path to the directory holding your budget.xhb
+        --name my-webhomebank \                     # Name of the new container
+        webhomebank                                 # Name of the image (above in the build command)
 
 **Notice (1):** The .xhb file must be readable on the host by the UID the webserver of the container uses (www-data: UID 33).
 
