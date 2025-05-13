@@ -43,7 +43,8 @@ RUN a2enmod rewrite \
     deflate \
     expires
 
-RUN pecl install xdebug
+ARG installXdebug=0
+RUN test "${installXdebug}" = "0" || pecl install xdebug
 ENV XDEBUG=0
 
 COPY resources/php.ini    /usr/local/etc/php/conf.d/zz-webhomebank.ini

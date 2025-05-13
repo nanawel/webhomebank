@@ -1,11 +1,16 @@
 
+
 .PHONY: shell
 shell:
 	docker-compose exec -u $$(id -u):$$(id -g) app bash
 
 .PHONY: build
 build:
-	docker-compose build
+	docker-compose build --build-arg installXdebug=0
+
+.PHONY: build-with-xdebug
+build-with-xdebug:
+	docker-compose build --build-arg installXdebug=1
 
 .PHONY: upd
 upd:

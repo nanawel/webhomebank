@@ -17,7 +17,7 @@ before_script:
 build_image:
   stage: build
   script:
-    - time docker build -t ${BUILD_IMAGE} --build-arg appVersion=${WEBAPP_VERSION} .
+    - time docker build -t ${BUILD_IMAGE} --pull --build-arg appVersion=${WEBAPP_VERSION} .
     - time docker tag ${BUILD_IMAGE}:latest ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
     - time docker push ${CONTAINER_RELEASE_IMAGE}:${CI_COMMIT_SHORT_SHA}
   tags:
