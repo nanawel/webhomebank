@@ -15,8 +15,8 @@
         "php": "~7.3",
         "bcosca/fatfree-core": "^3.7.3",
         "laminas/laminas-db": "2.13.4",
-        "nanawel/zend-db-sql-insertmultiple": "dev-master"
-
+        "nanawel/zend-db-sql-insertmultiple": "dev-master",
+        "arvenil/ninja-mutex": "^0.6.0"
     },
     "repositories": [
         {

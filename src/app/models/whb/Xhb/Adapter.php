@@ -10,6 +10,7 @@ namespace app\models\whb\Xhb;
 
 
 use app\models\core\Main;
+use NinjaMutex\Lock\FlockLock;
 use Xhb\Adapter\AdapterInterface as XhbAdapterInterface;
 use Xhb\Adapter\Factory as XhbAdapterFactory;
 use Xhb\Parser as XhbParser;
@@ -99,11 +100,21 @@ class Adapter
     }
 
     public function loadXhb($force = false) {
+        $xhbId = $this->getXhbId();
+        $flock = new FlockLock($this->_fw->get('TEMP'));
         if ($force || !$this->isXhbLoaded()) {
-            $this->getResourceAdapter()->importXhbData(
-                $this->_parser->getXhbData(),
-                $this->getXhbId()
-            );
+            if ($flock->acquireLock($xhbId)) {
+                $this->getResourceAdapter()->importXhbData(
+                    $this->_parser->getXhbData(),
+                    $xhbId
+                );
+                $flock->releaseLock($xhbId);
+            }
+            else {
+                while ($flock->isLocked()) {
+                    sleep(1);
+                }
+            }
         }
         $xhb = new \Xhb\Model\Xhb($this->_getConfig());
         return $xhb->load($this->getXhbId());
