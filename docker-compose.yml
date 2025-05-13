@@ -1,6 +1,3 @@
-
-version: '3.2'
-
 services:
   app:
     image: ${DOCKER_IMAGE:-nanawel/webhomebank}
@@ -11,3 +8,9 @@ services:
       - '${HOST_PORT:-49080}:80'
     volumes:
       - ${DATA_DIR}:/data:ro
+    deploy:
+      resources:
+        limits:
+          # This is the minimum recommended, otherwise XHB loading might silently fail
+          # and the message "UNIQUE constraint failed (...)" would show up on the loading screen
+          memory: 256M

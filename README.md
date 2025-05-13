@@ -27,6 +27,35 @@ More screenshots below:
 
 # Installation
 
+## Docker
+
+Use the following `docker-compose.yml` to start the container using the [official image](https://hub.docker.com/r/nanawel/webhomebank):
+
+```yml
+services:
+  app:
+    image: nanawel/webhomebank
+    restart: unless-stopped
+    ports:
+      - '${HOST_PORT:-49080}:80'
+    volumes:
+      - ${DATA_DIR}:/data:ro
+    #deploy:
+    #  resources:
+    #    limits:
+    #      # This is the minimum recommended, otherwise XHB loading might silently fail
+    #      # and the message "UNIQUE constraint failed (...)" would show up on the loading screen
+    #      memory: 256M
+```
+
+Create a `.env` a provide the required values:
+
+```env
+# The app will try to load a "budget.xhb" file from this directory
+DATA_DIR=...
+HOST_PORT=49080
+```
+
 ## From sources
 
 Requirements:
