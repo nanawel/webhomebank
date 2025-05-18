@@ -55,6 +55,39 @@ const populateDoughnutChartWithData = function(chart, data) {
 }
 
 // Helper function for compatibility with ChartJS 2+
+const populateBarChartWithData = function(chart, data) {
+    chart.data.labels.splice(0, chart.data.labels.length);
+    chart.data.datasets.splice(0, chart.data.datasets.length);
+
+    if (data['datasets'].length > 1) {
+        throw 'NOT IMPLEMENTED';
+    }
+
+    let newLabels = [];
+    for (let j in data.labels) {
+        let ts = data.labels[j] * 1000;
+        newLabels.push(ts);
+    }
+    chart.data.labels = newLabels;
+
+    for (let i in data['datasets']) {
+        const currentDataset = data['datasets'][i];
+        let newDataset = {
+            label: currentDataset.label,
+            data: [],
+            borderColor: currentDataset.strokeColor,
+            backgroundColor: currentDataset.fillColor,
+            pointHitRadius: 3
+        };
+        for (let j in currentDataset.data) {
+            newDataset.data.push(currentDataset.data[j]);
+        }
+        chart.data.datasets.push(newDataset);
+    }
+    chart.update();
+}
+
+// Helper function for compatibility with ChartJS 2+
 const populateChartWithData = function (chart, data) {
     chart.data.datasets.splice(0, chart.data.datasets.length);
 
@@ -64,7 +97,7 @@ const populateChartWithData = function (chart, data) {
             label: currentDataset.label,
             data: [],
             borderColor: currentDataset.strokeColor,
-            backgroundColor: currentDataset.strokeColor,
+            backgroundColor: currentDataset.fillColor,
             pointHitRadius: 3
         };
         for (let j in currentDataset.data) {
@@ -81,8 +114,9 @@ const populateChartWithData = function (chart, data) {
 
 const whbChartjs = {
     Chart,
-    populateDoughnutChartWithData,
+    populateBarChartWithData,
     populateChartWithData,
+    populateDoughnutChartWithData,
 }
 
 window.whbChartjs = whbChartjs;

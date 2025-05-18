@@ -30,6 +30,10 @@ use Xhb\Util\MagicObject;
  */
 class AbstractChart extends MagicObject
 {
+    public const SCALE_Y_UNIT_CURRENCY = '__currency__';
+    public const SCALE_Y_UNIT_NUMBER = '__number__';
+    public const SCALE_Y_UNIT_CUSTOM = '__custom__';
+
     protected static $_commonDefaultData = array(
         'escape_hives'           => false,
         'no_data_message'        => 'No Data',
@@ -76,5 +80,17 @@ class AbstractChart extends MagicObject
             }
         }
         return $html;
+    }
+
+    public function getTooltipJsCallback($jsValueVar = null) {
+        switch ($this->getData('scale_y_unit')) {
+            case self::SCALE_Y_UNIT_CURRENCY:
+                return "i18n.formatCurrency($jsValueVar)";
+            case self::SCALE_Y_UNIT_CUSTOM:
+                return $this->getData('scale_y_unit_custom');
+            case self::SCALE_Y_UNIT_NUMBER:
+            default:
+                return "i18n.formatNumber($jsValueVar)";
+        }
     }
 }

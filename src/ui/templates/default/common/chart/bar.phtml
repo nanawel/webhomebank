@@ -44,7 +44,22 @@ $chartVar = 'chart_' . $chartId;
                             animation: false,
                             responsive: true,
                             scaleBeginAtZero: true,
-                        }
+                            scales: {
+                                x: {
+                                    type: 'time',
+                                },
+                            },
+                            plugins: {
+                                tooltip: {
+                                    enabled: true,
+                                    usePointStyle: true,
+                                    callbacks: {
+                                        title: (data) => data[0].dataset.label,
+                                        label: (data) => <?= $_block->getTooltipJsCallback('data.parsed.y') ?>,
+                                    },
+                                },
+                            }
+                        },
                     });
 
                     const updateChart = function() {
@@ -61,7 +76,7 @@ $chartVar = 'chart_' . $chartId;
                                 $('#<?= $chartId ?> canvas').after('<div class="no-data-message"><?= $this->__($no_data_message); ?></div>');
                                 return;
                             }
-                            whbChartjs.populateChartWithData(chart, data);
+                            whbChartjs.populateBarChartWithData(chart, data);
                         });
                     }
 

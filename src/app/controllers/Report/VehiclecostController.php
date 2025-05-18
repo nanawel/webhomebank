@@ -97,6 +97,8 @@ class VehiclecostController extends WhbController
                 'data_url'    => $this->getUrl('*/distanceTraveledByPeriodChartData', array('_query' => '*')),
                 'class'       => 'toolbar-top-right',
                 'show_legend' => false,
+                'scale_y_unit' => Line::SCALE_Y_UNIT_CUSTOM,
+                'scale_y_unit_custom' => '`${data.parsed.y}km`'
             )))
             ->setData('FUEL_PRICE_EVOLUTION_CHART', new Line(array(
                 'id'          => 'fuelPriceChart',
