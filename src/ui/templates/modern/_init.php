@@ -8,7 +8,13 @@
         'foundation/foundation.topbar.js',
     ), 'footer')
     ->addInlineJs(
-        "jQuery(document).foundation();",
+        <<<EOJS
+            window.addEventListener('DOMContentLoaded', function() {
+                (function($) {
+                    jQuery(document).foundation();
+                })(jQuery);
+            });
+        EOJS,
         'footer',
         1000
     )

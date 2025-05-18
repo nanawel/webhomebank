@@ -36,7 +36,7 @@ class Operation
         $maxResults = 6;
         $sumByCategory = Chart::sumBy($opColl, 'category', 'amount', 0, $maxResults);
 
-        $return = array();
+        $return = [];
         $n = 0;
         foreach($sumByCategory as $catId => $sum) {
             $cat = $xhb->getCategory($catId);
@@ -47,11 +47,11 @@ class Operation
                 $catName = $cat->getFullname();
             }
             $v = abs(round($sum, 2));
-            $return[] = array(
+            $return[] = [
                 'value'          => $v,
                 'label'          => $i18n->tr('{0} ({1})', $catName, I18n::instance()->currency($v)),
                 'color'          => Output::rgbToCss(Chart::getColor($n++))
-            );
+            ];
         }
         return $return;
     }

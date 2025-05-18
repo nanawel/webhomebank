@@ -40,21 +40,12 @@ class AbstractChart extends MagicObject
         'filters'                => array(),
         'footer_note'            => '',
         'class'                  => '',
-        'legend_template'        => '',
-        'tooltip_template'       => '',
-        'multi_tooltip_template' => '',
         'show_legend'            => true,
-        'scale_label'            => '',
-        'scale_arg_label'        => ''
     );
 
     protected $_defaultData = array();
 
     public function __construct($data = array()) {
-        //FIXME Date patterns used by Chart.js are different from PHP's... :(
-        //$this->_defaultData['scale_date_time_format'] = I18n::instance()->getDateFormatterInstance()->getPattern();
-        $this->_defaultData['scale_date_time_format'] = 'yyyy-mm-dd';
-        $this->_defaultData['scale_date_format'] = 'yyyy-mm-dd';
         parent::__construct(array_merge(self::$_commonDefaultData, $this->_defaultData, $data));
     }
 
@@ -76,9 +67,13 @@ class AbstractChart extends MagicObject
             $esc = $fw->get('ESCAPE');
             $fw->set('ESCAPE', $this->getEscapeHives());
         }
-        $html = View::instance()->render($template, $this->getMimetype(), $this->getData());
-        if ($this->getEscapeHives()) {
-            $fw->set('ESCAPE', $esc);
+        try {
+            $hive = $this->getData() + ['_block' => $this];
+            $html = View::instance()->render($template, $this->getMimetype(), $hive);
+        } finally {
+            if ($this->getEscapeHives()) {
+                $fw->set('ESCAPE', $esc);
+            }
         }
         return $html;
     }

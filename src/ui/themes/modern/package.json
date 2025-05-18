@@ -4,16 +4,23 @@
     "description": "WHB Modern Theme",
     "main": "Gruntfile.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "webpack-cli --config webpack.config.js",
+        "watch": "webpack-cli watch --config webpack.config.js"
     },
     "author": "Nanawel",
-    "license": "ISC",
+    "license": "MIT",
     "devDependencies": {
-        "node-fs-extra": "*",
+        "chart.js": "^4.4.9",
+        "chartjs-adapter-moment": "^1.0.1",
+        "foundation-sites": "~5.5",
         "grunt": "~0.4.5",
+        "grunt-banner": "~0.6",
         "grunt-contrib-less": "*",
         "grunt-contrib-sass": "*",
-        "grunt-banner": "~0.6",
-        "foundation-sites": "~5.5"
+        "jquery": "^2.2.4",
+        "moment": "^2.30.1",
+        "node-fs-extra": "*",
+        "webpack-cli": "^6.0.1"
     }
 }

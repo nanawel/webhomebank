@@ -24,13 +24,15 @@ class WhbController extends AbstractController
             return false;
         }
 
+        Design::instance()
+            ->addInlineJs(<<<EOJS
+                window.LANGUAGE='{$fw->get('LANGUAGE')}';
+                window.CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';
+            EOJS);
+        Design::instance()->addJsModule('app.bundle.js');
+
         $xhb = $this->getXhbSession()->getModel();
         $this->setPageTitle($xhb->getTitle());
-
-        Design::instance()
-            ->addJs('jquery/jquery-2.1.4.min.js', 'header', -100)
-            ->addJs('whb/i18n.js')
-            ->addInlineJs("var LANGUAGE='{$fw->get('LANGUAGE')}';\nvar CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';\nvar i18n = new I18n(LANGUAGE, CURRENCY);");
 
         $this->_setupLayoutBlocks();
     }

@@ -1,8 +1,8 @@
 <?php
 /* @var $this \app\models\core\View */
 ?>
-<?php echo $TOP_SPENDING_CHART->toHtml() ?>
+<?= isset($TOP_SPENDING_CHART) ? $TOP_SPENDING_CHART->toHtml() : '' ?>
 
 <div class="clear"></div>
 
-<?php echo $BALANCE_REPORT_CHART->toHtml() ?>
+<?= isset($BALANCE_REPORT_CHART) ? $BALANCE_REPORT_CHART->toHtml() : '' ?>

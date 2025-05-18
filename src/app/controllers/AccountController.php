@@ -11,9 +11,9 @@ namespace app\controllers;
 use app\helpers\core\Output;
 use app\helpers\whb\AccountOperation;
 use app\helpers\whb\Chart;
-use app\models\core\Chart\Donut;
+use app\models\core\Chart\Doughnut;
+use app\models\core\Chart\Line;
 use app\models\core\Main;
-use app\models\whb\Chart\Scatter;
 use app\models\core\Design;
 use app\models\core\I18n;
 use app\models\whb\Form\Element\PeriodFilter;
@@ -88,13 +88,11 @@ class AccountController extends WhbController
         }
 
 
-        Design::instance()->addJs('chartjs/Chart.min.js')
-            ->addJs('chartjs/Chart.Scatter.js');    //FIXME Scale is buggy with minified JS
         $this->getView()
             ->setBlockTemplate('charts', 'account/index/charts.phtml')
             ->setData('GRID_DATA', $gridData)
             ->setData('TOTAL_DATA', $totalData)
-            ->setData('TOP_SPENDING_CHART', new Donut(array(
+            ->setData('TOP_SPENDING_CHART', new Doughnut(array(
                 'id'       => 'topSpendingChart',
                 'title'    => 'Where your money goes',
                 'data_url' => $this->getUrl('*/topSpendingChartData'),
@@ -106,7 +104,7 @@ class AccountController extends WhbController
                 ),
                 'class' => 'toolbar-right'
             )))
-            ->setData('BALANCE_REPORT_CHART', new Scatter(array(
+            ->setData('BALANCE_REPORT_CHART', new Line(array(
                 'id'       => 'balanceReportChart',
                 'title'    => 'General Balance Report',
                 'data_url' => $this->getUrl('*/balanceReportChartData'),
@@ -119,7 +117,6 @@ class AccountController extends WhbController
                 'class'       => 'toolbar-top-right',
                 'show_legend' => false,
                 'footer_note' => $this->__('Only bank accounts are shown here.'),
-                'axis_type'   => Scatter::AXIS_TYPE_DATE_CURRENCY
             )))
         ;
     }
@@ -127,7 +124,9 @@ class AccountController extends WhbController
     public function topSpendingChartDataAction() {
         $xhb = $this->getXhbSession()->getModel();
         $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
+            'period' => $this->getRequestQuery('period')
+                ? $this->getRequestQuery('period')
+                : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
         );
 
         $sumsData = Chart\Operation::getTopSpendingReportData($xhb, $collFilters);
@@ -157,4 +156,4 @@ class AccountController extends WhbController
             ));
         $this->getView()->setData('DATA', $chartData);
     }
-} 
+}

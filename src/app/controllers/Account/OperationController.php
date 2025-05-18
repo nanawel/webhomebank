@@ -18,7 +18,6 @@ use app\models\core\I18n;
 use app\models\core\Log;
 use app\models\core\Main;
 use app\models\whb\App;
-use app\models\whb\Chart\Scatter;
 use app\models\whb\Form\Element\PeriodFilter;
 use app\models\whb\Form\Element\SearchFilter;
 use app\models\whb\Form\Element\StatusFilter;
@@ -110,8 +109,6 @@ class OperationController extends WhbController
         ));
         $filterFormElements['search'] = $searchFilter;
 
-        Design::instance()->addJs('chartjs/Chart.min.js')
-            ->addJs('chartjs/Chart.Scatter.js');    //FIXME Scale is buggy with minified JS
         $this->getView()
             ->setBlockTemplate('operation_toolbar', 'common/toolbar.phtml')
             ->setBlockTemplate('account_summary', 'account/operation/index/summary.phtml')
@@ -121,13 +118,12 @@ class OperationController extends WhbController
             ->setData('RESET_FILTERS_URL', $this->getUrl('*/*/*'))
             ->setData('FILTERS', $filterFormElements)
             ->setData('CURRENT_ORDER', $currentOrder)
-            ->setData('BALANCE_REPORT_CHART', new Scatter(array(
+            ->setData('BALANCE_REPORT_CHART', new Line(array(
                 'id'       => 'balanceReportChart',
                 'title'    => 'Balance Report',
                 'data_url' => $this->getUrl('*/balanceReportChartData/*', array('_query' => '*')),
                 'class'       => 'toolbar-top-right',
                 'show_legend' => false,
-                'axis_type'   => Scatter::AXIS_TYPE_DATE_CURRENCY
             )))
         ;
     }

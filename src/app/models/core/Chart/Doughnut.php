@@ -9,12 +9,12 @@
 namespace app\models\core\Chart;
 
 
-class Scatter extends AbstractChart
+class Doughnut extends AbstractChart
 {
     protected $_defaultData = array(
-        'type'     => 'scatter',
-        'template' => 'common/chart/scatter.phtml',
-        'width'    => 800,
+        'type'     => 'doughnut',
+        'template' => 'common/chart/doughnut.phtml',
+        'width'    => 300,
         'height'   => 300
     );
 }

@@ -20,6 +20,11 @@ upd:
 stop:
 	docker-compose stop
 
+.PHONY: restartd
+restartd:
+	$(MAKE) stop
+	$(MAKE) upd
+
 .PHONY: logs
 logs:
 	docker-compose logs

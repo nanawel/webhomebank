@@ -156,12 +156,32 @@ class Design extends \Prefab
     }
 
     /**
+     * @param array|string $filepath
+     * @param string $area
+     * @return $this
+     */
+    public function addJsModule($filepath, $area = 'header', $order = 0) {
+        $this->addItems($filepath, 'js_module', $area, $order);
+        return $this;
+    }
+
+    /**
      * @param array|string $content
      * @param string $area
      * @return $this
      */
     public function addInlineJs($content, $area = 'header', $order = 0) {
         $this->addItems($content, 'js_inline', $area, $order);
+        return $this;
+    }
+
+    /**
+     * @param array|string $content
+     * @param string $area
+     * @return $this
+     */
+    public function addInlineJsModule($content, $area = 'header', $order = 0) {
+        $this->addItems($content, 'js_module_inline', $area, $order);
         return $this;
     }
 
@@ -209,11 +229,15 @@ class Design extends \Prefab
                 $output = '<link rel="stylesheet" href="' . $this->getCssUrl($item) . '" type="text/css" />';
                 break;
             case 'js':
-                $output = '<script src="' . $this->getJsUrl($item) . '" type="application/javascript"></script>';
+            case 'js_module':
+                $typeAttr = $type == 'js_module' ? 'type="module"' : '';
+                $output = sprintf('<script src="%s" %s></script>', $this->getJsUrl($item), $scriptType);
                 break;
             case 'js_inline':
+            case 'js_module_inline':
+                $typeAttr = $type == 'js_module_inline' ? 'type="module"' : '';
                 $output = <<<"EOJS"
-<script type="application/javascript">
+<script $typeAttr>
 //<![CDATA[
 $item
 //]]>

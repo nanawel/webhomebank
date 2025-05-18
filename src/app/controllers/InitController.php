@@ -24,11 +24,6 @@ class InitController extends WhbController
 
         $this->setPageTitle($this->__('WebHomeBank'));
 
-        Design::instance()
-            ->addJs('jquery/jquery-2.1.4.min.js', 'header', -100)
-            ->addJs('whb/i18n.js')
-            ->addInlineJs("var LANGUAGE='{$fw->get('LANGUAGE')}';\nvar CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';\nvar i18n = new I18n(LANGUAGE, CURRENCY);");
-
         $this->canCacheOutput(false);
         $this->_setupLayoutBlocks();
     }

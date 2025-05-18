@@ -20,13 +20,17 @@
                 <?php endif; ?>
             </ul>
         </form>
-        <script type="application/javascript">
-            $('#toolbar-form select').change(function() {
-                $('#toolbar-form').submit();
-            });
-            $('#toolbar-form button.reset').click(function(ev) {
-                window.location = "<?php echo $RESET_FILTERS_URL ?>";
-                return false;
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                (function($) {
+                    $('#toolbar-form select').change(function() {
+                        $('#toolbar-form').submit();
+                    });
+                    $('#toolbar-form button.reset').click(function(ev) {
+                        window.location = "<?php echo $RESET_FILTERS_URL ?>";
+                        return false;
+                    });
+                })(jQuery);
             });
         </script>
     <?php endif; ?>

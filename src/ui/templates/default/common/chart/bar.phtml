@@ -1,29 +1,24 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anael
- * Date: 11/11/15
- * Time: 14:35
- */
+// @formatter:off
 /* @var $this \app\models\core\View */
 
 $chartId = $id;
-$chartVar = 'chart_' . $chartId . '_';
+$chartVar = 'chart_' . $chartId;
 ?>
 
-<div id="<?php echo $chartId ?>" class="chart <?php echo $class ?> <?php echo $type ?>">
+<div id="<?= $chartId ?>" class="chart <?= $class ?> <?= $type ?>">
     <div class="chart-heading">
-        <h2 class="chart-title"><?php echo $this->__($title) ?></h2>
+        <h2 class="chart-title"><?= $this->__($title) ?></h2>
     </div>
     <div class="chart-body">
         <div class="toolbar">
-            <form action="javascript:void(0)" id="<?php echo $chartId ?>_form">
+            <form action="javascript:void(0)" id="<?= $chartId ?>_form">
                 <ul>
                     <?php foreach ($filters as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>
                         <li>
-                            <span class="filter-label"><?php echo $this->__($filterElement->getLabel()) ?></span>
+                            <span class="filter-label"><?= $this->__($filterElement->getLabel()) ?></span>
                             <div class="filter-input">
-                                <?php echo $filterElement->toHtml() ?>
+                                <?= $filterElement->toHtml() ?>
                             </div>
                         </li>
                     <?php endforeach; ?>
@@ -36,86 +31,52 @@ $chartVar = 'chart_' . $chartId . '_';
 
         <div class="canvas-container">
             <div class="loading-anim"></div>
-            <canvas width="<?php echo $width ?>" height="<?php echo $height ?>"></canvas>
+            <canvas width="<?= $width ?>" height="<?= $height ?>"></canvas>
         </div>
 
         <script type="application/javascript">
             //<![CDATA[
-            var <?php echo $chartVar ?>Canvas;
-            var <?php echo $chartVar ?>;
-            function update<?php echo $chartVar ?>Chart() {
-                $('#<?php echo $chartId ?> .loading-anim').show();
-
-                var filters = $('#<?php echo $chartId ?>_form').serialize();
-                if (typeof(<?php echo $chartVar ?>) != "undefined") {
-                    <?php echo $chartVar ?>.destroy();
-                }
-                <?php echo $chartVar ?>Canvas = new Chart($('#<?php echo $chartId ?> canvas').get(0).getContext('2d'));
-                $.getJSON("<?php echo $data_url ?>", filters, function(data) {
-                    $('#<?php echo $chartId ?> .loading-anim').hide();
-                    $('#<?php echo $chartId ?> .no-data-message').remove();
-                    if (data == null || data.datasets.length == 0) {
-                        if (typeof <?php echo $chartVar ?> != "undefined") {
-                            <?php echo $chartVar ?>.clear();
+            window.addEventListener('DOMContentLoaded', function() {
+                (function($, Chart) {
+                    const <?= $chartVar ?> = new Chart($('#<?= $chartId ?> canvas').get(0), {
+                        type: 'bar',
+                        options: {
+                            animation: false,
+                            responsive: true,
+                            scaleBeginAtZero: true,
                         }
-                        $('#<?php echo $chartId ?> canvas').after('<div class="no-data-message"><?php echo $this->__($no_data_message); ?></div>');
-                        return;
-                    }
-                    for (var i in data['labels']) {
-                        var ts = data['labels'][i] * 1000;
-                        data['labels'][i] = i18n.formatDate(new Date(ts));
-                    }
-                    <?php echo $chartVar ?> = <?php echo $chartVar ?>Canvas.Bar(data, {
-                        animation: false,
-                        responsive: true,
-                        scaleBeginAtZero: true,
-                        datasetFill: false,
-                        pointHitDetectionRadius: 3,
-                        <?php if ($empty_data_message): ?>
-                            emptyDataMessage: '<?php echo \app\helpers\core\Output::jsQuoteEscape($empty_data_message) ?>',
-                        <?php endif ?>
-                        <?php if ($scale_date_time_format): ?>
-                            scaleDateTimeFormat: '<?php echo \app\helpers\core\Output::jsQuoteEscape($scale_date_time_format) ?>',
-                        <?php endif ?>
-                        <?php if ($scale_date_format): ?>
-                            scaleDateFormat: '<?php echo \app\helpers\core\Output::jsQuoteEscape($scale_date_format) ?>',
-                        <?php endif ?>
-                        <?php if ($scale_label): ?>
-                            scaleLabel: '<?php echo \app\helpers\core\Output::jsQuoteEscape($scale_label) ?>',
-                        <?php endif ?>
-                        <?php if ($scale_arg_label): ?>
-                            scaleArgLabel: '<?php echo \app\helpers\core\Output::jsQuoteEscape($scale_arg_label) ?>',
-                        <?php endif ?>
-                        <?php if ($legend_template): ?>
-                            legendTemplate: '<?php echo \app\helpers\core\Output::jsQuoteEscape($legend_template) ?>',
-                        <?php endif ?>
-                        <?php if ($tooltip_template): ?>
-                            tooltipTemplate: '<?php echo \app\helpers\core\Output::jsQuoteEscape($tooltip_template) ?>',
-                        <?php endif ?>
-                        <?php if ($multi_tooltip_template): ?>
-                            multiTooltipTemplate: '<?php echo \app\helpers\core\Output::jsQuoteEscape($multi_tooltip_template) ?>'
-                        <?php endif ?>
                     });
-                    $('#<?php echo $chartId ?> .legend').empty();
-                    try {
-                        $('#<?php echo $chartId ?> .legend').append(<?php echo $chartVar ?>.generateLegend());
-                    }
-                    catch (e) {
-                        // just ignore
-                    }
-                });
-            }
 
-            $(window).load(function() {
-                update<?php echo $chartVar ?>Chart();
-                $('#<?php echo $chartId ?> .toolbar select').change(update<?php echo $chartVar ?>Chart);
+                    function update<?= $chartVar ?>Chart() {
+                        $('#<?= $chartId ?> .loading-anim').show();
+
+                        const filters = $('#<?= $chartId ?>_form').serialize();
+                        $.getJSON("<?= $data_url ?>", filters, function(data) {
+                            $('#<?= $chartId ?> .loading-anim').hide();
+                            $('#<?= $chartId ?> .no-data-message').remove();
+                            if (data == null || data.datasets.length == 0) {
+                                if (typeof <?= $chartVar ?> != "undefined") {
+                                    <?= $chartVar ?>.clear();
+                                }
+                                $('#<?= $chartId ?> canvas').after('<div class="no-data-message"><?= $this->__($no_data_message); ?></div>');
+                                return;
+                            }
+                            whbChartjs.populateChartWithData(<?= $chartVar ?>, data);
+                        });
+                    }
+
+                    $(window).load(function() {
+                        update<?= $chartVar ?>Chart();
+                        $('#<?= $chartId ?> .toolbar select').change(update<?= $chartVar ?>Chart);
+                    });
+                })(jQuery, Chart, whbChartjs, i18n);
             });
             //]]>
         </script>
         <div class="clear"></div>
         <?php if ($footer_note): ?>
             <div class="chart-footer right">
-                <p><?php echo $footer_note ?></p>
+                <p><?= $footer_note ?></p>
             </div>
         <?php endif; ?>
     </div>

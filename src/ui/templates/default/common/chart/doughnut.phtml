@@ -1,6 +1,5 @@
 <?php
 // @formatter:off
-/** @var $_block \app\models\core\Chart\Line */
 
 $chartId = $id;
 $chartVar = 'chart_' . $chartId;
@@ -11,6 +10,10 @@ $chartVar = 'chart_' . $chartId;
         <h2 class="chart-title"><?= $this->__($title) ?></h2>
     </div>
     <div class="chart-body">
+        <div class="canvas-container">
+            <div class="loading-anim"></div>
+            <canvas width="<?= $width ?>" height="<?= $height ?>"></canvas>
+        </div>
         <div class="toolbar">
             <form action="javascript:void(0)" id="<?= $chartId ?>_form">
                 <ul>
@@ -29,22 +32,16 @@ $chartVar = 'chart_' . $chartId;
             <div id="<?= $chartId ?>-legend-container" class="legend"></div>
         <?php endif; ?>
 
-        <div class="canvas-container">
-            <canvas width="<?= $width ?>" height="<?= $height ?>"></canvas>
-        </div>
-
         <script>
             window.addEventListener('DOMContentLoaded', function() {
                 (function($, Chart) {
-                    //<![CDATA[
-                    <?php if ($show_legend): ?>
                     const getOrCreateLegendList = (chart, id) => {
                         const legendContainer = document.getElementById(id);
                         let listContainer = legendContainer.querySelector('ul');
 
                         if (!listContainer) {
                             listContainer = document.createElement('ul');
-                            listContainer.className = 'line-legend';
+                            listContainer.className = 'doughnut-legend';
 
                             legendContainer.appendChild(listContainer);
                         }
@@ -62,6 +59,9 @@ $chartVar = 'chart_' . $chartId;
                                 ul.firstChild.remove();
                             }
 
+                            if (!chart.data?.datasets.length) {
+                                return;
+                            }
                             // Reuse the built-in legendItems generator
                             const items = chart.options.plugins.legend.labels.generateLabels(chart);
 
@@ -109,70 +109,48 @@ $chartVar = 'chart_' . $chartId;
                             });
                         }
                     };
-                    <?php endif; ?>
 
                     const <?= $chartVar ?> = new Chart($('#<?= $chartId ?> canvas').get(0), {
-                        type: 'line',
+                        type: 'doughnut',
                         options: {
-                            responsive: true,
                             animation: false,
+                            responsive: true,
+                            maintainAspectRatio: false,
                             plugins: {
                                 htmlLegend: {
                                     containerID: '<?= $chartId ?>-legend-container',
                                 },
                                 legend: {
-                                    display: <?= $show_legend ? 'true' : 'false' ?>,
-                                },
-                                tooltip: {
-                                    enabled: true,
-                                    usePointStyle: true,
-                                    callbacks: {
-                                        title: (data) => data[0].dataset.label,
-                                        label: (data) => <?= $_block->getTooltipJsCallback('data.parsed.y') ?>,
-                                    },
-                                },
+                                    display: false,
+                                }
                             },
-                            scales: {
-                                x: {
-                                    type: 'time',
-                                    time: {
-                                        unit: 'week',
-                                        isoWeekday: true,
-                                    }
-                                },
-                            }
                         },
-                        <?php if ($show_legend): ?>
                         plugins: [htmlLegendPlugin],
-                        <?php endif; ?>
                     });
 
-                    const updateBalanceReportChart = function() {
+                    function update<?= $chartVar ?>() {
+                        <?= $chartVar ?>.clear();
+
+                        $('#<?= $chartId ?> .loading-anim').show();
+
                         var filters = $('#<?= $chartId ?>_form').serialize();
                         $.getJSON("<?= $data_url ?>", filters, function(data) {
+                            $('#<?= $chartId ?> .loading-anim').hide();
                             $('#<?= $chartId ?> .no-data-message').remove();
-                            if (data == null || data.datasets.length == 0) {
-                                if (typeof <?= $chartVar ?> != "undefined") {
-                                    <?= $chartVar ?>.clear();
-                                }
-                                $('#<?= $chartId ?> canvas').after('<div class="no-data-message"><?= $this->__($no_data_message); ?></div>');
-                                return;
-                            } else {
-                                console.debug('Line chart data', data);
-                                whbChartjs.populateChartWithData(<?= $chartVar ?>, data);
-                            }
+
+                            whbChartjs.populateDoughnutChartWithData(<?= $chartVar ?>, data);
+
+                            <?= $chartVar ?>.update();
                         });
                     }
 
                     $(window).load(function() {
-                        updateBalanceReportChart();
-                        $('#<?= $chartId ?> .toolbar select').change(updateBalanceReportChart);
+                        update<?= $chartVar ?>();
+                        $('#<?= $chartId ?> .toolbar .filter-input').change(update<?= $chartVar ?>);
                     });
-                })(jQuery, Chart, whbChartjs, i18n);
+                })(jQuery, Chart, whbChartjs);
             });
-            //]]>
         </script>
-        <div class="clear"></div>
         <?php if ($footer_note): ?>
             <div class="chart-footer right">
                 <p><?= $footer_note ?></p>
