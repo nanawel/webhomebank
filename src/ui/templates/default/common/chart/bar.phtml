@@ -37,8 +37,8 @@ $chartVar = 'chart_' . $chartId;
         <script type="application/javascript">
             //<![CDATA[
             window.addEventListener('DOMContentLoaded', function() {
-                (function($, Chart) {
-                    const <?= $chartVar ?> = new Chart($('#<?= $chartId ?> canvas').get(0), {
+                (function($) {
+                    const chart = new Chart($('#<?= $chartId ?> canvas').get(0), {
                         type: 'bar',
                         options: {
                             animation: false,
@@ -47,29 +47,29 @@ $chartVar = 'chart_' . $chartId;
                         }
                     });
 
-                    function update<?= $chartVar ?>Chart() {
+                    const updateChart = function() {
                         $('#<?= $chartId ?> .loading-anim').show();
 
                         const filters = $('#<?= $chartId ?>_form').serialize();
                         $.getJSON("<?= $data_url ?>", filters, function(data) {
                             $('#<?= $chartId ?> .loading-anim').hide();
                             $('#<?= $chartId ?> .no-data-message').remove();
-                            if (data == null || data.datasets.length == 0) {
-                                if (typeof <?= $chartVar ?> != "undefined") {
-                                    <?= $chartVar ?>.clear();
+                            if (data == null || !data.datasets?.length) {
+                                if (typeof chart != "undefined") {
+                                    chart.clear();
                                 }
                                 $('#<?= $chartId ?> canvas').after('<div class="no-data-message"><?= $this->__($no_data_message); ?></div>');
                                 return;
                             }
-                            whbChartjs.populateChartWithData(<?= $chartVar ?>, data);
+                            whbChartjs.populateChartWithData(chart, data);
                         });
                     }
 
                     $(window).load(function() {
-                        update<?= $chartVar ?>Chart();
-                        $('#<?= $chartId ?> .toolbar select').change(update<?= $chartVar ?>Chart);
+                        updateChart();
+                        $('#<?= $chartId ?> .toolbar select').change(updateChart);
                     });
-                })(jQuery, Chart, whbChartjs, i18n);
+                })(jQuery);
             });
             //]]>
         </script>

@@ -34,7 +34,7 @@ $chartVar = 'chart_' . $chartId;
 
         <script>
             window.addEventListener('DOMContentLoaded', function() {
-                (function($, Chart) {
+                (function($) {
                     const getOrCreateLegendList = (chart, id) => {
                         const legendContainer = document.getElementById(id);
                         let listContainer = legendContainer.querySelector('ul');
@@ -110,7 +110,7 @@ $chartVar = 'chart_' . $chartId;
                         }
                     };
 
-                    const <?= $chartVar ?> = new Chart($('#<?= $chartId ?> canvas').get(0), {
+                    const chart = new Chart($('#<?= $chartId ?> canvas').get(0), {
                         type: 'doughnut',
                         options: {
                             animation: false,
@@ -128,8 +128,8 @@ $chartVar = 'chart_' . $chartId;
                         plugins: [htmlLegendPlugin],
                     });
 
-                    function update<?= $chartVar ?>() {
-                        <?= $chartVar ?>.clear();
+                    function updateChart() {
+                        chart.clear();
 
                         $('#<?= $chartId ?> .loading-anim').show();
 
@@ -138,17 +138,17 @@ $chartVar = 'chart_' . $chartId;
                             $('#<?= $chartId ?> .loading-anim').hide();
                             $('#<?= $chartId ?> .no-data-message').remove();
 
-                            whbChartjs.populateDoughnutChartWithData(<?= $chartVar ?>, data);
+                            whbChartjs.populateDoughnutChartWithData(chart, data);
 
-                            <?= $chartVar ?>.update();
+                            chart.update();
                         });
                     }
 
                     $(window).load(function() {
-                        update<?= $chartVar ?>();
-                        $('#<?= $chartId ?> .toolbar .filter-input').change(update<?= $chartVar ?>);
+                        updateChart();
+                        $('#<?= $chartId ?> .toolbar .filter-input').change(updateChart);
                     });
-                })(jQuery, Chart, whbChartjs);
+                })(jQuery);
             });
         </script>
         <?php if ($footer_note): ?>

@@ -1,4 +1,4 @@
-import jQuery from "jquery";
+import "./jquery.js";
 
 import I18n from "./i18n.js";
 

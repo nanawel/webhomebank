@@ -1,6 +1,8 @@
 import {
     ArcElement,
     BarController,
+    BarElement,
+    CategoryScale,
     Chart,
     DoughnutController,
     Legend,
@@ -17,6 +19,8 @@ import "chartjs-adapter-moment";
 Chart.register(
     ArcElement,
     BarController,
+    BarElement,
+    CategoryScale,
     DoughnutController,
     Legend,
     LineController,
