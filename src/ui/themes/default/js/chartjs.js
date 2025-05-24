@@ -88,7 +88,7 @@ const populateBarChartWithData = function(chart, data) {
 }
 
 // Helper function for compatibility with ChartJS 2+
-const populateChartWithData = function (chart, data) {
+const populateLineChartWithData = function (chart, data) {
     chart.data.datasets.splice(0, chart.data.datasets.length);
 
     for (let i in data['datasets']) {
@@ -112,11 +112,90 @@ const populateChartWithData = function (chart, data) {
     chart.update();
 }
 
+/**
+ * See https://www.chartjs.org/docs/4.4.9/samples/legend/html.html
+ */
+const getOrCreateLegendList = (chart, id) => {
+    const legendContainer = document.getElementById(id);
+    let listContainer = legendContainer.querySelector('ul');
+
+    if (!listContainer) {
+        listContainer = document.createElement('ul');
+        listContainer.className = 'line-legend';
+
+        legendContainer.appendChild(listContainer);
+    }
+
+    return listContainer;
+};
+const htmlLegendPlugin = {
+    id: 'htmlLegend',
+    afterUpdate(chart, args, options) {
+        const ul = getOrCreateLegendList(chart, options.containerID);
+
+        // Remove old legend items
+        while (ul.firstChild) {
+            ul.firstChild.remove();
+        }
+
+        if (!chart.data?.datasets.length) {
+            return;
+        }
+
+        // Reuse the built-in legendItems generator
+        const items = chart.options.plugins.legend.labels.generateLabels(chart);
+
+        items.forEach(item => {
+            const li = document.createElement('li');
+            li.style.cursor = 'pointer';
+
+            li.onclick = () => {
+                const {type} = chart.config;
+                if (type === 'pie' || type === 'doughnut') {
+                    // Pie and doughnut charts only have a single dataset and visibility is per item
+                    chart.toggleDataVisibility(item.index);
+                } else {
+                    chart.setDatasetVisibility(item.datasetIndex, !chart.isDatasetVisible(item.datasetIndex));
+                }
+                chart.update();
+            };
+
+            // Color box
+            const boxSpan = document.createElement('span');
+            boxSpan.style.background = item.fillStyle;
+            boxSpan.style.borderColor = item.strokeStyle;
+            boxSpan.style.borderWidth = item.lineWidth + 'px';
+            boxSpan.style.display = 'inline-block';
+            boxSpan.style.flexShrink = 0;
+            boxSpan.style.height = '20px';
+            boxSpan.style.marginRight = '10px';
+            boxSpan.style.width = '20px';
+            boxSpan.className = 'label-color';
+
+            // Text
+            const textContainer = document.createElement('span');
+            textContainer.style.color = item.fontColor;
+            textContainer.style.margin = 0;
+            textContainer.style.padding = 0;
+            textContainer.style.textDecoration = item.hidden ? 'line-through' : '';
+            textContainer.className = 'label-text';
+
+            const text = document.createTextNode(item.text);
+            textContainer.appendChild(text);
+
+            li.appendChild(boxSpan);
+            li.appendChild(textContainer);
+            ul.appendChild(li);
+        });
+    }
+};
+
 const whbChartjs = {
     Chart,
     populateBarChartWithData,
-    populateChartWithData,
+    populateLineChartWithData,
     populateDoughnutChartWithData,
+    htmlLegendPlugin,
 }
 
 window.whbChartjs = whbChartjs;

@@ -43,10 +43,10 @@ class WhbController extends AbstractController
             ->setBlockTemplate('footer', 'page/footer.phtml')
             ->setBlockTemplate('header', 'page/header.phtml')
             ->setBlockTemplate('header.nav', 'page/header/nav.phtml')
-            //->setBlockCachePlaceholder('footer');                                 // Both method calls
-            ->setBlockCachePlaceholder('footer', function() {                       // are equivalent here.
-                    return $this->getView()->renderBlockWithoutCache('footer');     //
-                })                                                                  //
+            //->setBlockCachePlaceholder('footer');                             // Both method calls
+            ->setBlockCachePlaceholder('footer', function() {                   // are equivalent here.
+                return $this->getView()->renderBlockWithoutCache('footer');     //
+            })                                                                  //
             ->setBlockTemplate('messages', 'messages.phtml')
             ->setBlockCachePlaceholder('messages');
         return $this;

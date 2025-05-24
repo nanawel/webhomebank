@@ -12,11 +12,11 @@ namespace app\models\core\Chart;
 class Line extends AbstractChart
 {
     protected $_defaultData = array(
-        'type'     => 'line',
-        'template' => 'common/chart/line.phtml',
-        'width'    => 800,
-        'height'   => 300,
-        'class'    => 'toolbar-top-right',
+        'type'         => 'line',
+        'template'     => 'common/chart/line.phtml',
+        'width'        => 800,
+        'height'       => 300,
+        'class'        => 'toolbar-top-right',
         'scale_y_unit' => self::SCALE_Y_UNIT_CURRENCY
     );
 }

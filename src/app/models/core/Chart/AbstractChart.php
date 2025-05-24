@@ -82,7 +82,7 @@ class AbstractChart extends MagicObject
         return $html;
     }
 
-    public function getTooltipJsCallback($jsValueVar = null) {
+    public function getTooltipJsCallback($jsValueVar = 'data.parsed.y') {
         switch ($this->getData('scale_y_unit')) {
             case self::SCALE_Y_UNIT_CURRENCY:
                 return "i18n.formatCurrency($jsValueVar)";
