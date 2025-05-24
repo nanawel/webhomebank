@@ -25,23 +25,32 @@ use app\models\core\View;
 abstract class AbstractController
 {
     const CACHE_REQUEST_OUTPUT_PREFIX     = 'REQUEST_';
+
     const CACHE_REQUEST_OUTPUT_TTL        = 120;
+
     const CACHE_DEFAULT_TTL               = 600;
+
     const PAGE_BLOCK_NAME                 = 'page';
+
     const PAGE_TEMPLATE_DEFAULT           = 'layout.phtml';
 
     /* @var $_fw \Base */
     protected $_fw = null;
 
     protected $_controller = null;
+
     protected $_action = null;
+
     protected $_rawRequestParams;
-    protected $_requestParams = array();
+
+    protected $_requestParams = [];
 
     protected $_viewInstance = null;
 
     protected $_shouldRender = true;
+
     protected $_renderedFromCache = true;
+
     protected $_canCacheOutput = true;
 
     public final function __construct($fw) {
@@ -66,10 +75,12 @@ abstract class AbstractController
         if ($controller === null) {
             $controller = 'index';
         }
+
         $action = array_shift($parts);
         if ($action === null) {
             $action = 'index';
         }
+
         $this->_controller = $controller;
         $this->_action = $action;
         $this->_setRequestParams($parts);
@@ -91,6 +102,7 @@ abstract class AbstractController
         if (count($values) < count($keys)) {
             $values[] = null;
         }
+
         $this->_requestParams = array_combine($keys, $values);
         return $this;
     }
@@ -100,7 +112,7 @@ abstract class AbstractController
     }
 
     protected function _getRequestParam($param) {
-        return isset($this->_requestParams[$param]) ? $this->_requestParams[$param] : null;
+        return $this->_requestParams[$param] ?? null;
     }
 
     public function getRequestQuery($param = null) {
@@ -108,7 +120,8 @@ abstract class AbstractController
         if ($param === null) {
             return $query;
         }
-        return isset($query[$param]) ? $query[$param] : null;
+
+        return $query[$param] ?? null;
     }
 
     public function getFullActionName() {
@@ -117,7 +130,7 @@ abstract class AbstractController
 
     protected function _setContentTemplate() {
         $fullAction = $this->getFullActionName();
-        $defaultTemplate = str_replace(array('_', '/'), DIRECTORY_SEPARATOR, $fullAction) . View::TEMPLATE_DEFAULT_EXTENSION;
+        $defaultTemplate = str_replace(['_', '/'], DIRECTORY_SEPARATOR, $fullAction) . View::TEMPLATE_DEFAULT_EXTENSION;
         $this->getView()->setBlockTemplate(View::TEMPLATE_CONTENT_KEY, $defaultTemplate);
         return $this;
     }
@@ -148,7 +161,7 @@ abstract class AbstractController
      * @param bool $shouldRender
      */
     public function setShouldRender($shouldRender) {
-        $this->_shouldRender = $shouldRender ? true : false;
+        $this->_shouldRender = $shouldRender;
         return $this;
     }
 
@@ -199,10 +212,8 @@ abstract class AbstractController
         }
 
         $beforeMethod = '_' . $this->getActionName() . 'ActionBefore';
-        if (method_exists($this, $beforeMethod)) {
-            if (!$this->$beforeMethod($fw, $args) === false) {
-                return false;
-            }
+        if (method_exists($this, $beforeMethod) && $this->$beforeMethod($fw, $args)) {
+            return false;
         }
 
         if ($this->_renderedFromCache = $this->_renderFromCache()) {
@@ -210,6 +221,7 @@ abstract class AbstractController
             // Rendered from cache successfully, so skip @action() method and afterRoute()
             return false;
         }
+
         return true;
     }
 
@@ -221,11 +233,13 @@ abstract class AbstractController
         if ($this->_afterRoute($fw, $args) === false) {
             return false;
         }
+
         $this->_render();
         $this->__afterRender($fw, $args);
+        return null;
     }
 
-    private function __afterRender($fw, $args = null) {
+    private function __afterRender($fw, $args = null): void {
         $this->getSession()->set('last_url', $fw->get('REALM'));
         $this->_afterRender($fw, $args);
     }
@@ -256,7 +270,7 @@ abstract class AbstractController
      * @return View
      */
     public function getView() {
-        return $this->_viewInstance ? $this->_viewInstance : View::instance();
+        return $this->_viewInstance ?: View::instance();
     }
 
     protected function _render() {
@@ -268,6 +282,7 @@ abstract class AbstractController
             echo $output;
             return true;
         }
+
         return false;
     }
 
@@ -281,11 +296,12 @@ abstract class AbstractController
             $this->_shouldRender = false;
             return true;
         }
+
         return false;
     }
 
-    public function canCacheOutput($canCache = true) {
-        $this->_canCacheOutput = $canCache ? true :false;
+    public function canCacheOutput($canCache = true): void {
+        $this->_canCacheOutput = (bool) $canCache;
     }
 
     protected function _saveOutputToCache($output) {
@@ -308,6 +324,7 @@ abstract class AbstractController
             $cacheKey = $this->_getRequestCacheKey();
             return Main::app()->loadCache(self::CACHE_REQUEST_OUTPUT_PREFIX . $cacheKey);
         }
+
         return false;
     }
 
@@ -316,16 +333,17 @@ abstract class AbstractController
     }
 
     protected function _getRequestCacheKeyInfo() {
-        return array(
+        return [
             $this->_fw->get('REALM'),
             $this->getSession()->getLocale()
-        );
+        ];
     }
 
     protected function _saveCache($key, $data, $ttl = self::CACHE_DEFAULT_TTL, $strictFullActionName = true) {
         if ($strictFullActionName) {
             $key = $this->getFullActionName() . '_' . $key;
         }
+
         Main::app()->saveCache($key, $data, $ttl);
         return $this;
     }
@@ -334,6 +352,7 @@ abstract class AbstractController
         if ($strictFullActionName) {
             $key = $this->getFullActionName() . '_' . $key;
         }
+
         return Main::app()->loadCache($key);
     }
 
@@ -354,12 +373,14 @@ abstract class AbstractController
         elseif ($parts[0] == '*') {
             $parts[0] = $this->getControllerName();
         }
+
         if (!isset($parts[1])) {
             $parts[1] = 'index';
         }
         elseif (isset($parts[1]) && $parts[1] == '*') {
             $parts[1] = $this->getActionName();
         }
+
         if (count($parts) == 3 && $parts[2] == '*') {
             if (isset($this->_rawRequestParams['*'])) {
                 $parts[2] = $this->_rawRequestParams['*'];
@@ -367,6 +388,7 @@ abstract class AbstractController
                 unset($parts[2]);
             }
         }
+
         return implode('/', $parts);
     }
 
@@ -394,6 +416,7 @@ abstract class AbstractController
         if ($referrer && $referrer != $this->_fw->get('REALM')) {
             return $referrer;
         }
+
         return null;
     }
 
@@ -404,11 +427,12 @@ abstract class AbstractController
         else {
             $this->_reroute('/');
         }
+
         return $this;
     }
 
     protected function _reroute($path, $permanent = false) {
-        $url = $this->getUrl($path, array('_force_scheme' => true));
+        $url = $this->getUrl($path, ['_force_scheme' => true]);
         $this->_rerouteUrl($url, $permanent);
     }
 
@@ -416,7 +440,7 @@ abstract class AbstractController
         $this->_fw->reroute($url, $permanent);
     }
 
-    function __call($name, $arguments) {
+    public function __call(string $name, $arguments) {
         if (strcasecmp(substr($name, -6), 'action') === 0) {
             // Tried to call an undefined action, return 404 (instead of 405 from standard)
             if ($this->_fw->get('DEBUG') > 1) {
@@ -425,8 +449,10 @@ abstract class AbstractController
                     LOG_INFO
                 );
             }
+
             $this->_fw->error(404);
             return false;
         }
+        return null;
     }
 }

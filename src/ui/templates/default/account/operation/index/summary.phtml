@@ -4,16 +4,16 @@ $account = \Base::instance()->get('current_account');
 ?>
 <div class="account-balance-summary">
     <div class="label-value-group">
-        <label class="label first"><?php echo $this->__('Bank: ') ?></label>
-        <span class="value balance bank-balance"><?php echo $this->i18n()->currency($account->getBankBalance(), true) ?></span>
+        <label class="label first"><?= $this->__('Bank: ') ?></label>
+        <span class="value balance bank-balance"><?= $this->i18n()->currency($account->getBankBalance(), true) ?></span>
     </div>
     <div class="label-value-group">
-        <label class="label"><?php echo $this->__('Today: ') ?></label>
-        <span class="value balance today-balance"><?php echo $this->i18n()->currency($account->getTodayBalance(), true) ?></span>
+        <label class="label"><?= $this->__('Today: ') ?></label>
+        <span class="value balance today-balance"><?= $this->i18n()->currency($account->getTodayBalance(), true) ?></span>
     </div>
     <div class="label-value-group">
-        <label class="label"><?php echo $this->__('Future: ') ?></label>
-        <span class="value balance future-balance last"><?php echo $this->i18n()->currency($account->getFutureBalance(), true) ?></span>
+        <label class="label"><?= $this->__('Future: ') ?></label>
+        <span class="value balance future-balance last"><?= $this->i18n()->currency($account->getFutureBalance(), true) ?></span>
     </div>
 </div>
 

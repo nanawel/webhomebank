@@ -13,11 +13,13 @@ use app\controllers\Core\AbstractController;
 abstract class App
 {
     const SESSION_DEFAULT = 'core';
+
     const CONFIG_KEY_PREFIX = 'app.';
 
     const DEFAULT_TMP_DIR = 'var/tmp/';
 
-    protected $_sessions = array();
+    protected $_sessions = [];
+
     protected $_customSessionsConfig;
 
     protected $_useCache = false;
@@ -38,8 +40,8 @@ abstract class App
     /**
      * @return void
      */
-    public final function setup() {
-        $this->_useCache = \Base::instance()->get('CACHE') ? true : false;
+    public final function setup(): void {
+        $this->_useCache = (bool) \Base::instance()->get('CACHE');
         $this->_setup();
         $this->_initTmpDir();
     }
@@ -51,11 +53,11 @@ abstract class App
         // to be overridden
     }
 
-    public function setConfig($key, $value) {
+    public function setConfig(string $key, $value) {
         return \Base::instance()->set(self::CONFIG_KEY_PREFIX . $key, $value);
     }
 
-    public function getConfig($key) {
+    public function getConfig(string $key) {
         return \Base::instance()->get(self::CONFIG_KEY_PREFIX . $key);
     }
 
@@ -67,6 +69,7 @@ abstract class App
         if ($name === null) {
             $name = self::SESSION_DEFAULT;
         }
+
         if (!isset($this->_sessions[$name])) {
             $customSessions = $this->_getCustomSessionsConfig();
             if (isset($customSessions[$name])) {
@@ -76,6 +79,7 @@ abstract class App
                 $this->_sessions[$name] = new Session($name);
             }
         }
+
         return $this->_sessions[$name];
     }
 
@@ -83,10 +87,11 @@ abstract class App
         if (!$this->_customSessionsConfig) {
             $config = explode(';', $this->getConfig('CUSTOM_SESSIONS'));
             foreach($config as $session) {
-                list($key, $class) = explode(':', $session);
+                [$key, $class] = explode(':', $session);
                 $this->_customSessionsConfig[$key] = $class;
             }
         }
+
         return $this->_customSessionsConfig;
     }
 
@@ -126,6 +131,7 @@ abstract class App
                 $this->_cache = false;
             }
         }
+
         return $this->_cache;
     }
 
@@ -144,21 +150,14 @@ abstract class App
     }
 
     protected function _initTmpDir() {
-        if ($tmpDir = \Base::instance()->get('TEMP')) {
-            $this->_tmpDir = $tmpDir;
-        }
-        else {
-            $this->_tmpDir = self::DEFAULT_TMP_DIR;
-        }
+        $this->_tmpDir = \Base::instance()->get('TEMP') ?: self::DEFAULT_TMP_DIR;
+
         if (!is_dir($this->_tmpDir)) {
             if (!@mkdir($this->_tmpDir, 0770, true)) {
                 throw new \Exception('Cannot create temporary directory in ' . realpath(dirname($this->_tmpDir)) . ', please adjust permissions first.');
             }
-        }
-        else {
-            if (!is_writable($this->_tmpDir)) {
-                throw new \Exception($this->_tmpDir. ' must be writable');
-            }
+        } elseif (!is_writable($this->_tmpDir)) {
+            throw new \Exception($this->_tmpDir. ' must be writable');
         }
     }
 
@@ -171,11 +170,12 @@ abstract class App
      * @return array
      */
     public static function configToHashmap($config, $valueSeparator = ';', $keyValueSeparator = ':') {
-        $return = array();
+        $return = [];
         foreach(explode($valueSeparator, $config) as $c) {
-            list($key, $value) = explode($keyValueSeparator, $c);
+            [$key, $value] = explode($keyValueSeparator, $c);
             $return[$key] = $value;
         }
+
         return $return;
     }
 }

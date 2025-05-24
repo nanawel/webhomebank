@@ -12,7 +12,7 @@ class Main extends \Prefab
 {
     protected static $_app;
 
-    public function setup() {
+    public function setup(): self {
         $this->_checkRequirements();
         $this->_installErrorHandler();
         $this->_registerShutdownFunction();
@@ -38,29 +38,32 @@ class Main extends \Prefab
             if (!$appClass) {
                 throw new \Exception('Missing app.APP_CLASS in configuration');
             }
+
             self::$_app = new $appClass();
             self::$_app->setup();
         }
+
         return self::$_app;
     }
 
     protected function _installErrorHandler() {
-        set_error_handler(array(__CLASS__, '__exception_error_handler'));
+        set_error_handler([self::class, '__exception_error_handler']);
     }
 
     protected function _registerShutdownFunction() {
-        register_shutdown_function(array(__CLASS__, '__on_shutdown'));
+        register_shutdown_function([self::class, '__on_shutdown']);
     }
 
-    public static function __exception_error_handler($severity, $message, $file, $line) {
-        if (!(error_reporting() & $severity)) {
+    public static function __exception_error_handler($severity, $message, $file, $line): void {
+        if ((error_reporting() & $severity) === 0) {
             // This error code is not included in error_reporting
             return;
         }
+
         throw new \ErrorException($message, 0, $severity, $file, $line);
     }
 
-    public static function __on_shutdown() {
+    public static function __on_shutdown(): void {
         //nothing for now
     }
 }

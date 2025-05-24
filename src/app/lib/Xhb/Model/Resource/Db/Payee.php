@@ -13,8 +13,8 @@ class Payee extends AbstractModel
 {
     const MAIN_TABLE = 'payee';
 
-    public function __construct(array $params = array()) {
+    public function __construct(array $params = []) {
         parent::__construct($params);
-        $this->_init(array('xhb_id', 'key'), self::MAIN_TABLE);
+        $this->_init(['xhb_id', 'key'], self::MAIN_TABLE);
     }
 }

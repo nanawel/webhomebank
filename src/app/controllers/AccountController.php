@@ -26,7 +26,7 @@ class AccountController extends WhbController
     protected function _beforeRoute($fw, $args = null) {
         parent::_beforeRoute($fw, $args);
 
-        $this->_addCrumbsToTitle(array('Accounts'));
+        $this->_addCrumbsToTitle(['Accounts']);
     }
 
     protected function _indexActionBefore() {
@@ -39,40 +39,41 @@ class AccountController extends WhbController
     /**
      * @param \Base $fw
      */
-    public function indexAction() {
+    public function indexAction(): void {
         $xhb = $this->getXhbSession()->getModel();
         $gridDataCacheKey = 'gridData_'. $xhb->getUniqueKey();
         $totalDataCacheKey = 'totalData_'. $xhb->getUniqueKey();
 
         if (!($gridData = $this->_loadCache($gridDataCacheKey)) || !($totalData = $this->_loadCache($totalDataCacheKey))) {
-            $gridData = array();
-            $totalData = array();
+            $gridData = [];
+            $totalData = [];
             /* @var $account \Xhb\Model\Account */
             foreach($xhb->getAccountCollection() as $account) {
                 $type = $account->getType(true);
-                $accountData = array(
+                $accountData = [
                     'account' => $account,
-                    'balances' => array(
+                    'balances' => [
                         Constants::BALANCE_TYPE_BANK => $account->getBankBalance(),
                         Constants::BALANCE_TYPE_TODAY => $account->getTodayBalance(),
                         Constants::BALANCE_TYPE_FUTURE => $account->getFutureBalance()
-                    )
-                );
+                    ]
+                ];
                 $gridData[$type][] = $accountData;
 
                 if (!isset($totalData[$type])) {
-                    $totalData[$type] = array(
+                    $totalData[$type] = [
                         Constants::BALANCE_TYPE_BANK => 0,
                         Constants::BALANCE_TYPE_TODAY => 0,
                         Constants::BALANCE_TYPE_FUTURE => 0
-                    );
+                    ];
                 }
+
                 if (!isset($totalData['grand_total'])) {
-                    $totalData['grand_total'] = array(
+                    $totalData['grand_total'] = [
                         Constants::BALANCE_TYPE_BANK => 0,
                         Constants::BALANCE_TYPE_TODAY => 0,
                         Constants::BALANCE_TYPE_FUTURE => 0
-                    );
+                    ];
                 }
 
                 $totalData[$type][Constants::BALANCE_TYPE_BANK] += $accountData['balances'][Constants::BALANCE_TYPE_BANK];
@@ -92,57 +93,55 @@ class AccountController extends WhbController
             ->setBlockTemplate('charts', 'account/index/charts.phtml')
             ->setData('GRID_DATA', $gridData)
             ->setData('TOTAL_DATA', $totalData)
-            ->setData('TOP_SPENDING_CHART', new Doughnut(array(
+            ->setData('TOP_SPENDING_CHART', new Doughnut([
                 'id'       => 'topSpendingChart',
                 'title'    => 'Where your money goes',
                 'data_url' => $this->getUrl('*/topSpendingChartData'),
-                'filters'  => array(
-                    new PeriodFilter($xhb, array(
+                'filters'  => [
+                    new PeriodFilter($xhb, [
                         'name'  => 'period',
                         'value' => Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
-                    ))
-                ),
+                    ])
+                ],
                 'class' => 'toolbar-right'
-            )))
-            ->setData('BALANCE_REPORT_CHART', new Line(array(
+            ]))
+            ->setData('BALANCE_REPORT_CHART', new Line([
                 'id'       => 'balanceReportChart',
                 'title'    => 'General Balance Report',
                 'data_url' => $this->getUrl('*/balanceReportChartData'),
-                'filters'  => array(
-                    new PeriodFilter($xhb, array(
+                'filters'  => [
+                    new PeriodFilter($xhb, [
                         'name' => 'period',
                         'value' => Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
-                    ))
-                ),
+                    ])
+                ],
                 'class'       => 'toolbar-top-right',
                 'show_legend' => false,
                 'footer_note' => $this->__('Only bank accounts are shown here.'),
-            )))
+            ]))
         ;
     }
 
-    public function topSpendingChartDataAction() {
+    public function topSpendingChartDataAction(): void {
         $xhb = $this->getXhbSession()->getModel();
-        $collFilters = array(
-            'period' => $this->getRequestQuery('period')
-                ? $this->getRequestQuery('period')
-                : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
-        );
+        $collFilters = [
+            'period' => $this->getRequestQuery('period') ?: Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
+        ];
 
         $sumsData = Chart\Operation::getTopSpendingReportData($xhb, $collFilters);
 
-        $this->setPageConfig(array(
+        $this->setPageConfig([
             'template' => 'data/json.phtml',
             'mime'     => 'application/json'
-        ));
+        ]);
         $this->getView()->setData('DATA', $sumsData);
     }
 
-    public function balanceReportChartDataAction() {
+    public function balanceReportChartDataAction(): void {
         $xhb = $this->getXhbSession()->getModel();
-        $collFilters = array(
-            'period' => $this->getRequestQuery('period') ? $this->getRequestQuery('period') : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
-        );
+        $collFilters = [
+            'period' => $this->getRequestQuery('period') ?: Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD')
+        ];
 
         $accountCollection = $xhb->getAccountCollection()
             ->addFieldToFilter('type', Constants::ACC_TYPE_BANK);
@@ -150,10 +149,10 @@ class AccountController extends WhbController
 
         $chartData = Chart\Operation::getBalanceReportData($xhb, $collFilters, $accountIds, true);
 
-        $this->setPageConfig(array(
+        $this->setPageConfig([
                 'template' => 'data/json.phtml',
                 'mime'     => 'application/json'
-            ));
+            ]);
         $this->getView()->setData('DATA', $chartData);
     }
 }

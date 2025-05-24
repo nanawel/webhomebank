@@ -11,27 +11,32 @@ namespace app\models\core;
 class Session extends \Magic
 {
     const MESSAGE_INFO = 'info';
+
     const MESSAGE_WARN = 'warn';
+
     const MESSAGE_ERROR = 'error';
 
     const MESSAGES_KEY = '__messages';
 
     protected static $_cacheInstance;
+
     protected static $_session;
 
     protected $_name;
+
     protected $_data;
 
-    public function __construct($name) {
+    public function __construct(string $name) {
         if (!self::$_session) {
             self::$_cacheInstance = new \Cache(Main::app()->getConfig('SESSIONS'));
             self::$_session = new \Session(null, null, self::$_cacheInstance);
         }
+
         $this->_name = $name;
         $this->_data =& \Base::instance()->ref('SESSION.' . $name);
     }
 
-    public function getId() {
+    public function getId(): string {
         return session_id() . '' . $this->_name;
     }
 
@@ -51,6 +56,7 @@ class Session extends \Magic
         else {
             $val = null;
         }
+
         return $val;
     }
 
@@ -59,18 +65,19 @@ class Session extends \Magic
         return $this;
     }
 
-    public function addMessage($message, $type, $options = array()) {
+    public function addMessage($message, $type, $options = []): self {
         $messages = $this->getMessages();
         $key = md5($message);
 
         // Prevent adding the same message multiple times
         if (!isset($messages[$type][$key])) {
-            $messages[$type][$key] = array(
+            $messages[$type][$key] = [
                 'message' => $message,
                 'options' => $options
-            );
+            ];
             $this->set(self::MESSAGES_KEY, $messages);
         }
+
         return $this;
     }
 
@@ -80,9 +87,10 @@ class Session extends \Magic
      */
     public function getMessages() {
         $messages = $this->get(self::MESSAGES_KEY);
-        if (!is_array($messages) || empty($messages)) {
+        if (!is_array($messages) || $messages === []) {
             $messages = $this->clearMessages();
         }
+
         return $messages;
     }
 
@@ -92,27 +100,29 @@ class Session extends \Magic
      */
     public function getMessagesByType($type) {
         $messages = $this->getMessages();
-        return isset($messages[$type]) ? $messages[$type] : array();
+        return $messages[$type] ?? [];
     }
 
-    public function clearMessages() {
-        $messages = array(
-            self::MESSAGE_INFO  => array(),
-            self::MESSAGE_WARN  => array(),
-            self::MESSAGE_ERROR => array(),
-        );
+    public function clearMessages(): array {
+        $messages = [
+            self::MESSAGE_INFO  => [],
+            self::MESSAGE_WARN  => [],
+            self::MESSAGE_ERROR => [],
+        ];
         $this->set(self::MESSAGES_KEY, $messages);
         return $messages;
     }
 
     public function getLocale() {
         if (!$locale = $this->get('locale')) {
-            list($locale) = explode(',', \Base::instance()->get('LANGUAGE'));
+            [$locale] = explode(',', \Base::instance()->get('LANGUAGE'));
             if (strpos($locale, '.') === false) {
                 $locale .= '.' . \Base::instance()->get('ENCODING');
             }
+
             $this->setLocale($locale);
         }
+
         return $locale;
     }
 
@@ -124,6 +134,7 @@ class Session extends \Magic
         if ($theme = $this->get('theme')) {
             return $theme;
         }
+
         return null;
     }
 

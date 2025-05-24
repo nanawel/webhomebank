@@ -13,7 +13,7 @@ interface AdapterInterface
      * @param $xhbId string
      * @return boolean
      */
-    public function xhbExists($xhbId);
+    public function xhbExists($xhbId): bool;
 
     /**
      * @param $xhbData array
@@ -21,5 +21,5 @@ interface AdapterInterface
      * @param $force boolean
      * @return void
      */
-    public function importXhbData($xhbData, $xhbId, $force = false);
+    public function importXhbData($xhbData, $xhbId, $force = false): bool;
 }

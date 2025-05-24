@@ -5,34 +5,34 @@ $design = \app\models\core\Design::instance();
 $url = \app\models\core\Url::instance();
 /* @var $this \app\models\core\View */
 ?>
-<html lang="<?php echo $fw->get('HTML_LANG'); ?>">
+<html lang="<?= $fw->get('HTML_LANG'); ?>">
 
-    <?php echo $this->renderBlock('head') ?>
+    <?= $this->renderBlock('head') ?>
 
-	<body<?php if ($class = $design->getBodyClass()) echo ' class="' . $class . '"' ?>>
+    <body<?php if ($class = $design->getBodyClass()) echo ' class="' . $class . '"' ?>>
 
         <div class="header-container">
-            <?php echo $this->renderBlock('header') ?>
+            <?= $this->renderBlock('header') ?>
         </div>
 
         <div class="clear"></div>
 
         <div class="main-content">
             <div class="session-messages">
-                <?php echo $this->renderBlock('messages'); ?>
+                <?= $this->renderBlock('messages'); ?>
             </div>
             <div id="content-wrapper">
                 <div class="content">
-                    <?php echo $this->renderBlock('content'); ?>
+                    <?= $this->renderBlock('content'); ?>
                 </div>
             </div>
         </div>
 
-		<div class="clear"></div>
+        <div class="clear"></div>
         <div class="footer center">
-            <?php echo $this->renderBlock('footer') ?>
+            <?= $this->renderBlock('footer') ?>
         </div>
 
-		<?php echo $design->renderItems('footer'); ?>
-	</body>
+        <?= $design->renderItems('footer'); ?>
+    </body>
 </html>

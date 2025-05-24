@@ -31,25 +31,27 @@ use Xhb\Util\MagicObject;
 class AbstractChart extends MagicObject
 {
     public const SCALE_Y_UNIT_CURRENCY = '__currency__';
+
     public const SCALE_Y_UNIT_NUMBER = '__number__';
+
     public const SCALE_Y_UNIT_CUSTOM = '__custom__';
 
-    protected static $_commonDefaultData = array(
+    protected static $_commonDefaultData = [
         'escape_hives'           => false,
         'no_data_message'        => 'No Data',
         'empty_data_message'     => 'No Data',
         'mimetype'               => 'text/html',
         'width'                  => 600,
         'height'                 => 300,
-        'filters'                => array(),
+        'filters'                => [],
         'footer_note'            => '',
         'class'                  => '',
         'show_legend'            => true,
-    );
+    ];
 
-    protected $_defaultData = array();
+    protected $_defaultData = [];
 
-    public function __construct($data = array()) {
+    public function __construct($data = []) {
         parent::__construct(array_merge(self::$_commonDefaultData, $this->_defaultData, $data));
     }
 
@@ -64,13 +66,15 @@ class AbstractChart extends MagicObject
     protected function _toHtml() {
         if (!$template = $this->getTemplate()) {
             Log::instance()->log('No template defined for chart with ID "' . $this->getId() . '", skipping.',LOG_ERR);
-            return;
+            return null;
         }
+
         $fw = \Base::instance();
         if ($this->getEscapeHives() != $fw->get('ESCAPE')) {
             $esc = $fw->get('ESCAPE');
             $fw->set('ESCAPE', $this->getEscapeHives());
         }
+
         try {
             $hive = $this->getData() + ['_block' => $this];
             $html = View::instance()->render($template, $this->getMimetype(), $hive);
@@ -79,18 +83,19 @@ class AbstractChart extends MagicObject
                 $fw->set('ESCAPE', $esc);
             }
         }
+
         return $html;
     }
 
     public function getTooltipJsCallback($jsValueVar = 'data.parsed.y') {
         switch ($this->getData('scale_y_unit')) {
             case self::SCALE_Y_UNIT_CURRENCY:
-                return "i18n.formatCurrency($jsValueVar)";
+                return sprintf('i18n.formatCurrency(%s)', $jsValueVar);
             case self::SCALE_Y_UNIT_CUSTOM:
                 return $this->getData('scale_y_unit_custom');
             case self::SCALE_Y_UNIT_NUMBER:
             default:
-                return "i18n.formatNumber($jsValueVar)";
+                return sprintf('i18n.formatNumber(%s)', $jsValueVar);
         }
     }
 }

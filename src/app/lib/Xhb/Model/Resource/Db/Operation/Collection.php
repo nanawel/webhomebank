@@ -19,7 +19,7 @@ use Laminas\Db\Sql\Select;
 
 class Collection extends XhbCollection implements \Xhb\Model\Resource\Iface\Operation\Collection
 {
-    public function __construct($params = array()) {
+    public function __construct(array $params = []) {
         parent::__construct($params);
         $this->_init(\Xhb\Model\Xhb::MODEL_CLASS_NAMESPACE . 'Operation', 'id', Operation::MAIN_TABLE);
     }
@@ -29,11 +29,12 @@ class Collection extends XhbCollection implements \Xhb\Model\Resource\Iface\Oper
         foreach($this as $op) {
             $balance += $op->getAmount();
         }
+
         return $balance;
     }
 
     protected function _filterToPredicate($field, $predicate) {
-        if (strtolower($field) == 'categories' && !$predicate instanceof Predicate) {
+        if (strtolower($field) === 'categories' && !$predicate instanceof Predicate) {
             // Handle split amount
             $predicateSet = new PredicateSet();
             $predicateSet->addPredicate(parent::_filterToPredicate('category', $predicate));
@@ -42,6 +43,7 @@ class Collection extends XhbCollection implements \Xhb\Model\Resource\Iface\Oper
             $predicateSet->addPredicate(parent::_filterToPredicate($secondField, $predicate), Predicate::OP_OR);
             return $predicateSet;
         }
+
         return parent::_filterToPredicate($field, $predicate);
     }
 }

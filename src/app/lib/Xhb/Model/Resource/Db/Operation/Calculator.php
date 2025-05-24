@@ -25,6 +25,7 @@ class Calculator extends AbstractModel
         else {
             $operationCollection = $object->getXhb()->getOperationCollection();
         }
+
         return $operationCollection;
     }
 
@@ -37,14 +38,15 @@ class Calculator extends AbstractModel
     public function getCurrentBalance(\Xhb\Model\Operation\Calculator $object, $type, $referenceTime) {
         $txnTypeFilter = $object->getBalanceStatuses($type);
         $operationCollection = $this->getOperationCollection($object)
-            ->addFieldToSelect(array('balance' => new Expression('SUM(amount)')))
-            ->addFieldToFilter('st', array('in' => $txnTypeFilter))
-            ->addFieldToFilter('date', array('le' => $referenceTime))
+            ->addFieldToSelect(['balance' => new Expression('SUM(amount)')])
+            ->addFieldToFilter('st', ['in' => $txnTypeFilter])
+            ->addFieldToFilter('date', ['le' => $referenceTime])
             ->setLimit(1);
         $item = $operationCollection->getFirstItem();
         if ($item) {
             return $item->getBalance();
         }
+
         return 0.0;
     }
 }

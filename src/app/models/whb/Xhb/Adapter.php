@@ -17,6 +17,7 @@ use Xhb\Parser as XhbParser;
 
 class Adapter
 {
+    public $_resourceAdater;
     /**
      * @var \Base
      */
@@ -72,6 +73,7 @@ class Adapter
         if (!$this->_parser) {
             $this->_parser = new XhbParser($this->_xhbFile);
         }
+
         return $this->_parser;
     }
 
@@ -79,6 +81,7 @@ class Adapter
         if (!$this->_xhbId) {
             $this->_xhbId = $this->_generateXhbId($this->getParser()->getUniqueKey());
         }
+
         return $this->_xhbId;
     }
 
@@ -88,10 +91,11 @@ class Adapter
             $hive['xhbid'] = $this->getXhbId();
             $this->_processConfig($hive);
         }
+
         return $this->_config;
     }
 
-    protected function _generateXhbId($xhbUniqueKey) {
+    protected function _generateXhbId(string $xhbUniqueKey): string {
         return sha1(Main::app()->getConfig('VERSION') . $xhbUniqueKey);
     }
 
@@ -116,6 +120,7 @@ class Adapter
                 }
             }
         }
+
         $xhb = new \Xhb\Model\Xhb($this->_getConfig());
         return $xhb->load($this->getXhbId());
     }
@@ -127,17 +132,18 @@ class Adapter
         if (!$this->_resourceAdater) {
             $this->_resourceAdapter = XhbAdapterFactory::create($this->_getConfig());
         }
+
         return $this->_resourceAdapter;
     }
 
     protected function _processConfig($hive) {
         $this->_config = $this->_rawConfig;
-        array_walk_recursive($this->_config, array($this, '_filterConfig'), $hive);
+        array_walk_recursive($this->_config, [$this, '_filterConfig'], $hive);
     }
 
     protected function _filterConfig(&$val, $key, $hive) {
-        $val = preg_replace_callback('/({)?@([a-z\._]+)(?(1)})/i', function ($var) use ($hive) {
-            return isset($hive[$var[2]]) ? $hive[$var[2]] : $var;
+        $val = preg_replace_callback('/({)?@([a-z\._]+)(?(1)})/i', function (array $var) use ($hive) {
+            return $hive[$var[2]] ?? $var;
         }, $val);
     }
 }

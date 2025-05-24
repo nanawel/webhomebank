@@ -13,14 +13,19 @@ use app\helpers\core\Output;
 class View extends \View
 {
     const TEMPLATE_DEFAULT_EXTENSION = '.phtml';
+
     const TEMPLATE_CONTENT_KEY = 'content';
+
     const TEMPLATE_BASE_DIR = 'templates';
+
     const BLOCK_KEY_PREFIX = 'BLOCK.';
 
     const BLOCK_PLACEHOLDER_KEY_PREFIX = 'BLOCK_PLACEHOLDER.';
+
     const CACHE_BLOCK_OUTPUT_PREFIX = 'BLOCK_';
 
-    protected $_data = array();
+    protected $_data = [];
+
     protected $_placeholdersRendering = false;
 
     /**
@@ -32,12 +37,12 @@ class View extends \View
 
     public function __($string, $vars = null) {
         return call_user_func_array(
-            array($this->i18n(), 'tr'),
+            [$this->i18n(), 'tr'],
             func_get_args()
         );
     }
 
-    public function getUrl($path, $params = array()) {
+    public function getUrl($path, $params = []) {
         return Url::instance()->getUrl($path, $params);
     }
 
@@ -45,35 +50,42 @@ class View extends \View
      * @param string $blockName
      * @return mixed
      */
-    public function getBlockConfig($blockName, $configKey = null) {
+    public function getBlockConfig(string $blockName, $configKey = null) {
         if ($configKey === null) {
             $config = \Base::instance()->get(self::BLOCK_KEY_PREFIX . $blockName);
             if (!$config) {
-                $config = array();
+                $config = [];
             }
         }
         else {
             $config = \Base::instance()->get(self::BLOCK_KEY_PREFIX . $blockName . '.' . $configKey);
         }
+
         return $config;
     }
 
-
-    public function setBlockConfig($blockName, $configKey, $value = null) {
+    /**
+     * @param string $blockName
+     * @param mixed|array $configKey
+     * @param mixed|null $value
+     * @return $this
+     */
+    public function setBlockConfig(string $blockName, $configKey, $value = null): self {
         if ($value === null) {
             \Base::instance()->set(self::BLOCK_KEY_PREFIX . $blockName, $configKey);
         }
         else {
             \Base::instance()->set(self::BLOCK_KEY_PREFIX . $blockName . '.' . $configKey, $value);
         }
+
         return $this;
     }
 
     /**
-     * @param $blockName
+     * @param string $blockName
      * @return string
      */
-    public function getBlockTemplate($blockName) {
+    public function getBlockTemplate(string $blockName) {
         return $this->getBlockConfig($blockName, 'template');
     }
 
@@ -81,7 +93,7 @@ class View extends \View
      * @param string $blockName
      * @param string $template
      */
-    public function setBlockTemplate($blockName, $template) {
+    public function setBlockTemplate($blockName, $template): self {
         $this->setBlockConfig($blockName, 'template', $template);
         return $this;
     }
@@ -92,12 +104,12 @@ class View extends \View
      * @param array $params
      * @return $this
      */
-    public function setBlockCachePlaceholder($blockName, $callable = null, $params = array()) {
-        \Base::instance()->set(self::BLOCK_PLACEHOLDER_KEY_PREFIX . $blockName, array($callable, $params));
+    public function setBlockCachePlaceholder(string $blockName, $callable = null, $params = []): self {
+        \Base::instance()->set(self::BLOCK_PLACEHOLDER_KEY_PREFIX . $blockName, [$callable, $params]);
         return $this;
     }
 
-    public function getBlockCachePlaceholder($blockName) {
+    public function getBlockCachePlaceholder(string $blockName) {
         return \Base::instance()->get(self::BLOCK_PLACEHOLDER_KEY_PREFIX . $blockName);
     }
 
@@ -114,39 +126,40 @@ class View extends \View
      * @param int $ttl
      * @return string
      */
-    public function renderBlock($blockName, $mime = 'text/html', array $hive = null, $ttl = 0) {
+    public function renderBlock(string $blockName, $mime = 'text/html', array $hive = null, $ttl = 0) {
         $output = null;
         $shouldRender = true;
-        static $processingPlaceholders = array();
+        static $processingPlaceholders = [];
 
-        if ($this->isRenderingPlaceholders() && $placeholderConfig = $this->getBlockCachePlaceholder($blockName)) {
-            if ($placeholderConfig[0] !== null) {
-                if (is_callable($placeholderConfig[0])) {
-                    if (isset($processingPlaceholders[$blockName]) && $processingPlaceholders[$blockName]) {
-                        $shouldRender = false;
-                    }
-                    else {
-                        $processingPlaceholders[$blockName] = true;
-                        $output = call_user_func($placeholderConfig[0], $placeholderConfig[1]);
-                        $processingPlaceholders[$blockName] = false;
-
-                        if ($output === false) {
-                            $output = '';           //Overwrite with clean string
-                        }
-                        $shouldRender = false;
-                    }
+        if ($this->isRenderingPlaceholders() && ($placeholderConfig = $this->getBlockCachePlaceholder($blockName)) && $placeholderConfig[0] !== null) {
+            if (is_callable($placeholderConfig[0])) {
+                if (isset($processingPlaceholders[$blockName]) && $processingPlaceholders[$blockName]) {
+                    $shouldRender = false;
                 }
                 else {
-                    Log::instance()->log(
-                        'Invalid placeholder callback for block "' . $blockName . '": ' .
-                        \Base::instance()->stringify($placeholderConfig[0])
-                    );
+                    $processingPlaceholders[$blockName] = true;
+                    $output = call_user_func($placeholderConfig[0], $placeholderConfig[1]);
+                    $processingPlaceholders[$blockName] = false;
+
+                    if ($output === false) {
+                        $output = '';           //Overwrite with clean string
+                    }
+
+                    $shouldRender = false;
                 }
             }
+            else {
+                Log::instance()->log(
+                    'Invalid placeholder callback for block "' . $blockName . '": ' .
+                    \Base::instance()->stringify($placeholderConfig[0])
+                );
+            }
         }
+
         if ($shouldRender) {
             $output = $this->renderBlockWithoutCache($blockName, $mime, $hive, $ttl);
         }
+
         return $output;
     }
 
@@ -159,14 +172,15 @@ class View extends \View
      * @param int $ttl
      * @return string
      */
-    public function renderBlockWithoutCache($blockName, $mime = 'text/html', array $hive = null, $ttl = 0) {
-        $hasPlaceholder = $this->getBlockCachePlaceholder($blockName) ? true : false;
+    public function renderBlockWithoutCache(string $blockName, $mime = 'text/html', array $hive = null, $ttl = 0) {
+        $hasPlaceholder = (bool) $this->getBlockCachePlaceholder($blockName);
         $blockConfig = $this->getBlockConfig($blockName);
         $output = '';
         try {
             if (!isset($blockConfig['template']) || !$blockConfig['template']) {
                 throw new \Exception('Missing template for block "' . $blockName . '".');
             }
+
             $mime = (isset($blockConfig['mime']) && $blockConfig['mime']) ? $blockConfig['mime'] : 'text/html';
 
             //TODO Data should be moved to block's config
@@ -178,13 +192,14 @@ class View extends \View
                 $output = $this->_wrapBlockPlaceholder($blockName, $output, $mime);
             }
         }
-        catch (\Exception $e) {
+        catch (\Exception $exception) {
             /*if ($mime == 'text/html') {
                 $exClass = get_class($e);
                 $output = "<!-- {$exClass} [{$e->getCode()}] {$e->getMessage()} -->";
             }*/
-            Log::instance()->logException($e);
+            Log::instance()->logException($exception);
         }
+
         return $output;
     }
 
@@ -195,6 +210,7 @@ class View extends \View
                 $blockOutput . "\n" .
                 $this->_getBlockPlaceholderBanner($blockName, 'END') . "\n";
         }
+
         return $blockOutput;
     }
 
@@ -214,7 +230,7 @@ class View extends \View
                     '\1',
                     preg_quote($this->_getBlockPlaceholderBanner($dummyBlockName, 'END', $mime), '#')
                 );
-                $pattern = "#$beginBannerPattern(?P<blockContent>.*?)$endBannerPattern#sm";
+                $pattern = sprintf('#%s(?P<blockContent>.*?)%s#sm', $beginBannerPattern, $endBannerPattern);
                 preg_match_all($pattern, $cacheOutput, $matches);
                 $generatedOutput = preg_replace_callback(
                     $pattern,
@@ -232,20 +248,22 @@ class View extends \View
         finally {
             $this->_placeholdersRendering = false;
         }
+
         return $finalOutput;
     }
 
-    protected function _getBlockPlaceholderBanner($blockName, $suffix, $mime = 'text/html') {
+    protected function _getBlockPlaceholderBanner($blockName, $suffix, $mime = 'text/html'): string {
         // Only mimetype supported for now
         if ($mime == 'text/html') {
-            return "<!-- {{ BLOCK_PLACEHOLDER_{$blockName}_{$suffix} }} -->";
+            return sprintf('<!-- {{ BLOCK_PLACEHOLDER_%s_%s }} -->', $blockName, $suffix);
         }
+
         return '';
     }
 
-    public function getMessagesHtml($session = null, $flush = true) {
+    public function getMessagesHtml($session = null, $flush = true): string {
         if ($session !== null) {
-            $sessions = is_array($session) ? $session : array($session);
+            $sessions = is_array($session) ? $session : [$session];
         }
         else {
             $sessions = Main::app()->getSessions();
@@ -261,13 +279,16 @@ class View extends \View
                     if (!isset($options['no_escape']) || !$options['no_escape']) {
                         $message = Output::htmlspecialchars($message);
                     }
-                    $html .= "<div class=\"message-$type\"><span>" . $message . "</span></div>\n";
+
+                    $html .= sprintf('<div class="message-%s"><span>', $type) . $message . "</span></div>\n";
                 }
             }
+
             if ($flush) {
                 $session->clearMessages();
             }
         }
+
         return $html;
     }
 
@@ -282,20 +303,22 @@ class View extends \View
         if ($key === null) {
             return $this->_data;
         }
-        return isset($this->_data[$key]) ? $this->_data[$key] : null;
+
+        return $this->_data[$key] ?? null;
     }
 
-    public function setData($key, $value) {
+    public function setData($key, $value): self {
         if ($key === null) {
             $this->_data = $value;
         }
         else {
             $this->_data[$key] = $value;
         }
+
         return $this;
     }
 
-    public function hasData($key) {
+    public function hasData($key): bool {
         return isset($this->_data[$key]);
     }
 }

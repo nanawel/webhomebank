@@ -48,7 +48,15 @@ $chartVar = 'chart_' . $chartId;
                                 },
                                 legend: {
                                     display: false,
-                                }
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    usePointStyle: true,
+                                    callbacks: {
+                                        title: (data) => data.label,
+                                        label: (data) => i18n.formatCurrency(data.parsed),
+                                    },
+                                },
                             },
                         },
                         <?php if ($show_legend): ?>

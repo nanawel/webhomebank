@@ -11,13 +11,14 @@ namespace app\models\core\Form\Element;
 class Select extends AbstractElement
 {
     const SEPARATOR_LABEL = '-';
+
     const SEPARATOR_LABEL_RENDERER = '──────────';
 
-    public function __construct($data = array()) {
+    public function __construct($data = []) {
         parent::__construct('select', $data);
     }
 
-    protected function _toHtml() {
+    protected function _toHtml(): string {
         $el = $this->getDOMElement();
         $this->_setCommonAttributes();
         foreach($this->getOptions() as $value => $option) {
@@ -36,16 +37,19 @@ class Select extends AbstractElement
                     $optEl->setAttribute(htmlspecialchars($n), htmlspecialchars($a));
                 }
             }
+
             $optEl->setAttribute('value', htmlspecialchars($value));
             if ($value == $this->getValue()) {
                 $optEl->setAttribute('selected', 'selected');
             }
+
             $el->appendChild($optEl);
         }
+
         return self::getDocument()->saveXML($el);
     }
 
-    public function setSelection($key) {
+    public function setSelection($key): void {
         $this->setValue($key);
     }
 }

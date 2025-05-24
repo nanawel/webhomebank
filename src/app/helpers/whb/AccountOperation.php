@@ -20,11 +20,11 @@ class AccountOperation
      *
      * @return array
      */
-    public static function getStaticCollectionFilters() {
-        $return = array(
-            'period' => array(
+    public static function getStaticCollectionFilters(): array {
+        $return = [
+            'period' => [
                 'label' => 'Range',
-                'values' => array(
+                'values' => [
                     DateHelper::TIME_PERIOD_THIS_MONTH      => 'This Month',
                     DateHelper::TIME_PERIOD_LAST_MONTH      => 'Last Month',
                     DateHelper::TIME_PERIOD_THIS_QUARTER    => 'This Quarter',
@@ -39,20 +39,20 @@ class AccountOperation
                     '-sep2-'                                => '-',
                     //TODO Custom range
                     DateHelper::TIME_PERIOD_ALL_DATE        => 'All Date'
-                )
-            ),
-            'type' => array(
+                ]
+            ],
+            'type' => [
                 'label' => 'Type',
-                'values' => array(
+                'values' => [
                     'any_type'  => 'Any Type',
                     '--------'  => '-',
                     'outcome'   => 'Outcome',
                     'income'    => 'Income'
-                )
-            ),
-            'status' => array(
+                ]
+            ],
+            'status' => [
                 'label' => 'Status',
-                'values' => array(
+                'values' => [
                     'any_status'     => 'Any Status',
                     '--------'       => '-',
                     'uncategorized'  => 'Uncategorized',
@@ -60,9 +60,9 @@ class AccountOperation
                     'uncleared'      => 'Uncleared',
                     'reconciled'     => 'Reconciled',
                     'cleared'        => 'Cleared'
-                )
-            )
-        );
+                ]
+            ]
+        ];
         return $return;
     }
 
@@ -71,35 +71,33 @@ class AccountOperation
      * @param $filters
      * @return array
      */
-    public static function applyFiltersOnCollection(AbstractCollection $collection, $filters) {
-        $processedFilters = array();
+    public static function applyFiltersOnCollection(AbstractCollection $collection, array $filters): array {
+        $processedFilters = [];
         $xhb = $collection->getXhb();
         foreach($filters as $name => $value) {
             switch ($name) {
                 case 'period':
                     $periods = $xhb->getDateHelper()->getPredefinedTimePeriods();
-                    $period = isset($periods[$filters['period']])
-                        ? $periods[$filters['period']]
-                        : $periods[DateHelper::TIME_PERIOD_DEFAULT];
+                    $period = $periods[$filters['period']] ?? $periods[DateHelper::TIME_PERIOD_DEFAULT];
 
                     $ge = $period['start'];
                     $le = $period['end'];
 
-                    $collection->addFieldToFilter('date', array('ge' => Date::dateToJd($ge)));
+                    $collection->addFieldToFilter('date', ['ge' => Date::dateToJd($ge)]);
                     $processedFilters['start_date'] = $ge;
-                    $collection->addFieldToFilter('date', array('le' => Date::dateToJd($le)));
+                    $collection->addFieldToFilter('date', ['le' => Date::dateToJd($le)]);
                     $processedFilters['end_date'] = $le;
                     break;
 
                 case 'type':
                     switch ($value) {
                         case 'outcome':
-                            $collection->addFieldToFilter('amount', array('lt' => 0));
+                            $collection->addFieldToFilter('amount', ['lt' => 0]);
                             $processedFilters['min_amount'] = 0;
                             break;
 
                         case 'income':
-                            $collection->addFieldToFilter('amount', array('gt' => 0));
+                            $collection->addFieldToFilter('amount', ['gt' => 0]);
                             $processedFilters['max_amount'] = 0;
                             break;
 
@@ -108,33 +106,34 @@ class AccountOperation
                             //no filter
                             break;
                     }
+
                     break;
 
                 case 'status':
                     switch ($value) {
                         case 'uncategorized':
-                            $collection->addFieldToFilter('category', array('null' => true))
-                                ->addFieldToFilter('scat', array('null' => true));
+                            $collection->addFieldToFilter('category', ['null' => true])
+                                ->addFieldToFilter('scat', ['null' => true]);
                             $processedFilters['categories'] = null;
                             break;
 
                         case 'unreconciled':
-                            $collection->addFieldToFilter('st', array('in' => Operation\Calculator::getUnreconciliedStatuses()));
+                            $collection->addFieldToFilter('st', ['in' => Operation\Calculator::getUnreconciliedStatuses()]);
                             $processedFilters['status'] = implode(',', Operation\Calculator::getUnreconciliedStatuses());
                             break;
 
                         case 'uncleared':
-                            $collection->addFieldToFilter('st', array('in' => Operation\Calculator::getUnclearedStatuses()));
+                            $collection->addFieldToFilter('st', ['in' => Operation\Calculator::getUnclearedStatuses()]);
                             $processedFilters['status'] = implode(',', Operation\Calculator::getUnclearedStatuses());
                             break;
 
                         case 'reconciled':
-                            $collection->addFieldToFilter('st', array('in' => Operation\Calculator::getReconciliedStatuses()));
+                            $collection->addFieldToFilter('st', ['in' => Operation\Calculator::getReconciliedStatuses()]);
                             $processedFilters['status'] = implode(',', Operation\Calculator::getReconciliedStatuses());
                             break;
 
                         case 'cleared':
-                            $collection->addFieldToFilter('st', array('in' => Operation\Calculator::getClearedStatuses()));
+                            $collection->addFieldToFilter('st', ['in' => Operation\Calculator::getClearedStatuses()]);
                             $processedFilters['status'] = implode(',', Operation\Calculator::getClearedStatuses());
                             break;
 
@@ -143,17 +142,20 @@ class AccountOperation
                             //no filter
                             break;
                     }
+
                     break;
 
                 case 'search':
                     $value = trim($value);
-                    if ($value) {
-                        $collection->addFieldToFilter('text_search', array('like' => "%$value%"));
+                    if ($value !== '' && $value !== '0') {
+                        $collection->addFieldToFilter('text_search', ['like' => sprintf('%%%s%%', $value)]);
                         $processedFilters['search'] = $value;
                     }
+
                     break;
             }
         }
+
         return $processedFilters;
     }
 
@@ -161,6 +163,7 @@ class AccountOperation
         if ($operation->getPaymode() == Constants::PAYMODE_INTXFER) {
             return $operation->getXhb()->getAccount($operation->getDstAccount())->getName();
         }
+
         return $operation->getPayeeModel() ? $operation->getPayeeModel()->getName() : '';
     }
 }

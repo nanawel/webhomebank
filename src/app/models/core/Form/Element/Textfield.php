@@ -10,11 +10,11 @@ namespace app\models\core\Form\Element;
 
 class Textfield extends AbstractElement
 {
-    public function __construct($data = array()) {
+    public function __construct($data = []) {
         parent::__construct('input', $data);
     }
 
-    protected function _toHtml() {
+    protected function _toHtml(): string {
         $el = $this->getDOMElement();
         $this->_setCommonAttributes();
         $el->setAttribute('type', 'text');

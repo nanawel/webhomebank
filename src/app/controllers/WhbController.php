@@ -35,9 +35,10 @@ class WhbController extends AbstractController
         $this->setPageTitle($xhb->getTitle());
 
         $this->_setupLayoutBlocks();
+        return null;
     }
 
-    protected function _setupLayoutBlocks() {
+    protected function _setupLayoutBlocks(): self {
         $this->getView()
             ->setBlockTemplate('head', 'page/head.phtml')
             ->setBlockTemplate('footer', 'page/footer.phtml')

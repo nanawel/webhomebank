@@ -11,10 +11,10 @@ namespace app\models\core\Chart;
 
 class Doughnut extends AbstractChart
 {
-    protected $_defaultData = array(
+    protected $_defaultData = [
         'type'     => 'doughnut',
         'template' => 'common/chart/doughnut.phtml',
         'width'    => 300,
         'height'   => 300
-    );
+    ];
 }

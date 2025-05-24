@@ -8,47 +8,47 @@ $i18n = \app\models\core\I18n::instance();
 ?>
 <ul class="nav-menu dropdown dropdown-horizontal" id="nav">
     <li class="level-1 account-operations-links dir">
-        <?php echo $this->__('Account Operations') ?>
+        <?= $this->__('Account Operations') ?>
         <ul class="dir">
             <?php foreach($this->getModel()->getAccountCollection() as $account): ?>
                 <li class="level-2 account-operations-link">
-                    <a href="<?php echo $url->getUrl('account_operation/index', array('account_id' => $account->getId())) ?>"><?php echo $account->getName() ?></a>
+                    <a href="<?= $url->getUrl('account_operation/index', array('account_id' => $account->getId())) ?>"><?= $account->getName() ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
     </li>
     <li class="level-1 vehiclecost-link">
-        <a href="<?php echo $url->getUrl('report_vehiclecost/index') ?>"><?php echo $this->__('Vehicle Cost') ?></a>
+        <a href="<?= $url->getUrl('report_vehiclecost/index') ?>"><?= $this->__('Vehicle Cost') ?></a>
     </li>
     <li class="level-1 settings-links dir">
-        <?php echo $this->__('Settings') ?>
+        <?= $this->__('Settings') ?>
         <ul class="dir">
             <li class="level-2 settings-currency-link dir">
-                <?php echo $this->__('Currency') ?>
+                <?= $this->__('Currency') ?>
                 <ul class="dir">
                     <?php foreach($i18n->getAvailableCurrencies() as $code): ?>
-                        <li class="level-3 set-currency-link currency-<?php echo strtolower($code) ?>">
-                            <a href="<?php echo $url->getUrl('settings/setCurrency', array('_query' => array('code' => $code))) ?>"><?php echo $code ?></a>
+                        <li class="level-3 set-currency-link currency-<?= strtolower($code) ?>">
+                            <a href="<?= $url->getUrl('settings/setCurrency', array('_query' => array('code' => $code))) ?>"><?= $code ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             </li>
             <li class="level-2 settings-locale-link dir">
-                <?php echo $this->__('Locale') ?>
+                <?= $this->__('Locale') ?>
                 <ul class="dir">
                     <?php foreach($i18n->getAvailableLocales() as $code): ?>
-                        <li class="level-3 set-locale-link currency-<?php echo strtolower($code) ?>">
-                            <a href="<?php echo $url->getUrl('settings/setLocale', array('_query' => array('code' => $code))) ?>"><?php echo $code ?></a>
+                        <li class="level-3 set-locale-link currency-<?= strtolower($code) ?>">
+                            <a href="<?= $url->getUrl('settings/setLocale', array('_query' => array('code' => $code))) ?>"><?= $code ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
             </li>
             <li class="level-2 settings-theme-link dir">
-                <?php echo $this->__('Theme') ?>
+                <?= $this->__('Theme') ?>
                 <ul class="dir">
                     <?php foreach($design->getAvailableThemes() as $code): ?>
-                        <li class="level-3 set-theme-link theme-<?php echo strtolower($code) ?>">
-                            <a href="<?php echo $url->getUrl('settings/setTheme', array('_query' => array('code' => $code))) ?>"><?php echo $code ?></a>
+                        <li class="level-3 set-theme-link theme-<?= strtolower($code) ?>">
+                            <a href="<?= $url->getUrl('settings/setTheme', array('_query' => array('code' => $code))) ?>"><?= $code ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>

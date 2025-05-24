@@ -27,6 +27,7 @@ abstract class XhbCollection extends AbstractCollection
         if (!$this->getFlag('skip_xhb_id_filter')) {
             $this->addFieldToFilter('main_table.' . self::XHB_ID_COL, $this->getXhb()->getXhbId());
         }
+
         return $this;
     }
 
@@ -36,6 +37,7 @@ abstract class XhbCollection extends AbstractCollection
         foreach($items as &$it) {
             $it['xhb'] = $xhb;
         }
+
         return $items;
     }
 }

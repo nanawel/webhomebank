@@ -25,31 +25,35 @@ class Chart
      * @param int $maxResults
      * @return array
      */
-    public static function sumBy(AbstractCollection $collection, $labelField, $valueField, $initial = 0.0, $maxResults = 0) {
-        $sums = array();
+    public static function sumBy(AbstractCollection $collection, $labelField, $valueField, $initial = 0.0, $maxResults = 0): array {
+        $sums = [];
         /* @var $item \Xhb\Util\MagicObject */
         foreach($collection as $item) {
             $label = $item->getDataUsingMethod($labelField);
             if (!isset($sums[$label])) {
                 $sums[$label] = $initial;
             }
+
             $sums[$label] += $item->getDataUsingMethod($valueField);
         }
+
         asort($sums, SORT_DESC);
 
         if ($maxResults > 0 && count($sums) > $maxResults) {
             $i = 0;
             $remainder = 0;
-            $newSums = array();
+            $newSums = [];
             foreach($sums as $key => $value) {
                 if (++$i < $maxResults) {
                     $newSums[$key] = $value;
                     continue;
                 }
+
                 if ($value < 0) {
                     $remainder += $value;
                 }
             }
+
             $newSums['__REMAINDER__'] = $remainder;
             $sums = $newSums;
         }

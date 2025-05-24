@@ -19,8 +19,11 @@ class I18n extends \Prefab
     protected static $_PREFIX;
 
     protected $_currencyCode;
+
     protected $_numberFormatter;
+
     protected $_currencyFormatter;
+
     protected $_dateFormatter;
 
     public function __construct() {
@@ -32,17 +35,17 @@ class I18n extends \Prefab
         }
     }
 
-    public function setLocale($locale) {
+    public function setLocale($locale): self {
         \Base::instance()->set('LANGUAGE', $locale);
         return $this;
     }
 
-    public function getLocale() {
-        list($lang) = explode(',', \Base::instance()->get('LANGUAGE'));
+    public function getLocale(): string {
+        [$lang] = explode(',', \Base::instance()->get('LANGUAGE'));
         return $lang;
     }
 
-    public function setCurrencyCode($currencyCode) {
+    public function setCurrencyCode($currencyCode): self {
         $this->_currencyCode = $currencyCode;
         return $this;
     }
@@ -66,23 +69,27 @@ class I18n extends \Prefab
      * @param mixed $vars...
      * @return mixed
      */
-    public function tr($string, $vars = null) {
+    public function tr(?string $string, $vars = null) {
         $fw = \Base::instance();
         if ($string === '' || $string === null) {
             return '';
         }
+
         if (!is_array($vars)) {
             $vars = array_slice(func_get_args(), 1);
         }
+
         $translation = $this->get($string, $vars);
         if (!$translation) {
             if ($fw->get('DEBUG') > 1) {
                 Log::instance()->log('Missing translation for string: ' . $string, LOG_DEBUG, 'i18n.log');
             }
+
             // Fallback: add the given string as translation itself
             $this->set($string, $string);
             $translation = $this->get($string, $vars);
         }
+
         return $translation;
     }
 
@@ -96,16 +103,18 @@ class I18n extends \Prefab
         if ($currencyCode === null) {
             $currencyCode = $this->_currencyCode;
         }
+
         if ($formatter = $this->getCurrencyFormatterInstance()) {
             $return = $formatter->formatCurrency($value, $currencyCode);
         }
         else {
-            $return = \Base::instance()->format("{0,number,currency,$currencyCode}", $value);
+            $return = \Base::instance()->format(sprintf('{0,number,currency,%s}', $currencyCode), $value);
         }
 
         if ($withContainer) {
             $return = $this->_wrapContainer($value, $return, 'currency');
         }
+
         return $return;
     }
 
@@ -116,20 +125,23 @@ class I18n extends \Prefab
         else {
             $return = \Base::instance()->format('{0,number}', $value);
         }
+
         if ($withContainer) {
             $return = $this->_wrapContainer($value, $return);
         }
+
         return $return;
     }
 
-    protected function _wrapContainer($rawValue, $displayValue, $additionalClasses = '') {
+    protected function _wrapContainer($rawValue, $displayValue, $additionalClasses = ''): string {
         $class = explode(' ', $additionalClasses);
         if (is_numeric($rawValue)) {
             $class[] = 'number';
             $class[] = $rawValue < 0 ? 'number-neg' : 'number-pos';
         }
+
         $class = implode(' ', $class);
-        $return = "<span class=\"$class\">$displayValue</span>";
+        $return = sprintf('<span class="%s">%s</span>', $class, $displayValue);
         return $return;
     }
 
@@ -137,6 +149,7 @@ class I18n extends \Prefab
         if ($formatter = $this->getDateFormatterInstance()) {
             return $formatter->format($value);
         }
+
         return \Base::instance()->format('{0,date}', $value);
     }
 
@@ -147,6 +160,7 @@ class I18n extends \Prefab
                 \NumberFormatter::DECIMAL
             );
         }
+
         return $this->_numberFormatter;
     }
 
@@ -157,6 +171,7 @@ class I18n extends \Prefab
                 \NumberFormatter::CURRENCY
             );
         }
+
         return $this->_currencyFormatter;
     }
 
@@ -168,6 +183,7 @@ class I18n extends \Prefab
                 \IntlDateFormatter::NONE
             );
         }
+
         return $this->_dateFormatter;
     }
 
@@ -175,11 +191,11 @@ class I18n extends \Prefab
         return substr($this->getLocale(), 0, 2);
     }
 
-    public function set($key, $value) {
+    public function set(string $key, $value) {
         return \Base::instance()->set(self::$_PREFIX . $key, $value);
     }
 
-    public function get($key, $vars = null) {
+    public function get(string $key, $vars = null) {
         return \Base::instance()->get(self::$_PREFIX . $key, $vars);
     }
 }

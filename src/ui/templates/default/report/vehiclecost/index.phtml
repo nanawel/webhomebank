@@ -9,17 +9,17 @@ $volUnit = $xhbSession->getCarFuelVolumeUnit();
 ?>
 
 <div class="back-link top">
-	<span><a href="<?php echo $this->getUrl('account') ?>"><?php echo $this->__('Back to accounts page') ?></a></span>
+    <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
 </div>
 
-<h1><?php echo $this->__('Vehicle Cost Report') ?></h1>
+<h1><?= $this->__('Vehicle Cost Report') ?></h1>
 
-<?php echo $this->renderBlock('toolbar'); ?>
+<?= $this->renderBlock('toolbar'); ?>
 
 <div class="clear"></div>
 
 <div class="vehiclecost-summary">
-    <?php echo $this->renderBlock('summary'); ?>
+    <?= $this->renderBlock('summary'); ?>
 </div>
 
 <div class="clear"></div>
@@ -28,32 +28,32 @@ $volUnit = $xhbSession->getCarFuelVolumeUnit();
 <table class="data-table vehiclecost-table<?php if ($noResults): echo ' no-data'; endif; ?>">
     <thead>
         <tr>
-            <th><?php echo $this->__('Date') ?></th>
-            <th><?php echo $this->__('Meter') ?></a></th>
-            <th><?php echo $this->__('Fuel') ?></a></th>
-            <th><?php echo $this->__('Price') ?></a></th>
-            <th><?php echo $this->__('Amount') ?></th>
-            <th><?php echo $this->__('Dist.') ?></a></th>
-            <th><?php echo $this->__('100 {0}', $distUnit) ?></a></th>
-            <th><?php echo $this->__('{0}/{1}', $distUnit, $volUnit) ?></a></th>
+            <th><?= $this->__('Date') ?></th>
+            <th><?= $this->__('Meter') ?></a></th>
+            <th><?= $this->__('Fuel') ?></a></th>
+            <th><?= $this->__('Price') ?></a></th>
+            <th><?= $this->__('Amount') ?></th>
+            <th><?= $this->__('Dist.') ?></a></th>
+            <th><?= $this->__('100 {0}', $distUnit) ?></a></th>
+            <th><?= $this->__('{0}/{1}', $distUnit, $volUnit) ?></a></th>
         </tr>
     </thead>
     <tbody>
         <?php if ($noResults): ?>
         <tr class="vehiclecost-row">
-            <td colspan="10"><?php echo $this->__('No data for this period of time or this category') ?></td>
+            <td colspan="10"><?= $this->__('No data for this period of time or this category') ?></td>
         </tr>
         <?php else: ?>
             <?php foreach($CONSUMPTION_DATA as $row): ?>
             <tr class="vehiclecost-row">
-                <td class="date"><?php echo $this->i18n()->date($row['date']) ?></td>
-                <td class="meter"><?php echo $this->i18n()->number($row['meter']) ?></td>
-                <td class="fuel"><?php echo $this->i18n()->number($row['fuel']) ?></td>
-                <td class="currency price"><?php echo $this->i18n()->currency($row['price'], true) ?></td>
-                <td class="currency amount"><?php echo $this->i18n()->currency($row['amount'], true) ?></td>
-                <td class="dist"><?php echo $row['dist'] ? $this->i18n()->number($row['dist']) : '-' ?></td>
-                <td class="per-100"><?php echo $row['per-100'] ? $this->i18n()->number($row['per-100']) : '-' ?></td>
-                <td class="ratio"><?php echo $row['ratio'] ? $this->i18n()->number($row['ratio']) : '-' ?></td>
+                <td class="date"><?= $this->i18n()->date($row['date']) ?></td>
+                <td class="meter"><?= $this->i18n()->number($row['meter']) ?></td>
+                <td class="fuel"><?= $this->i18n()->number($row['fuel']) ?></td>
+                <td class="currency price"><?= $this->i18n()->currency($row['price'], true) ?></td>
+                <td class="currency amount"><?= $this->i18n()->currency($row['amount'], true) ?></td>
+                <td class="dist"><?= $row['dist'] ? $this->i18n()->number($row['dist']) : '-' ?></td>
+                <td class="per-100"><?= $row['per-100'] ? $this->i18n()->number($row['per-100']) : '-' ?></td>
+                <td class="ratio"><?= $row['ratio'] ? $this->i18n()->number($row['ratio']) : '-' ?></td>
             </tr>
             <?php endforeach; ?>
         <?php endif; ?>
@@ -62,10 +62,10 @@ $volUnit = $xhbSession->getCarFuelVolumeUnit();
 
 <div class="clear"></div>
 <div class="charts-container">
-	<?php echo $this->renderBlock('charts'); ?>
+    <?= $this->renderBlock('charts'); ?>
 </div>
 
 <div class="clear"></div>
 <div class="back-link bottom">
-	<span><a href="<?php echo $this->getUrl('account') ?>"><?php echo $this->__('Back to accounts page') ?></a></span>
+    <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
 </div>

@@ -8,13 +8,13 @@ $url = \app\models\core\Url::instance();
     <div class="nav-container">
         <div class="brand">
             <div class="home-link">
-                <a href="<?php echo $this->getUrl('/') ?>">
-                    <img class="logo" src="<?php echo $design->getImageUrl('logo.png') ?>" alt="<?php echo $fw->get('app.TITLE') ?> logo" height="60"/>
+                <a href="<?= $this->getUrl('/') ?>">
+                    <img class="logo" src="<?= $design->getImageUrl('logo.png') ?>" alt="<?= $fw->get('app.TITLE') ?> logo" height="60"/>
                 </a>
-                <h1><a href="<?php echo $this->getUrl('/') ?>"><?php echo $fw->get('app.TITLE') ?></a></h1>
+                <h1><a href="<?= $this->getUrl('/') ?>"><?= $fw->get('app.TITLE') ?></a></h1>
             </div>
         </div>
         <div class="separator"></div>
-        <?php echo $this->renderBlock('header.nav'); ?>
+        <?= $this->renderBlock('header.nav'); ?>
     </div>
 </div>

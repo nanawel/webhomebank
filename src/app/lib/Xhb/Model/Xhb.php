@@ -9,13 +9,16 @@ class Xhb extends XhbModel
     protected $_resourceType;
 
     protected $_accounts    = null;
+
     protected $_categories  = null;
+
     protected $_payees      = null;
+
     protected $_operations  = null;
 
     protected $_dateHelper  = null;
 
-    public function __construct($data = array()) {
+    public function __construct(array $data = []) {
         parent::__construct($data);
         if (isset($data['resource_config']['type']) && $data['resource_config']['type']) {
             $this->_resourceType = ucfirst($data['resource_config']['type']);
@@ -23,6 +26,7 @@ class Xhb extends XhbModel
         else {
             throw new \Exception('Missing resource configuration');
         }
+
         $this->setXhb($this);
 
         // Init own resource instance
@@ -40,6 +44,7 @@ class Xhb extends XhbModel
         if ($id instanceof Account) {
             $id = $id->getId();
         }
+
         return $this->_getAccountCollection()->getItem($id);
     }
 
@@ -60,6 +65,7 @@ class Xhb extends XhbModel
         if ($this->_accounts === null) {
             $this->_accounts = $this->getAccountCollection();
         }
+
         return $this->_accounts;
     }
 
@@ -80,6 +86,7 @@ class Xhb extends XhbModel
         if ($this->_categories === null) {
             $this->_categories = $this->getCategoryCollection();
         }
+
         return $this->_categories;
     }
 
@@ -90,6 +97,7 @@ class Xhb extends XhbModel
         if ($id instanceof Category) {
             $id = $id->getId();
         }
+
         return $this->_getCategoryCollection()->getItem($id);
     }
 
@@ -118,6 +126,7 @@ class Xhb extends XhbModel
         if ($this->_payees === null) {
             $this->_payees = $this->getPayeeCollection();
         }
+
         return $this->_payees;
     }
 
@@ -128,16 +137,19 @@ class Xhb extends XhbModel
         if ($id instanceof Payee) {
             $id = $id->getId();
         }
+
         return $this->_getPayeeCollection()->getItem($id);
     }
 
     public function getDateHelper($singleton = true) {
         if (! $singleton) {
-            return new DateHelper(array('xhb' => $this));
+            return new DateHelper(['xhb' => $this]);
         }
+
         if (! $this->_dateHelper) {
-            $this->_dateHelper = new DateHelper(array('xhb' => $this));
+            $this->_dateHelper = new DateHelper(['xhb' => $this]);
         }
+
         return $this->_dateHelper;
     }
 
@@ -145,17 +157,17 @@ class Xhb extends XhbModel
      * Resources Management
      */
 
-    public function getResourceClass($modelClass) {
+    public function getResourceClass(string $modelClass): string {
         $fullClassName = self::MODEL_CLASS_NAMESPACE . 'Resource\\' . $this->_resourceType . '\\' . $modelClass;
         return $fullClassName;
     }
 
-    public function getResourceInstance($modelClass, $params = array()) {
+    public function getResourceInstance($modelClass, $params = []) {
         $fullClassName = $this->getResourceClass($modelClass);
         return new $fullClassName($params);
     }
 
-    public function getCollectionInstance($modelClass, $params = array()) {
+    public function getCollectionInstance(string $modelClass, $params = []) {
         $coll = $this->getResourceInstance($modelClass . '\\Collection', $params);
         $coll->setXhb($this->getXhb());
         return $coll;

@@ -8,20 +8,20 @@ class MagicObject
      *
      * @var array
      */
-    protected $_data = array();
+    protected $_data = [];
 
     /**
      * Setter/Getter underscore transformation cache
      *
      * @var array
     */
-    protected static $_underscoreCache = array();
+    protected static $_underscoreCache = [];
 
-    public function __construct() {
-        $args = func_get_args();
+    public function __construct(...$args) {
         if (empty($args[0])) {
-            $args[0] = array();
+            $args[0] = [];
         }
+
         $this->_data = $args[0];
     }
 
@@ -32,7 +32,7 @@ class MagicObject
      * @return  mixed
      */
     protected function _getData($key) {
-        return isset($this->_data[$key]) ? $this->_data[$key] : null;
+        return $this->_data[$key] ?? null;
     }
 
     /**
@@ -43,10 +43,11 @@ class MagicObject
      * @param array $arr
      * @return \Xhb\Util\MagicObject
      */
-    public function addData(array $arr) {
+    public function addData(array $arr): self {
         foreach($arr as $index=>$value) {
             $this->setData($index, $value);
         }
+
         return $this;
     }
 
@@ -62,12 +63,13 @@ class MagicObject
      * @param mixed $value
      * @return \Xhb\Util\MagicObject
      */
-    public function setData($key, $value=null) {
+    public function setData($key, $value=null): self {
         if(is_array($key)) {
             $this->_data = $key;
         } else {
             $this->_data[$key] = $value;
         }
+
         return $this;
     }
 
@@ -79,12 +81,13 @@ class MagicObject
      * @param string $key
      * @return \Xhb\Util\MagicObject
      */
-    public function unsetData($key=null) {
+    public function unsetData($key=null): self {
         if (is_null($key)) {
-            $this->_data = array();
+            $this->_data = [];
         } else {
             unset($this->_data[$key]);
         }
+
         return $this;
     }
 
@@ -95,10 +98,11 @@ class MagicObject
      * @param string $key
      * @return boolean
      */
-    public function hasData($key = '') {
+    public function hasData($key = ''): bool {
         if (empty($key) || !is_string($key)) {
             return !empty($this->_data);
         }
+
         return array_key_exists($key, $this->_data);
     }
 
@@ -119,14 +123,12 @@ class MagicObject
         if ('' === $key) {
             return $this->_data;
         }
-        if (isset($this->_data[$key])) {
-            return $this->_data[$key];
-        }
-        return null;
+
+        return $this->_data[$key] ?? null;
     }
 
     public function getDataUsingMethod($key) {
-        return call_user_func(array($this, 'get' . self::_camelize($key)));
+        return call_user_func([$this, 'get' . self::_camelize($key)]);
     }
 
     /**
@@ -136,16 +138,16 @@ class MagicObject
      * @param   array $args
      * @return  mixed
      */
-    public function __call($method, $args) {
+    public function __call(string $method, $args) {
         switch (substr($method, 0, 3)) {
             case 'get' :
                 $key = self::_underscore(substr($method,3));
-                $data = $this->getData($key, isset($args[0]) ? $args[0] : null);
+                $data = $this->getData($key);
                 return $data;
 
             case 'set' :
                 $key = self::_underscore(substr($method,3));
-                $result = $this->setData($key, isset($args[0]) ? $args[0] : null);
+                $result = $this->setData($key, $args[0] ?? null);
                 return $result;
 
             case 'uns' :
@@ -157,6 +159,7 @@ class MagicObject
                 $key = self::_underscore(substr($method,3));
                 return isset($this->_data[$key]);
         }
+
         throw new \Exception("Invalid method ".get_class($this)."::".$method."(".print_r($args,1).")");
     }
 
@@ -173,12 +176,13 @@ class MagicObject
         if (isset(self::$_underscoreCache[$name])) {
             return self::$_underscoreCache[$name];
         }
+
         $result = strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name));
         self::$_underscoreCache[$name] = $result;
         return $result;
     }
 
-    protected static function _camelize($name) {
+    protected static function _camelize($name): string {
         return str_replace(' ', '', ucwords(str_replace('_', ' ', $name)));
     }
 }

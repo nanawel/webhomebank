@@ -26,14 +26,14 @@ class VehicleCost extends XhbModel
     /**
      * @var Category[]
      */
-    protected $_carCategories = array();
+    protected $_carCategories = [];
 
     /**
      * @var array
      */
-    protected $_consumptionData = array();
+    protected $_consumptionData = [];
 
-    public function __construct(Xhb $xhb, $data = array()) {
+    public function __construct(Xhb $xhb, array $data = []) {
         parent::__construct($data);
         $this->setXhb($xhb);
     }
@@ -45,14 +45,15 @@ class VehicleCost extends XhbModel
         if (!$this->_carCategories) {
             $xhb = $this->getXhb();
             $mainCarCategory = $xhb->getCategory($xhb->getCarCategory());
-            $carCategories = array(
+            $carCategories = [
                 $mainCarCategory->getKey() => $mainCarCategory
-            );
+            ];
             $carCategories += $mainCarCategory
                 ->getChildrenCategories()
                 ->getItems();
             $this->_carCategories = $carCategories;
         }
+
         return $this->_carCategories;
     }
 
@@ -65,24 +66,26 @@ class VehicleCost extends XhbModel
     public function getPeriodConsumptionSummaryData(\DatePeriod $period, $categoryIds = null) {
         $startDate = $period->start;
         $endDate = $period->end;
-        $periodConsumptionSummaryData = array(
-            'per100' => array(),
-            'total'  => array(
+        $periodConsumptionSummaryData = [
+            'per100' => [],
+            'total'  => [
                 'meter'       => 0,
                 'fuel'        => 0,
                 'fuel_cost'   => 0,
                 'other_costs' => null,   //FIXME Not handled yet
                 'total_cost'  => 0
-            )
-        );
+            ]
+        ];
         $found = false;
         foreach($this->getConsumptionData($categoryIds) as $cd) {
             if ($cd['operation']->getDateModel() < $startDate) {
                 continue;
             }
+
             if ($cd['operation']->getDateModel() > $endDate) {
                 break;
             }
+
             $found = true;
             $periodConsumptionSummaryData['total']['meter'] += $cd['dist'];
             $periodConsumptionSummaryData['total']['fuel'] += $cd['fuel'];
@@ -90,14 +93,17 @@ class VehicleCost extends XhbModel
             //$periodConsumptionSummaryData['total']['other_costs'] += $cd['amount'];
             $periodConsumptionSummaryData['total']['total_cost'] += $cd['amount'];
         }
+
         if ($found) {
-            foreach($periodConsumptionSummaryData['total'] as $type => $value) {
+            foreach(array_keys($periodConsumptionSummaryData['total']) as $type) {
                 $periodConsumptionSummaryData['per100'][$type] = round($periodConsumptionSummaryData['total'][$type]
                     / $periodConsumptionSummaryData['total']['meter'] * 100, 2);
                 $periodConsumptionSummaryData['total'][$type] = round($periodConsumptionSummaryData['total'][$type], 2);
             }
+
             return $periodConsumptionSummaryData;
         }
+
         return false;
     }
 
@@ -106,19 +112,22 @@ class VehicleCost extends XhbModel
      * @param $categoryIds int[]
      * @return array
      */
-    public function getPeriodConsumptionData(\DatePeriod $period, $categoryIds = null) {
+    public function getPeriodConsumptionData(\DatePeriod $period, $categoryIds = null): array {
         $startDate = $period->start;
         $endDate = $period->end;
-        $periodConsumptionData = array();
+        $periodConsumptionData = [];
         foreach($this->getConsumptionData($categoryIds) as $cd) {
             if ($cd['operation']->getDateModel() < $startDate) {
                 continue;
             }
+
             if ($cd['operation']->getDateModel() > $endDate) {
                 break;
             }
+
             $periodConsumptionData[] = $cd;
         }
+
         return $periodConsumptionData;
     }
 
@@ -128,9 +137,10 @@ class VehicleCost extends XhbModel
      */
     public function getConsumptionData($categoryIds = null) {
         if (!is_array($categoryIds)) {
-            $categoryIds = array($categoryIds);
+            $categoryIds = [$categoryIds];
         }
-        $carCategoryIds = empty($categoryIds) ? array_keys($this->getCarCategories()) : $categoryIds;
+
+        $carCategoryIds = $categoryIds === [] ? array_keys($this->getCarCategories()) : $categoryIds;
         sort($carCategoryIds);
 
         $cacheKey = implode('-', $carCategoryIds);
@@ -138,11 +148,11 @@ class VehicleCost extends XhbModel
             $operationCollection = $this->getXhb()->getOperationCollection()
                 ->addFieldToFilter(
                     'categories',
-                    array('in' => $carCategoryIds)
+                    ['in' => $carCategoryIds]
                 )
                 ->orderBy('date', SORT_ASC);
 
-            $consumptionData = array();
+            $consumptionData = [];
             $lastMeter = false;
             $volSinceLastFullRefuel = 0;
             $distSinceLastFullRefuel = 0;
@@ -156,9 +166,9 @@ class VehicleCost extends XhbModel
                         $volSinceLastFullRefuel += $refuelData['volume'];
 
                         if ($isPartial) {
-                            $per100 = $ratio = false;
-                        }
-                        else {
+                            $per100 = false;
+                            $ratio = false;
+                        } else {
                             $per100 = round($volSinceLastFullRefuel * 100 / $distSinceLastFullRefuel, 2);
                             $ratio = round($distSinceLastFullRefuel / $volSinceLastFullRefuel, 2);
 
@@ -167,10 +177,12 @@ class VehicleCost extends XhbModel
                         }
                     }
                     else {
-                        $dist = $per100 = $ratio = false;
+                        $dist = false;
+                        $per100 = false;
+                        $ratio = false;
                     }
 
-                    $consumptionData[] = array(
+                    $consumptionData[] = [
                         'date'      => $op->getDateModel(),
                         'meter'     => $refuelData['dist'],
                         'fuel'      => $refuelData['volume'],
@@ -181,31 +193,36 @@ class VehicleCost extends XhbModel
                         'ratio'     => $ratio,
                         'operation' => $op,
                         'category'  => $refuelData['category']
-                    );
+                    ];
                     $lastMeter = $refuelData['dist'];
                 }
             }
+
             $this->_consumptionData[$cacheKey] =& $consumptionData;
         }
+
         return $this->_consumptionData[$cacheKey];
     }
 
-    public function extractRefuelData(Operation $operation) {
-        $consumptionData = array();
-        $rawData = array_merge(array(
-                array(
+    /**
+     * @return list<non-empty-array<('amount' | 'category' | 'dist' | 'op' | 'volume'), mixed>>
+     */
+    public function extractRefuelData(Operation $operation): array {
+        $consumptionData = [];
+        $rawData = array_merge([
+                [
                     'category' => $operation->getCategory(),
                     'amount' => $operation->getAmount(),
                     'wording' => $operation->getWording()
-                )
-            ),
+                ]
+            ],
             $operation->getSplitAmount()
         );
 
-        $keys = array('dist', 'volume', 'op');
+        $keys = ['dist', 'volume', 'op'];
         foreach($rawData as $rawDatum) {
             if (preg_match_all(self::CONSUMPTION_WORDING_PATTERN, $rawDatum['wording'], $matches, PREG_SET_ORDER)) {
-                $refuelData = array();
+                $refuelData = [];
                 foreach($matches as $m) {
                     foreach($keys as $k) {
                         if (isset($m[$k]) && $m[$k]) {
@@ -222,16 +239,20 @@ class VehicleCost extends XhbModel
                 }
             }
         }
+
         return $consumptionData;
     }
 
-    public function getDistanceTraveledByPeriod(\DatePeriod $period, $categoryIds = null) {
+    /**
+     * @return array{date: mixed, distance: (float | int)}[]
+     */
+    public function getDistanceTraveledByPeriod(\DatePeriod $period, $categoryIds = null): array {
         $startDate = $period->getStartDate();
         $endDate = $period->getEndDate();
         $interval = $period->getDateInterval();
 
         $consumptionData = $this->getConsumptionData($categoryIds);
-        $distanceByPeriod = array();
+        $distanceByPeriod = [];
         $nonNullPeriodFound = false;
 
         // Find first operation after start date
@@ -260,9 +281,11 @@ class VehicleCost extends XhbModel
                 }
             } while ($cd = next($consumptionData));
         }
+
         if ($nonNullPeriodFound) {
             return $distanceByPeriod;
         }
+
         return [];
     }
 }

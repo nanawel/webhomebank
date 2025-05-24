@@ -45,5 +45,5 @@ interface Xhb
      * @param array $params
      * @return mixed
      */
-    public function getCollectionInstance($modelClass, $params = array());
+    public function getCollectionInstance($modelClass, $params = []);
 }

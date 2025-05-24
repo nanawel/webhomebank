@@ -11,10 +11,10 @@ namespace app\models\core\Chart;
 
 class Bar extends AbstractChart
 {
-    protected $_defaultData = array(
+    protected $_defaultData = [
         'type'     => 'bar',
         'template' => 'common/chart/bar.phtml',
         'width'    => 800,
         'height'   => 300
-    );
+    ];
 }

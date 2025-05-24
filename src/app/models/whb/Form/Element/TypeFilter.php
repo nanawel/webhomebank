@@ -17,19 +17,20 @@ class TypeFilter extends Select implements IWhbElement
 {
     protected $_xhb;
 
-    public function __construct(Xhb $xhb, $data = array()) {
+    public function __construct(Xhb $xhb, $data = []) {
         $this->setLabel('Type');
         parent::__construct($data);
         $this->_xhb = $xhb;
 
         $i18n = I18n::instance();
         $periods = AccountOperation::getStaticCollectionFilters()['type'];
-        $options = array();
+        $options = [];
         foreach($periods['values'] as $k => $p) {
-            $options[$k] = array(
+            $options[$k] = [
                 'label' => $i18n->tr($p)
-            );
+            ];
         }
+
         $this->setOptions($options);
     }
 

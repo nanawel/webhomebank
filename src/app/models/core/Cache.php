@@ -32,54 +32,56 @@ use Base;
 class Cache
 {
     protected $_softBackend;
+
     protected $_params;
 
     protected $_configCacheKey;
-    protected $_configCacheKeySections = array(
+
+    protected $_configCacheKeySections = [
         'HTML_LANG',
         'ENCODING',
         'LANGUAGE',
         'FALLBACK',
         'CACHE',
         'app'
-    );
+    ];
 
-    public function __construct($params = array()) {
+    public function __construct($params = []) {
         $this->_softBackend = \Cache::instance();
         $this->_params = $params;
     }
 
-    protected function _prepareKey($key) {
+    protected function _prepareKey(string $key) {
         return \Base::instance()->hash($key . $this->_getConfigCacheKey());
     }
 
-    function exists($key, &$val = null)
+    public function exists($key, &$val = null)
     {
         $key = $this->_prepareKey($key);
-        return call_user_func_array(array($this->_softBackend, __FUNCTION__), array($key, &$val));
+        return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key, &$val]);
     }
 
-    function set($key, $val, $ttl = 0)
+    public function set($key, $val, $ttl = 0)
     {
         $key = $this->_prepareKey($key);
-        return call_user_func_array(array($this->_softBackend, __FUNCTION__), array($key, $val, $ttl));
+        return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key, $val, $ttl]);
     }
 
-    function get($key)
+    public function get($key)
     {
         $key = $this->_prepareKey($key);
-        return call_user_func_array(array($this->_softBackend, __FUNCTION__), array($key));
+        return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key]);
     }
 
-    function clear($key)
+    public function clear($key)
     {
         $key = $this->_prepareKey($key);
-        return call_user_func_array(array($this->_softBackend, __FUNCTION__), array($key));
+        return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key]);
     }
 
-    function reset($suffix = null, $lifetime = 0)
+    public function reset($suffix = null, $lifetime = 0)
     {
-        return call_user_func_array(array($this->_softBackend, __FUNCTION__), func_get_args());
+        return call_user_func_array([$this->_softBackend, __FUNCTION__], func_get_args());
     }
 
     /**
@@ -99,13 +101,15 @@ class Cache
                 $this->_configCacheKey = $key;
             }
             else {
-                $key = array();
+                $key = [];
                 foreach ($this->_configCacheKeySections as $section) {
                     $key[] = $fw->get($section);
                 }
+
                 $this->_configCacheKey = $fw->hash($fw->serialize($key));
             }
         }
+
         return $this->_configCacheKey;
     }
 }

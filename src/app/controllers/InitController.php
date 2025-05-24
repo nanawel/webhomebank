@@ -29,7 +29,7 @@ class InitController extends WhbController
     }
 
 
-    protected function _setupLayoutBlocks() {
+    protected function _setupLayoutBlocks(): self {
         $this->getView()
             ->setBlockTemplate('head', 'page/head.phtml')
             ->setBlockTemplate('footer', 'page/footer.phtml')
@@ -39,18 +39,18 @@ class InitController extends WhbController
         return $this;
     }
 
-    public function loadAction() {
+    public function loadAction(): void {
         $this->getView()
             ->setBlockTemplate('content', 'common/whbload.phtml')
             ->setData('AJAX_PROGRESS_URL', $this->getUrl('*/doLoad'))
             ->setData('REDIRECT_URL', $this->_getReferer() ?: $this->getUrl('/'));
     }
 
-    public function doLoadAction() {
-        $this->setPageConfig(array(
+    public function doLoadAction(): void {
+        $this->setPageConfig([
             'template' => 'data/json.phtml',
             'mime'     => 'application/json'
-        ));
+        ]);
         try {
             $config = Main::app()->getConfig('XHB');
             $adapter = new XhbAdapter($this->_fw, $this->getXhbSession()->get('xhb_file'), $config);
@@ -58,19 +58,20 @@ class InitController extends WhbController
             $this->getSession()
                 ->addMessage(I18n::instance()->tr('XHB imported to database successfully!'), Session::MESSAGE_INFO);
 
-            $this->getView()->setData('DATA', array(
+            $this->getView()->setData('DATA', [
                 'status'  => 'success',
                 'message' => ''
-            ));
+            ]);
         }
-        catch(\Exception $e) {
-            $response = array(
+        catch(\Exception $exception) {
+            $response = [
                 'status'  => 'error',
-                'message' => $e->getMessage()
-            );
+                'message' => $exception->getMessage()
+            ];
             if ($this->_fw->get('DEBUG') > 0) {
-                $response['trace'] = $e->getTraceAsString();
+                $response['trace'] = $exception->getTraceAsString();
             }
+
             $this->getView()->setData('DATA', $response);
         }
     }

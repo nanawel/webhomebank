@@ -1,6 +1,7 @@
 {
     "name": "nanawel/webhomebank",
-    "description": "",
+    "version": "1.0.0-dev",
+    "description": "A web-viewer for Homebank's XHB files.",
     "homepage": "https://github.com/nanawel/webhomebank",
     "license": "AGPL-3.0",
     "authors": [
@@ -13,12 +14,16 @@
     ],
     "require": {
         "php": "~7.3",
-        "bcosca/fatfree-core": "^3.7.3",
-        "laminas/laminas-db": "2.13.4",
-        "nanawel/zend-db-sql-insertmultiple": "dev-master",
+        "bcosca/fatfree-core": "^3.9",
+        "laminas/laminas-db": "^2",
+        "nanawel/zend-db-sql-insertmultiple": "2.1",
         "arvenil/ninja-mutex": "^0.6.0"
     },
     "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/laminas/laminas-stdlib.git"
+        },
         {
             "type": "composer",
             "url": "https://packages.zendframework.com/"
@@ -29,5 +34,8 @@
     },
     "autoload": {
         "files": ["app/vendor/bcosca/fatfree-core/base.php"]
+    },
+    "require-dev": {
+        "rector/rector": "^2.0"
     }
 }
