@@ -24,7 +24,7 @@ class Collection extends XhbCollection implements \Xhb\Model\Resource\Iface\Oper
         $this->_init(\Xhb\Model\Xhb::MODEL_CLASS_NAMESPACE . 'Operation', 'id', Operation::MAIN_TABLE);
     }
 
-    public function getBalance() {
+    public function getBalance(): int|float {
         $balance = 0;
         foreach($this as $op) {
             $balance += $op->getAmount();

@@ -143,9 +143,9 @@ class Operation extends XhbModel
         return $this->_splitAmountData;
     }
 
-    public function getPaymodeCode() {
+    public function getPaymodeCode(): int|string|false|null {
         if ($paymode = $this->getPaymode()) {
-            return array_search($paymode, Constants::$PAYMODES);
+            return array_search($paymode, Constants::$PAYMODES, true);
         }
 
         return null;
@@ -164,6 +164,7 @@ class Operation extends XhbModel
                     $categories[] = $this->getXhb()->getCategory($catId);
                 }
             }
+
             return $categories;
         }
 

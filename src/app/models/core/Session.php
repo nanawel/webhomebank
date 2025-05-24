@@ -22,18 +22,15 @@ class Session extends \Magic
 
     protected static $_session;
 
-    protected $_name;
-
     protected $_data;
 
-    public function __construct(string $name) {
+    public function __construct(protected string $_name) {
         if (!self::$_session) {
             self::$_cacheInstance = new \Cache(Main::app()->getConfig('SESSIONS'));
             self::$_session = new \Session(null, null, self::$_cacheInstance);
         }
 
-        $this->_name = $name;
-        $this->_data =& \Base::instance()->ref('SESSION.' . $name);
+        $this->_data =& \Base::instance()->ref('SESSION.' . $this->_name);
     }
 
     public function getId(): string {
@@ -116,7 +113,7 @@ class Session extends \Magic
     public function getLocale() {
         if (!$locale = $this->get('locale')) {
             [$locale] = explode(',', \Base::instance()->get('LANGUAGE'));
-            if (strpos($locale, '.') === false) {
+            if (!str_contains($locale, '.')) {
                 $locale .= '.' . \Base::instance()->get('ENCODING');
             }
 

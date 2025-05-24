@@ -88,7 +88,7 @@ class Log extends \Prefab
      *                                  array("MyClass", "myStaticMethod")
      * @return string
      */
-    public static function getContextAsString($to, $level = 1) {
+    public static function getContextAsString($to, $level = 1): string {
         $target = null;
         try {
             $backtrace = debug_backtrace();
@@ -106,7 +106,7 @@ class Log extends \Prefab
                 }
             }
         }
-        catch(Exception $exception) {}
+        catch(Exception) {}
 
         if (null !== $target) {
             return self::_formatContext($target);
@@ -125,8 +125,9 @@ class Log extends \Prefab
                 $target['type'] = '::';
                 $target['function'] = $target[1];
             }
+
             if (is_object($target[0]) && is_string($target[1])) {
-                $target['class'] = get_class($target[0]);
+                $target['class'] = $target[0]::class;
                 $target['type'] = '->';
                 $target['function'] = $target[1];
             }
@@ -166,7 +167,7 @@ class Log extends \Prefab
     protected static function _formatContext($context): string {
         $rootDir = dirname($_SERVER['SCRIPT_FILENAME']);
         $file = $context['file'];
-        if (0 === strpos($file, $rootDir)) {
+        if (str_starts_with($file, $rootDir)) {
             $file = substr($file, strlen($rootDir));
         }
 

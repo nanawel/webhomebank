@@ -19,7 +19,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
 {
     const SORT_DIR_DEFAULT = SORT_ASC;
 
-    protected $_itemClass = '\\xhb\\util\\MagicObject';
+    protected $_itemClass = \xhb\util\MagicObject::class;
 
     protected $_keyField = null;
 
@@ -210,21 +210,21 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
      * ArrayAccess Methods Implementation
      */
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset): bool {
         $this->load();
         return isset($this->_items[$offset]);
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset): mixed {
         $this->load();
         return $this->_items[$offset];
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value): void {
         throw new \BadMethodCallException('Setter is not supported.');
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset): void {
         throw new \BadMethodCallException('Unsetter is not supported.');
     }
 
@@ -232,7 +232,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
      * IterratorAggregate Methods Implementation
      */
 
-    public function getIterator() {
+    public function getIterator(): \Traversable {
         $this->load();
         return new \ArrayIterator($this->_items);
     }
@@ -241,7 +241,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
      * Countable Methods Implementation
      */
 
-    public function count() {
+    public function count(): int {
         $this->load();
         return count($this->_items);
     }

@@ -14,17 +14,14 @@ use Xhb\Model\Xhb;
 
 class SearchFilter extends Textfield implements IWhbElement
 {
-    protected $_xhb;
-
-    public function __construct(Xhb $xhb, $data = []) {
+    public function __construct(protected \Xhb\Model\Xhb $_xhb, $data = []) {
         parent::__construct($data);
-        $this->_xhb = $xhb;
         $i18n = I18n::instance();
         $this->setPlaceholder($i18n->tr('Search...'));
         $this->addClass('search');
     }
 
-    public function getXhb() {
+    public function getXhb(): \Xhb\Model\Xhb {
         return $this->_xhb;
     }
 }

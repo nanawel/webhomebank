@@ -62,7 +62,7 @@ class DateHelperTest extends \PHPUnit\Framework\TestCase
 
         // THIS QUARTER (current date)
         $month = date('n');
-        $firstMonthOfQuarter = $month > 9 ? 10 : $month > 6 ? 7 : $month > 3 ? 4 : 1;
+        $firstMonthOfQuarter = (($month > 9 ? 10 : $month > 6) ? 7 : $month > 3) ? 4 : 1;
         $lastMonthOfQuarter = $firstMonthOfQuarter + 2;
         $thisQuarter = [
             'start' => $this->_getDateTime('first day of ' . \DateTime::createFromFormat('!m', $firstMonthOfQuarter)->format('F')),
@@ -91,7 +91,7 @@ class DateHelperTest extends \PHPUnit\Framework\TestCase
 
         // LAST QUARTER (current date)
         $month = date('n');
-        $firstMonthOfLastQuarter = $month > 9 ? 7 : $month > 6 ? 4 : $month > 3 ? 1 : 10;
+        $firstMonthOfLastQuarter = (($month > 9 ? 7 : $month > 6) ? 4 : $month > 3) ? 1 : 10;
         $lastMonthOfLastQuarter = $firstMonthOfLastQuarter + 2;
         $thisQuarter = [
             'start' => $this->_getDateTime('first day of ' . \DateTime::createFromFormat('!m', $firstMonthOfLastQuarter)->format('F')),

@@ -19,8 +19,6 @@ class Parser
      */
     protected $_xhbFile = null;
 
-    protected $_params = [];
-
     /**
      * XHB file ID
      *
@@ -33,13 +31,12 @@ class Parser
      */
     protected $_data = null;
 
-    public function __construct($file = null, $params = []) {
+    public function __construct($file = null, protected $_params = []) {
         if (!is_file($file) || !is_readable($file)) {
             throw new \InvalidArgumentException(sprintf("File '%s' does not exist or is not readable.", $file));
         }
 
         $this->setFile($file);
-        $this->_params = $params;
     }
 
     public function setFile($file): void {

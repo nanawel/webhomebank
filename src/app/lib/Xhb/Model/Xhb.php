@@ -162,7 +162,7 @@ class Xhb extends XhbModel
         return $fullClassName;
     }
 
-    public function getResourceInstance($modelClass, $params = []) {
+    public function getResourceInstance(string $modelClass, $params = []) {
         $fullClassName = $this->getResourceClass($modelClass);
         return new $fullClassName($params);
     }

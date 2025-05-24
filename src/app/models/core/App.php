@@ -166,14 +166,16 @@ abstract class App
     }
 
     /**
-     * @param $config
+     * @param string|null $config
      * @return array
      */
     public static function configToHashmap($config, $valueSeparator = ';', $keyValueSeparator = ':') {
         $return = [];
-        foreach(explode($valueSeparator, $config) as $c) {
-            [$key, $value] = explode($keyValueSeparator, $c);
-            $return[$key] = $value;
+        if ($config) {
+            foreach(explode($valueSeparator, $config) as $c) {
+                [$key, $value] = explode($keyValueSeparator, $c);
+                $return[$key] = $value;
+            }
         }
 
         return $return;

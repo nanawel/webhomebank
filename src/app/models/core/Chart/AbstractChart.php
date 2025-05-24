@@ -55,7 +55,7 @@ class AbstractChart extends MagicObject
         parent::__construct(array_merge(self::$_commonDefaultData, $this->_defaultData, $data));
     }
 
-    public function __($string, $vars = null) {
+    public function __(?string $string, $vars = null) {
         return I18n::instance()->tr($string, $vars);
     }
 
@@ -88,14 +88,10 @@ class AbstractChart extends MagicObject
     }
 
     public function getTooltipJsCallback($jsValueVar = 'data.parsed.y') {
-        switch ($this->getData('scale_y_unit')) {
-            case self::SCALE_Y_UNIT_CURRENCY:
-                return sprintf('i18n.formatCurrency(%s)', $jsValueVar);
-            case self::SCALE_Y_UNIT_CUSTOM:
-                return $this->getData('scale_y_unit_custom');
-            case self::SCALE_Y_UNIT_NUMBER:
-            default:
-                return sprintf('i18n.formatNumber(%s)', $jsValueVar);
-        }
+        return match ($this->getData('scale_y_unit')) {
+            self::SCALE_Y_UNIT_CURRENCY => sprintf('i18n.formatCurrency(%s)', $jsValueVar),
+            self::SCALE_Y_UNIT_CUSTOM => $this->getData('scale_y_unit_custom'),
+            default => sprintf('i18n.formatNumber(%s)', $jsValueVar),
+        };
     }
 }

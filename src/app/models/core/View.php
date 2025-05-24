@@ -35,14 +35,14 @@ class View extends \View
         return I18n::instance();
     }
 
-    public function __($string, $vars = null) {
+    public function __($string, $vars = null): mixed {
         return call_user_func_array(
             [$this->i18n(), 'tr'],
             func_get_args()
         );
     }
 
-    public function getUrl($path, $params = []) {
+    public function getUrl($path, $params = []): string {
         return Url::instance()->getUrl($path, $params);
     }
 
@@ -93,7 +93,7 @@ class View extends \View
      * @param string $blockName
      * @param string $template
      */
-    public function setBlockTemplate($blockName, $template): self {
+    public function setBlockTemplate(string $blockName, $template): self {
         $this->setBlockConfig($blockName, 'template', $template);
         return $this;
     }
@@ -234,9 +234,7 @@ class View extends \View
                 preg_match_all($pattern, $cacheOutput, $matches);
                 $generatedOutput = preg_replace_callback(
                     $pattern,
-                    function (array $matches) use ($mime) {
-                        return $this->renderBlock($matches['blockName'], $mime);
-                    },
+                    fn(array $matches) => $this->renderBlock($matches['blockName'], $mime),
                     $cacheOutput
                 );
                 $finalOutput =& $generatedOutput;

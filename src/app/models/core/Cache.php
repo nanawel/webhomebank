@@ -33,8 +33,6 @@ class Cache
 {
     protected $_softBackend;
 
-    protected $_params;
-
     protected $_configCacheKey;
 
     protected $_configCacheKeySections = [
@@ -46,40 +44,39 @@ class Cache
         'app'
     ];
 
-    public function __construct($params = []) {
+    public function __construct(protected $_params = []) {
         $this->_softBackend = \Cache::instance();
-        $this->_params = $params;
     }
 
     protected function _prepareKey(string $key) {
         return \Base::instance()->hash($key . $this->_getConfigCacheKey());
     }
 
-    public function exists($key, &$val = null)
+    public function exists($key, &$val = null): mixed
     {
         $key = $this->_prepareKey($key);
         return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key, &$val]);
     }
 
-    public function set($key, $val, $ttl = 0)
+    public function set($key, $val, $ttl = 0): mixed
     {
         $key = $this->_prepareKey($key);
         return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key, $val, $ttl]);
     }
 
-    public function get($key)
+    public function get($key): mixed
     {
         $key = $this->_prepareKey($key);
         return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key]);
     }
 
-    public function clear($key)
+    public function clear($key): mixed
     {
         $key = $this->_prepareKey($key);
         return call_user_func_array([$this->_softBackend, __FUNCTION__], [$key]);
     }
 
-    public function reset($suffix = null, $lifetime = 0)
+    public function reset($suffix = null, $lifetime = 0): mixed
     {
         return call_user_func_array([$this->_softBackend, __FUNCTION__], func_get_args());
     }

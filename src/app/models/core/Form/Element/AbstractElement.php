@@ -14,14 +14,11 @@ class AbstractElement extends MagicObject
 {
     protected static $_document = null;
 
-    protected $_tagName = null;
-
     protected $_domElement = null;
 
     protected $_value = null;
 
-    public function __construct($tagName, $data = []) {
-        $this->_tagName = $tagName;
+    public function __construct(protected $_tagName, $data = []) {
         $this->addData($data);
     }
 
@@ -34,7 +31,7 @@ class AbstractElement extends MagicObject
 
     public function removeClass($class): self {
         $classes = explode(' ', $this->getClass());
-        if ($key = array_search($class, $classes) !== null) {
+        if ($key = array_search($class, $classes, true) !== null) {
             unset($classes[$key]);
         }
 
@@ -63,7 +60,7 @@ class AbstractElement extends MagicObject
 
     protected function _addAttributesToDOMElement(\DOMElement $el, array $attributes): self {
         foreach($attributes as $k => $v) {
-            if ($k && strpos($k, '_') !== 0) {
+            if ($k && !str_starts_with($k, '_')) {
                 $el->setAttribute($k, $v);
             }
         }
@@ -71,7 +68,7 @@ class AbstractElement extends MagicObject
         return $this;
     }
 
-    public final function toHtml() {
+    public final function toHtml(): string {
         return $this->_toHtml();
     }
 

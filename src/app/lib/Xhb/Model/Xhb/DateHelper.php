@@ -15,6 +15,7 @@ use Xhb\Model\XhbModel;
 class DateHelper extends XhbModel
 {
     public $TIME_PERIOD_DEFAULT;
+
     const TIME_PERIOD_THIS_MONTH    = 'this_month';
 
     const TIME_PERIOD_LAST_MONTH    = 'last_month';
@@ -146,7 +147,7 @@ class DateHelper extends XhbModel
      * @param string|\DateInterval $interval
      * @return \DatePeriod
      */
-    public function getPeriodFromConstant($periodConstant, $interval = null) {
+    public function getPeriodFromConstant($periodConstant, $interval = null): \DatePeriod {
         $periods = $this->getPredefinedTimePeriods();
         $periodDates = $periods[$periodConstant] ?? $periods[$this->TIME_PERIOD_DEFAULT];
 

@@ -13,11 +13,11 @@
         }
     ],
     "require": {
-        "php": "~7.3",
+        "php": "~8",
+        "arvenil/ninja-mutex": "^0.6.0",
         "bcosca/fatfree-core": "^3.9",
-        "laminas/laminas-db": "^2",
-        "nanawel/zend-db-sql-insertmultiple": "2.1",
-        "arvenil/ninja-mutex": "^0.6.0"
+        "laminas/laminas-db": "^2.20.0",
+        "nanawel/zend-db-sql-insertmultiple": "2.2"
     },
     "repositories": [
         {

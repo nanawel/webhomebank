@@ -33,6 +33,7 @@ use Laminas\Db\Sql\Select;
 abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
 {
     public $_mainTable;
+
     /**
      * @var Profiler
      */
@@ -188,63 +189,20 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
 
         $operator = key($predicate);
         $value = current($predicate);
-        switch($operator) {
-            case 'eq':
-            case '=':
-            case '==':
-                $predicate = new Operator($field, Operator::OP_EQ, $value);
-                break;
-
-            case 'ne':
-            case 'neq':
-            case '!=':
-                $predicate = new Operator($field, Operator::OP_NE, $value);
-                break;
-
-            case 'gt':
-            case '>':
-                $predicate = new Operator($field, Operator::OP_GT, $value);
-                break;
-
-
-            case 'ge':
-            case '>=':
-                $predicate = new Operator($field, Operator::OP_GTE, $value);
-                break;
-
-            case 'lt':
-            case '<':
-                $predicate = new Operator($field, Operator::OP_LT, $value);
-                break;
-
-            case 'le':
-            case '<':
-                $predicate = new Operator($field, Operator::OP_LTE, $value);
-                break;
-
-            case 'null':
-                $predicate = new IsNull($field);
-                break;
-
-            case 'in':
-                $predicate = new In($field, $value);
-                break;
-
-            case 'nin':
-                $predicate = new NotIn($field);
-                break;
-
-            case 'like':
-                $predicate = new Like($field, $value);
-                break;
-
-            case 'nlike':
-                $predicate = new NotLike($field, $value);
-                break;
-
-            default:
-                throw new \InvalidArgumentException('"' . $operator . '" is not a valid operator');
-        }
+        $predicate = match ($operator) {
+            'eq', '=', '==' => new Operator($field, Operator::OP_EQ, $value),
+            'ne', 'neq', '!=' => new Operator($field, Operator::OP_NE, $value),
+            'gt', '>' => new Operator($field, Operator::OP_GT, $value),
+            'ge', '>=' => new Operator($field, Operator::OP_GTE, $value),
+            'lt', '<' => new Operator($field, Operator::OP_LT, $value),
+            'le', '<' => new Operator($field, Operator::OP_LTE, $value),
+            'null' => new IsNull($field),
+            'in' => new In($field, $value),
+            'nin' => new NotIn($field),
+            'like' => new Like($field, $value),
+            'nlike' => new NotLike($field, $value),
+            default => throw new \InvalidArgumentException('"' . $operator . '" is not a valid operator'),
+        };
 
         return $predicate;
     }

@@ -28,6 +28,7 @@ class Sqlite extends Db
                 @chmod($this->_config['db']['database'], 0640);
                 return true;
             }
+
             return false;
         }
         catch (\Exception $exception) {

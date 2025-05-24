@@ -34,9 +34,6 @@ abstract class AbstractController
 
     const PAGE_TEMPLATE_DEFAULT           = 'layout.phtml';
 
-    /* @var $_fw \Base */
-    protected $_fw = null;
-
     protected $_controller = null;
 
     protected $_action = null;
@@ -53,8 +50,7 @@ abstract class AbstractController
 
     protected $_canCacheOutput = true;
 
-    public final function __construct($fw) {
-        $this->_fw = $fw;
+    public final function __construct(protected $_fw) {
         Main::instance()->setup();
         Main::app()->setCurrentController($this);
         $this->setPageTemplate(self::PAGE_TEMPLATE_DEFAULT);
@@ -199,6 +195,7 @@ abstract class AbstractController
      * @param \Base $fw
      * @param string $args
      */
+    #[\ReturnTypeWillChange]
     public final function beforeRoute($fw, $args = null) {
         $this->_rawRequestParams = $args;
         $this->_initRequestData($args);
@@ -229,6 +226,7 @@ abstract class AbstractController
      * @param \Base $fw
      * @param string $args
      */
+    #[\ReturnTypeWillChange]
     public final function afterRoute($fw, $args = null) {
         if ($this->_afterRoute($fw, $args) === false) {
             return false;
@@ -249,6 +247,7 @@ abstract class AbstractController
      * @param null $args
      * @return bool False to stop request processing.
      */
+    #[\ReturnTypeWillChange]
     protected function _beforeRoute($fw, $args = null) {
         // to be overridden
     }
@@ -258,10 +257,12 @@ abstract class AbstractController
      * @param null $args
      * @return bool False to stop request processing.
      */
+    #[\ReturnTypeWillChange]
     protected function _afterRoute($fw, $args = null) {
         // to be overridden
     }
 
+    #[\ReturnTypeWillChange]
     protected function _afterRender($fw, $args = null) {
         // to be overridden
     }
@@ -392,21 +393,21 @@ abstract class AbstractController
         return implode('/', $parts);
     }
 
-    public function __($string, $vars = null) {
+    public function __(?string $string, $vars = null) {
         return I18n::instance()->tr($string, $vars);
     }
 
-    protected function _info($message, $vars = null) {
+    protected function _info(?string $message, $vars = null) {
         $this->getSession()->addMessage($this->__($message, $vars), Session::MESSAGE_INFO);
         return $this;
     }
 
-    protected function _warn($message, $vars = null) {
+    protected function _warn(?string $message, $vars = null) {
         $this->getSession()->addMessage($this->__($message, $vars), Session::MESSAGE_WARN);
         return $this;
     }
 
-    protected function _error($message, $vars = null) {
+    protected function _error(?string $message, $vars = null) {
         $this->getSession()->addMessage($this->__($message, $vars), Session::MESSAGE_ERROR);
         return $this;
     }
@@ -445,7 +446,7 @@ abstract class AbstractController
             // Tried to call an undefined action, return 404 (instead of 405 from standard)
             if ($this->_fw->get('DEBUG') > 1) {
                 Log::instance()->log(
-                    'Invalid action requested "' .$name . '" for controller "' . get_class($this) . '".',
+                    'Invalid action requested "' .$name . '" for controller "' . static::class . '".',
                     LOG_INFO
                 );
             }
@@ -453,6 +454,7 @@ abstract class AbstractController
             $this->_fw->error(404);
             return false;
         }
+
         return null;
     }
 }

@@ -127,7 +127,7 @@ class MagicObject
         return $this->_data[$key] ?? null;
     }
 
-    public function getDataUsingMethod($key) {
+    public function getDataUsingMethod($key): mixed {
         return call_user_func([$this, 'get' . self::_camelize($key)]);
     }
 
@@ -160,7 +160,7 @@ class MagicObject
                 return isset($this->_data[$key]);
         }
 
-        throw new \Exception("Invalid method ".get_class($this)."::".$method."(".print_r($args,1).")");
+        throw new \Exception("Invalid method ".static::class."::".$method."(".print_r($args,1).")");
     }
 
     /**

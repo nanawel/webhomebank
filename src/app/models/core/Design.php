@@ -60,7 +60,7 @@ class Design extends \Prefab
         try {
             \View::instance()->render('_init.php', 'text/html', []);
         }
-        catch (\Exception $exception) {}
+        catch (\Exception) {}
 
         return $this;
     }
@@ -122,7 +122,7 @@ class Design extends \Prefab
     }
 
     public function getThemeUrl($path, $fallbackDefault = true) {
-        if (strpos('//', (string) $path) !== false) {    // Full URL (for externals; handles "same protocol as current page" syntax)
+        if (str_contains('//', (string) $path)) {    // Full URL (for externals; handles "same protocol as current page" syntax)
             return $path;
         }
 
@@ -240,7 +240,7 @@ class Design extends \Prefab
         return $html;
     }
 
-    protected function _renderItem($item, $type): ?string {
+    protected function _renderItem(string $item, $type): ?string {
         $output = null;
         switch ($type) {
             case 'css':
@@ -248,19 +248,19 @@ class Design extends \Prefab
                 break;
             case 'js':
             case 'js_module':
-                $typeAttr = $type == 'js_module' ? 'type="module"' : '';
-                $output = sprintf('<script src="%s" %s></script>', $this->getJsUrl($item), $scriptType);
+                $typeAttr = $type == 'js_module' ? ' type="module"' : '';
+                $output = sprintf('<script src="%s"%s></script>', $this->getJsUrl($item), $type);
                 break;
             case 'js_inline':
             case 'js_module_inline':
-                $typeAttr = $type == 'js_module_inline' ? 'type="module"' : '';
+                $typeAttr = $type == 'js_module_inline' ? ' type="module"' : '';
                 $output = <<<"EOJS"
-<script {$typeAttr}>
-//<![CDATA[
-{$item}
-//]]>
-</script>
-EOJS;
+                    <script{$typeAttr}>
+                    //<![CDATA[
+                    {$item}
+                    //]]>
+                    </script>
+                    EOJS;
                 break;
             default:
                 // ?

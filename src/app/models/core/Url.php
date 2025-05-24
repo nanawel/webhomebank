@@ -37,18 +37,11 @@ class Url extends \Prefab
                 $port = $fw->get('PORT');
             }
 
-            switch ($port) {
-                case 80:
-                    $port = $fw->get('SCHEME') == 'http' ? '' : ':' . $port;
-                    break;
-
-                case 443:
-                    $port = $fw->get('SCHEME') == 'https' ? '' : ':' . $port;
-                    break;
-
-                default:
-                    $port = ':' . $port;
-            }
+            $port = match ($port) {
+                80 => $fw->get('SCHEME') == 'http' ? '' : ':' . $port,
+                443 => $fw->get('SCHEME') == 'https' ? '' : ':' . $port,
+                default => ':' . $port,
+            };
 
             $url = '//' . $host . $port . $this->_getBasePath() . '/';
 
@@ -72,8 +65,8 @@ class Url extends \Prefab
     }
 
     protected function _getBasePath(): string {
-        $externalBasePath = trim(\Base::instance()->get('HEADERS.X-External-Base-Path'), '/');
-        $localBase = trim(\Base::instance()->get('BASE'), '/');
+        $externalBasePath = trim(\Base::instance()->get('HEADERS.X-External-Base-Path') ?? '', '/');
+        $localBase = trim(\Base::instance()->get('BASE') ?? '', '/');
 
         $basePath = [];
         if ($externalBasePath !== '' && $externalBasePath !== '0') {
@@ -103,7 +96,7 @@ class Url extends \Prefab
         $paramString = '';
         $sysParams = [];
         foreach($params as $k => $v) {
-            if (strpos($k, '_') === 0) {
+            if (str_starts_with($k, '_')) {
                 $sysParams[$k] = $v;
             }
             else {
@@ -125,4 +118,4 @@ class Url extends \Prefab
 
         return $this->getBaseUrl($sysParams) . trim($path . '/' . $paramString, '/ ') . ($query ? '?' . $query : '');
     }
-} 
+}

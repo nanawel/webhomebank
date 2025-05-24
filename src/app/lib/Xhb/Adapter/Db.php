@@ -38,25 +38,13 @@ class Db implements AdapterInterface
         Payee::MAIN_TABLE
     ];
 
-    /**
-     * @var \Laminas\Db\Adapter\Adapter
-     */
-    protected $_db;
+    protected \Laminas\Db\Adapter\Adapter $_db;
 
-    /**
-     * @var \Laminas\Db\Sql\Sql
-     */
-    protected $_sql;
+    protected \Laminas\Db\Sql\Sql $_sql;
 
-    /**
-     * @var \Laminas\Db\Metadata\Metadata
-     */
-    protected $_metadata;
+    protected \Laminas\Db\Metadata\Metadata $_metadata;
 
-    /**
-     * @var array
-     */
-    protected $_config;
+    protected array $_config;
 
     public function __construct(array $config) {
         if (!isset($config['db'])) {
@@ -84,7 +72,7 @@ class Db implements AdapterInterface
         return false;
     }
 
-    public function getConnection() {
+    public function getConnection(): \Laminas\Db\Adapter\Adapter {
         return $this->_db;
     }
 
@@ -95,7 +83,7 @@ class Db implements AdapterInterface
                 ->where(['id' => $xhbId]);
             $result = $this->_db->query($this->_sql->buildSqlString($select), Adapter::QUERY_MODE_EXECUTE);
         }
-        catch (\RuntimeException $runtimeException) {
+        catch (\RuntimeException) {
             return false;
         }
 
@@ -155,7 +143,7 @@ class Db implements AdapterInterface
         return $data;
     }
 
-    protected function _prepareOperationsData(array $xhbData, $xhbId) {
+    protected function _prepareOperationsData(array $xhbData, $xhbId): array {
         $recordsByKey = [];
         foreach ($xhbData as $type => $records) {
             if (is_array($records)) {

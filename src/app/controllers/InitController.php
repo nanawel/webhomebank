@@ -18,6 +18,7 @@ use app\models\whb\Xhb\Adapter as XhbAdapter;
 
 class InitController extends WhbController
 {
+    #[\ReturnTypeWillChange]
     protected function _beforeRoute($fw, $args = null) {
         AbstractController::_beforeRoute($fw, $args);
         $this->_viewInstance = View::instance();

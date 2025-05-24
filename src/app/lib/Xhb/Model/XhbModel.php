@@ -11,7 +11,7 @@ use Xhb\Util\MagicObject;
  *
  * @package Xhb\Model
  */
-abstract class XhbModel extends MagicObject
+abstract class XhbModel extends MagicObject implements \Stringable
 {
     const MODEL_CLASS_NAMESPACE = 'Xhb\\Model\\';
 
@@ -25,13 +25,13 @@ abstract class XhbModel extends MagicObject
         $this->setData($data);
     }
 
-    public function __toString() {
+    public function __toString(): string {
         $data = [];
         foreach($this->getData() as $k => $v) {
             $data[] = $k . '=' . (string)$v;
         }
 
-        return get_class($this) . ': ' . implode('|', $data);
+        return static::class . ': ' . implode('|', $data);
     }
 
     public function getResource($singleton = true, array $params = []) {
@@ -40,7 +40,7 @@ abstract class XhbModel extends MagicObject
             $params
         );
         $namespace = trim($params['_namespace'] ?? self::MODEL_CLASS_NAMESPACE, '\\');
-        $class = substr(trim(get_class($this), '\\'), strlen($namespace) + 1);
+        $class = substr(trim(static::class, '\\'), strlen($namespace) + 1);
         if (!isset($params['xhb'])) {
             $params['xhb'] = $this->getXhb();
         }

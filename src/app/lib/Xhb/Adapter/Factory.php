@@ -24,17 +24,10 @@ class Factory
                     throw new \Exception('Missing DB driver in configuration');
                 }
 
-                switch ($xhbConfig['resource_config']['db']['driver']) {
-                    case 'Pdo_Sqlite':
-                        $adapter = new Sqlite($xhbConfig['resource_config']);
-                        break 2;
-
-                    case 'Pdo_Mysql':
-                        //TODO Pdo_Mysql / Pdo_Pgsql
-
-                    default:
-                        throw new \Exception('Unsupported driver "' . $resourceParams['resource_config']['db']['driver'] . '"');
-                }
+                $adapter = match ($xhbConfig['resource_config']['db']['driver']) {
+                    'Pdo_Sqlite' => new Sqlite($xhbConfig['resource_config']),
+                    default => throw new \Exception('Unsupported driver "' . $resourceParams['resource_config']['db']['driver'] . '"'),
+                };
 
                 break;
 

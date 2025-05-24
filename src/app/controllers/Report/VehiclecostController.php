@@ -23,6 +23,7 @@ use Xhb\Model\Xhb\DateHelper;
 
 class VehiclecostController extends WhbController
 {
+    #[\ReturnTypeWillChange]
     protected function _beforeRoute($fw, $args = null) {
         parent::_beforeRoute($fw, $args);
 

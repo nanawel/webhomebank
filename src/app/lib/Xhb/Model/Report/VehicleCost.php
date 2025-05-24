@@ -63,7 +63,7 @@ class VehicleCost extends XhbModel
      * @param $categoryIds int[]
      * @return array
      */
-    public function getPeriodConsumptionSummaryData(\DatePeriod $period, $categoryIds = null) {
+    public function getPeriodConsumptionSummaryData(\DatePeriod $period, $categoryIds = null): array|false {
         $startDate = $period->start;
         $endDate = $period->end;
         $periodConsumptionSummaryData = [
@@ -72,7 +72,7 @@ class VehicleCost extends XhbModel
                 'meter'       => 0,
                 'fuel'        => 0,
                 'fuel_cost'   => 0,
-                'other_costs' => null,   //FIXME Not handled yet
+                'other_costs' => 0,   //FIXME Not handled yet
                 'total_cost'  => 0
             ]
         ];
@@ -96,8 +96,11 @@ class VehicleCost extends XhbModel
 
         if ($found) {
             foreach(array_keys($periodConsumptionSummaryData['total']) as $type) {
-                $periodConsumptionSummaryData['per100'][$type] = round($periodConsumptionSummaryData['total'][$type]
-                    / $periodConsumptionSummaryData['total']['meter'] * 100, 2);
+                $periodConsumptionSummaryData['per100'][$type] = round(
+                    $periodConsumptionSummaryData['total'][$type]
+                    / $periodConsumptionSummaryData['total']['meter'] * 100,
+                    2
+                );
                 $periodConsumptionSummaryData['total'][$type] = round($periodConsumptionSummaryData['total'][$type], 2);
             }
 
@@ -221,7 +224,7 @@ class VehicleCost extends XhbModel
 
         $keys = ['dist', 'volume', 'op'];
         foreach($rawData as $rawDatum) {
-            if (preg_match_all(self::CONSUMPTION_WORDING_PATTERN, $rawDatum['wording'], $matches, PREG_SET_ORDER)) {
+            if (preg_match_all(self::CONSUMPTION_WORDING_PATTERN, $rawDatum['wording'] ?? '', $matches, PREG_SET_ORDER)) {
                 $refuelData = [];
                 foreach($matches as $m) {
                     foreach($keys as $k) {

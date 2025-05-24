@@ -187,7 +187,7 @@ class I18n extends \Prefab
         return $this->_dateFormatter;
     }
 
-    public function getLocaleCountryCodeISO2() {
+    public function getLocaleCountryCodeISO2(): string {
         return substr($this->getLocale(), 0, 2);
     }
 

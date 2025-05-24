@@ -18,20 +18,6 @@ use Xhb\Parser as XhbParser;
 class Adapter
 {
     public $_resourceAdater;
-    /**
-     * @var \Base
-     */
-    protected $_fw;
-
-    /**
-     * @var string
-     */
-    protected $_xhbFile;
-
-    /**
-     * @var array
-     */
-    protected $_rawConfig;
 
     /**
      * @var array
@@ -62,11 +48,11 @@ class Adapter
      * @param $fw \Base
      * @param $xhbFile string
      * @param $config array
+     * @param \Base $fw
+     * @param string $xhbFile
      */
-    public function __construct($fw, $xhbFile, array $config) {
-        $this->_fw = $fw;
-        $this->_xhbFile = $xhbFile;
-        $this->_rawConfig = $config;
+    public function __construct(protected $_fw, protected $_xhbFile, protected array $_rawConfig)
+    {
     }
 
     public function getParser() {
@@ -142,8 +128,6 @@ class Adapter
     }
 
     protected function _filterConfig(&$val, $key, $hive) {
-        $val = preg_replace_callback('/({)?@([a-z\._]+)(?(1)})/i', function (array $var) use ($hive) {
-            return $hive[$var[2]] ?? $var;
-        }, $val);
+        $val = preg_replace_callback('/({)?@([a-z\._]+)(?(1)})/i', fn(array $var) => $hive[$var[2]] ?? $var, $val);
     }
 }

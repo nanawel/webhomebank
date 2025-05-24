@@ -15,12 +15,9 @@ use Xhb\Model\Xhb;
 
 class TypeFilter extends Select implements IWhbElement
 {
-    protected $_xhb;
-
-    public function __construct(Xhb $xhb, $data = []) {
+    public function __construct(protected \Xhb\Model\Xhb $_xhb, $data = []) {
         $this->setLabel('Type');
         parent::__construct($data);
-        $this->_xhb = $xhb;
 
         $i18n = I18n::instance();
         $periods = AccountOperation::getStaticCollectionFilters()['type'];
@@ -34,7 +31,7 @@ class TypeFilter extends Select implements IWhbElement
         $this->setOptions($options);
     }
 
-    public function getXhb() {
+    public function getXhb(): \Xhb\Model\Xhb {
         return $this->_xhb;
     }
 }

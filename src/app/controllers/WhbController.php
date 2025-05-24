@@ -15,6 +15,7 @@ use app\models\whb\View;
 
 class WhbController extends AbstractController
 {
+    #[\ReturnTypeWillChange]
     protected function _beforeRoute($fw, $args = null) {
         parent::_beforeRoute($fw, $args);
         $this->_viewInstance = View::instance();

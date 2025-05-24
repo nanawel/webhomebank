@@ -34,7 +34,7 @@ class Account extends XhbModel
             return $typeId;
         }
 
-        return array_search($typeId, Constants::$ACC_TYPE);
+        return array_search($typeId, Constants::$ACC_TYPE, true);
     }
 
     /**

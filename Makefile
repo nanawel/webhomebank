@@ -29,6 +29,10 @@ restartd:
 logs:
 	docker-compose logs
 
+.PHONY: logs-follow
+logs-follow:
+	docker-compose logs -f --tail=50
+
 .PHONY: clear-tmp-database
 clear-tmp-database:
 	docker-compose exec app sh -c 'rm /var/www/html/var/tmp/*.sqlite'

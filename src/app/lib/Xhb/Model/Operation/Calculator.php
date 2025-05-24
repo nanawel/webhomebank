@@ -113,17 +113,18 @@ class Calculator extends XhbModel
      * @param \DatePeriod $period
      * @return array
      */
-    public function getBalanceByDate($period): array {
+    public function getBalanceByDate(\DatePeriod $period): array {
         $balance = [];
         $it = $this->getOperationCollection()->getIterator();
+        $periodIt = $period->getIterator();
 
         $currentOperation = $it->current();
-        $firstKey = current($period)->format(self::DATE_FORMAT);
+        $firstKey = $periodIt->current()->format(self::DATE_FORMAT);
         $currentBalance = $this->getAccount()->getInitial();
         $previousBalance = $currentBalance;
-        foreach ($period as $date) {
+        foreach ($periodIt as $date) {
             $arrayKey = $date->format(self::DATE_FORMAT);
-            /* @var $date \DateTime */
+            /** @var $date \DateTime */
             while ($currentOperation->getDateModel() <= $date) {
                 $currentBalance = $currentOperation->getAccountBalance();
                 $balance[$arrayKey] = [
@@ -221,7 +222,7 @@ class Calculator extends XhbModel
      *
      * @return int[]
      */
-    public function getBalanceStatuses($type) {
+    public function getBalanceStatuses($type): ?array {
         $statuses = null;
         switch($type) {
             case Constants::BALANCE_TYPE_BANK:
@@ -241,17 +242,10 @@ class Calculator extends XhbModel
 
     public function getBalanceReferenceTime($type, $referenceDate = 'now') {
         $referenceTime = null;
-        switch($type) {
-            case Constants::BALANCE_TYPE_FUTURE:
-                $referenceTime = $this->getFutureDate($referenceDate);
-                break;
-
-            case Constants::BALANCE_TYPE_BANK:
-            case Constants::BALANCE_TYPE_TODAY:
-            default:
-                $referenceTime = new \DateTime($referenceDate);
-                break;
-        }
+        $referenceTime = match ($type) {
+            Constants::BALANCE_TYPE_FUTURE => $this->getFutureDate($referenceDate),
+            default => new \DateTime($referenceDate),
+        };
 
         $referenceTime->setTime(23, 59, 59);
         return $referenceTime;
