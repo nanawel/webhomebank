@@ -19,8 +19,8 @@ class Textfield extends AbstractElement
         $this->_setCommonAttributes();
         $el->setAttribute('type', 'text');
 
-        $el->setAttribute('value', $this->getValue());
-        $el->setAttribute('placeholder', $this->getPlaceholder());
+        $el->setAttribute('value', (string) $this->getValue());
+        $el->setAttribute('placeholder', (string) $this->getPlaceholder());
 
         return self::getDocument()->saveXML($el);
     }

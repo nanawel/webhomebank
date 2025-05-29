@@ -123,8 +123,8 @@ class Db implements AdapterInterface
             ]);
             $this->_insertInto(Xhb::MAIN_TABLE, [$xhbTableData]);
         }
-        catch (\Exception $exception) {
-            setlocale(LC_ALL, $oldLocale);
+        catch (\Throwable $exception) {
+            Log::instance()->logException($exception, LOG_ERR);
             // If something's gone wrong, destroy everything
             $this->_destroySchema(true);
             throw $exception;
@@ -157,22 +157,24 @@ class Db implements AdapterInterface
 
         foreach ($xhbData['operations'] as &$operation) {
             $searchText = [
-                $operation['info'],
-                $operation['wording'],
-                $operation['smem'],
-                $operation['tags'],
+                $operation['info'] ?? null,
+                $operation['wording'] ?? null,
+                $operation['smem'] ?? null,
+                $operation['tags'] ?? null,
             ];
-            if (!empty($operation['category'])) {
+            if (!empty($operation['category']) && !empty($recordsByKey['categories'][$operation['category']])) {
                 $searchText[] = $recordsByKey['categories'][$operation['category']]['name'];
             }
 
-            if (!empty($operation['payee'])) {
+            if (!empty($operation['payee']) && !empty($recordsByKey['payees'][$operation['payee']])) {
                 $searchText[] = $recordsByKey['payees'][$operation['payee']]['name'];
             }
 
             if (!empty($operation['scat'])) {
                 foreach (explode('||', $operation['scat']) as $categoryKey) {
-                    $searchText[] = $recordsByKey['categories'][$categoryKey]['name'];
+                    if (!empty($recordsByKey['categories'][$categoryKey])) {
+                        $searchText[] = $recordsByKey['categories'][$categoryKey]['name'];
+                    }
                 }
             }
 

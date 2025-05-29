@@ -244,12 +244,12 @@ class Design extends \Prefab
         $output = null;
         switch ($type) {
             case 'css':
-                $output = '<link rel="stylesheet" href="' . $this->getCssUrl($item) . '" type="text/css" />';
+                $output = '<link rel="stylesheet" href="' . $this->getCssUrl($item) . '" type="text/css">';
                 break;
             case 'js':
             case 'js_module':
                 $typeAttr = $type == 'js_module' ? ' type="module"' : '';
-                $output = sprintf('<script src="%s"%s></script>', $this->getJsUrl($item), $type);
+                $output = sprintf('<script src="%s"%s></script>', $this->getJsUrl($item), $typeAttr);
                 break;
             case 'js_inline':
             case 'js_module_inline':

@@ -6,31 +6,35 @@ $design = \app\models\core\Design::instance();
 <div>
     <p class="text"><?= $i18n->tr('Loading XHB, please wait...') ?></p>
     <p class="loading-anim">
-        <img src="<?= $design->getImageUrl('loading-pie.gif') ?>" />
+        <img src="<?= $design->getImageUrl('loading-pie.gif') ?>">
     </p>
     <p id="loading-status" class="text"></p>
 </div>
 
-<script type="application/javascript">
+<script>
     //<![CDATA[
-    $.ajax("<?= $AJAX_PROGRESS_URL ?>", {
-        dataType: 'json',
-        success: function(result) {
-            console.log(result.status);
-            console.log($('#loading-status'));
-            if (result.status == 'success') {
-                $('#loading-status').text('<?= \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Success, redirecting...')) ?>');
-                document.location = '<?= $REDIRECT_URL ?>';
-            }
-            else {
-                $('#loading-status').text('<?= \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Oops! Something went wrong: ')) ?>' + result.message);
-            }
-        },
-        error: function(result) {
-            var msg = result.status + " " + result.statusText;
-            msg = msg.replace('\'', '\\\'');
-            $('#loading-status').text('<?= \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Error! Try to reload the page.')) ?> (' + msg + ')');
-        }
+    window.addEventListener('DOMContentLoaded', function() {
+        (function($) {
+            $.ajax("<?= $AJAX_PROGRESS_URL ?>", {
+                dataType: 'json',
+                success: function(result) {
+                    console.log(result.status);
+                    console.log($('#loading-status'));
+                    if (result.status === 'success') {
+                        $('#loading-status').text('<?= \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Success, redirecting...')) ?>');
+                        document.location = '<?= $REDIRECT_URL ?>';
+                    }
+                    else {
+                        $('#loading-status').text('<?= \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Oops! Something went wrong: ')) ?>' + result.message);
+                    }
+                },
+                error: function(result) {
+                    var msg = result.status + " " + result.statusText;
+                    msg = msg.replace('\'', '\\\'');
+                    $('#loading-status').text('<?= \app\helpers\core\Output::jsQuoteEscape($i18n->tr('Error! Try to reload the page.')) ?> (' + msg + ')');
+                }
+            });
+        })(jQuery);
     });
     //]]>
 </script>

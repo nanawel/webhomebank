@@ -38,7 +38,7 @@ class Select extends AbstractElement
                 }
             }
 
-            $optEl->setAttribute('value', htmlspecialchars($value));
+            $optEl->setAttribute('value', htmlspecialchars((string) $value));
             if ($value == $this->getValue()) {
                 $optEl->setAttribute('selected', 'selected');
             }
@@ -49,7 +49,7 @@ class Select extends AbstractElement
         return self::getDocument()->saveXML($el);
     }
 
-    public function setSelection($key): void {
+    public function setSelection(string $key): void {
         $this->setValue($key);
     }
 }

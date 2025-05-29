@@ -1,5 +1,5 @@
 <div class="toolbar">
-    <?php if (isset($FILTER_FORM_ACTION) && $FILTER_FORM_ACTION && isset($FILTERS) && !empty($FILTERS)): ?>
+    <?php if (!empty($FILTER_FORM_ACTION) && !empty($FILTERS)): ?>
         <form action="<?= $FILTER_FORM_ACTION ?>" method="get" target="_self" id="toolbar-form">
             <ul>
                 <?php foreach ($FILTERS as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>

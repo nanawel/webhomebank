@@ -6,11 +6,11 @@ $url = \app\models\core\Url::instance();
 
 ?>
 <div class="contain-to-grid sticky">
-    <nav class="nav-container top-bar" data-topbar role="navigation">
+    <nav class="nav-container top-bar" data-topbar>
         <ul class="brand title-area">
             <li class="home-link name">
                 <a href="<?= $this->getUrl('/') ?>">
-                    <img class="logo" src="<?= $design->getImageUrl('logo.png') ?>" alt="<?= $fw->get('app.TITLE') ?> logo" height="60"/>
+                    <img class="logo" src="<?= $design->getImageUrl('logo.png') ?>" alt="<?= $fw->get('app.TITLE') ?> logo" height="60">
                 </a>
                 <h1><a href="<?= $this->getUrl('/') ?>"><?= $fw->get('app.TITLE') ?></a></h1>
             </li>
