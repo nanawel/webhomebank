@@ -1,15 +1,22 @@
-$topbar-bg: #8BB0D7;
-$topbar-link-bg: $topbar-bg;
-$topbar-link-bg-hover: darken($topbar-bg, 20%);
-$topbar-dropdown-bg: $topbar-bg;
-$topbar-dropdown-link-bg: $topbar-bg;
-$topbar-dropdown-link-bg-hover: $topbar-link-bg-hover;
-$primary-color: #3465a4;
-$secondary-color: #edd400;
-$body-bg: #eeeeee;
-$table-row-hover-color: rgba(238, 213, 6, 0.35);
+@import 'settings';
 
-@import "../node_modules/foundation-sites/scss/foundation";
+@import 'foundation-sites/scss/foundation';
+
+@include foundation-everything;
+
+@include foundation-button;
+@include foundation-button-group;
+@include foundation-menu;
+@include foundation-menu-icon;
+@include foundation-accordion-menu;
+@include foundation-drilldown-menu;
+@include foundation-dropdown-menu;
+@include foundation-flex-classes;
+@include foundation-flex-grid;
+@include foundation-table;
+@include foundation-sticky;
+@include foundation-title-bar;
+@include foundation-top-bar;
 
 /*****************************************************************************/
 /*                     HTML ELEMENTS                                         */
@@ -17,10 +24,6 @@ $table-row-hover-color: rgba(238, 213, 6, 0.35);
 
 table {
     width: 100%;
-
-    tbody tr:hover {
-        background-color: $table-row-hover-color;
-    }
 }
 
 select {
@@ -47,21 +50,31 @@ span.mono {
 }
 
 .header-container {
-    @extend .contain-to-grid;
+    a {
+        color: white !important;
+        font-weight: normal;
+    }
 
-    .top-bar {
-        .title-area {
-            img {
-                margin-left: 10px;
-            }
-            h1 {
-                display: inline-block;
-                a { font-weight: normal; }
+    .title-bar {
+        background-color: $topbar-background;
+
+        .logo-container {
+            width: 100%;
+
+            a {
+                float: right;
             }
         }
+    }
 
-        .nav-menu {
-            li.level-1 > a::before {
+    .top-bar {
+        padding: 0;
+
+        .top-bar-left > ul > li,
+        .top-bar-right > ul > li {
+            padding: 0.1rem 1rem;
+
+            a::before {
                 content: " ";
                 width: 24px;
                 height: 24px;
@@ -74,16 +87,16 @@ span.mono {
                 background-repeat: no-repeat;
             }
 
-            li.account-operations-links > a::before {
+            &.account-operations-links > a::before {
                 background-position: 0px -3px;
                 background-image: url(../images/hicolor_actions_24x24_hb-ope-show.png);
             }
 
-            li.vehiclecost-link > a::before {
+            &.vehiclecost-link > a::before {
                 background-image: url(../images/hicolor_actions_24x24_hb-rep-vehicle.png);
             }
 
-            li.settings-links > a::before {
+            &.settings-links > a::before {
                 background-image: url(../images/categories_24x24_gtk-preferences.png);
             }
         }
@@ -91,7 +104,7 @@ span.mono {
 }
 
 .footer {
-    background-color: $topbar-bg;
+    background-color: $topbar-background;
     color: #fff;
     text-align: center;
     margin-top: 30px;
@@ -108,13 +121,13 @@ span.mono {
     margin-top: 0.5em;
 
     .message-info {
-        @include alert($info-color, $alert-radius);
+        @include callout($info-color);
     }
     .message-warn {
-        @include alert($warning-color, $alert-radius);
+        @include callout($warning-color);
     }
     .message-error {
-        @include alert($alert-color, $alert-radius);
+        @include callout($alert-color);
     }
 
     > div {
@@ -168,7 +181,7 @@ span.mono {
     }
 
     button {
-        @include button($padding:$button-tny);
+        @include button();
     }
 }
 
@@ -219,12 +232,7 @@ input[type='text'].search {
 
     .toolbar {
         .filter-label {
-            @include prefix-postfix-base();
-            @include prefix();
-            @include grid-column(
-                $columns:4,
-                $float:left
-            );
+            @include grid-column();
         }
         .filter-input .custom-dropdown-area {
             @include grid-column($columns:8);
@@ -375,9 +383,9 @@ td.date, td.currency {
     display: inline-block;
 }
 
-.status-icon.status-0 {
-    background-image: url(..);
-}
+/*.status-icon.status-0 {
+    background-image: url(..?);
+}*/
 .status-icon.status-1 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-cleared.png);
 }
@@ -387,6 +395,6 @@ td.date, td.currency {
 .status-icon.status-3 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-remind.png);
 }
-.status-icon.status-4 {
+/*.status-icon.status-4 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-void.png);
-}
+}*/

@@ -127,7 +127,7 @@ class Log extends \Prefab
             }
 
             if (is_object($target[0]) && is_string($target[1])) {
-                $target['class'] = $target[0]::class;
+                $target['class'] = get_class($target[0]);
                 $target['type'] = '->';
                 $target['function'] = $target[1];
             }

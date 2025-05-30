@@ -2,7 +2,6 @@
     "name": "whb-theme-modern",
     "version": "1.0.0",
     "description": "WHB Modern Theme",
-    "main": "Gruntfile.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack-cli --config webpack.config.js",
@@ -13,14 +12,20 @@
     "devDependencies": {
         "chart.js": "^4.4.9",
         "chartjs-adapter-moment": "^1.0.1",
-        "foundation-sites": "~5.5",
+        "css-loader": "^7.1.2",
+        "dart-sass": "^1.25.0",
+        "foundation-sites": "~6.9.0",
         "grunt": "~0.4.5",
         "grunt-banner": "~0.6",
         "grunt-contrib-less": "*",
         "grunt-contrib-sass": "*",
-        "jquery": "^2.2.4",
+        "jquery": "^3.7.1",
+        "mini-css-extract-plugin": "^2.9.2",
         "moment": "^2.30.1",
         "node-fs-extra": "*",
+        "sass": "^1.89.0",
+        "sass-loader": "^16.0.5",
+        "style-loader": "^4.0.0",
         "webpack-cli": "^6.0.1"
     }
 }

@@ -30,7 +30,7 @@ class InitController extends WhbController
                 window.LANGUAGE='{$fw->get('LANGUAGE')}';
                 window.CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';
             EOJS);
-        Design::instance()->addJsModule('app.bundle.js');
+        Design::instance()->addJsModule('dist/app.bundle.js');
 
         $this->canCacheOutput(false);
         $this->_setupLayoutBlocks();

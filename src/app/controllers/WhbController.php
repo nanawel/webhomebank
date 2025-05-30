@@ -30,7 +30,7 @@ class WhbController extends AbstractController
                 window.LANGUAGE='{$fw->get('LANGUAGE')}';
                 window.CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';
             EOJS);
-        Design::instance()->addJsModule('app.bundle.js');
+        Design::instance()->addJsModule('dist/app.bundle.js');
 
         $xhb = $this->getXhbSession()->getModel();
         $this->setPageTitle($xhb->getTitle());

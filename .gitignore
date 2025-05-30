@@ -2,6 +2,7 @@
 .env
 .sass-cache
 .svn
+dist
 export
 node_modules
 /*.sh

@@ -81,10 +81,10 @@ $chartVar = 'chart_' . $chartId;
                         });
                     }
 
-                    $(window).load(function() {
+                    $(window).on('load', (function() {
                         updateChart();
                         $('#<?= $chartId ?> .toolbar select').change(updateChart);
-                    });
+                    }));
                 })(jQuery);
             });
             //]]>

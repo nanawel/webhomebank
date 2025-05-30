@@ -136,11 +136,13 @@ class Design extends \Prefab
     }
 
     public function getCssUrl(string $path) {
-        return $this->getThemeUrl('css/' . $path);
+        // Prefix has been removed after migrating to Webpack
+        return $this->getThemeUrl($path);
     }
 
     public function getJsUrl(string $path) {
-        return $this->getThemeUrl('js/' . $path);
+        // Prefix has been removed after migrating to Webpack
+        return $this->getThemeUrl($path);
     }
 
     public function getImageUrl(string $path) {
