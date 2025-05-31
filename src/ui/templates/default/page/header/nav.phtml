@@ -13,7 +13,7 @@ $i18n = \app\models\core\I18n::instance();
             <?php foreach($this->getModel()->getAccountCollection() as $account): ?>
                 <?php if ($account->getFlags() & \Xhb\Model\Constants::ACC_FLAG_NOSUMMARY) continue; ?>
                 <li class="level-2 account-operations-link">
-                    <a href="<?= $url->getUrl('account_operation/index', array('account_id' => $account->getId())) ?>"><?= $account->getName() ?></a>
+                    <a href="<?= $url->getUrl('account_operation/index', ['account_id' => $account->getId()]) ?>"><?= $account->getName() ?></a>
                 </li>
             <?php endforeach; ?>
         </ul>
@@ -29,7 +29,7 @@ $i18n = \app\models\core\I18n::instance();
                 <ul class="dir">
                     <?php foreach($i18n->getAvailableCurrencies() as $code): ?>
                         <li class="level-3 set-currency-link currency-<?= strtolower($code) ?>">
-                            <a href="<?= $url->getUrl('settings/setCurrency', array('_query' => array('code' => $code))) ?>"><?= $code ?></a>
+                            <a href="<?= $url->getUrl('settings/setCurrency', ['_query' => ['code' => $code]]) ?>"><?= $code ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -39,7 +39,7 @@ $i18n = \app\models\core\I18n::instance();
                 <ul class="dir">
                     <?php foreach($i18n->getAvailableLocales() as $code): ?>
                         <li class="level-3 set-locale-link currency-<?= strtolower($code) ?>">
-                            <a href="<?= $url->getUrl('settings/setLocale', array('_query' => array('code' => $code))) ?>"><?= $code ?></a>
+                            <a href="<?= $url->getUrl('settings/setLocale', ['_query' => ['code' => $code]]) ?>"><?= $code ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -49,7 +49,7 @@ $i18n = \app\models\core\I18n::instance();
                 <ul class="dir">
                     <?php foreach($design->getAvailableThemes() as $code): ?>
                         <li class="level-3 set-theme-link theme-<?= strtolower($code) ?>">
-                            <a href="<?= $url->getUrl('settings/setTheme', array('_query' => array('code' => $code))) ?>"><?= $code ?></a>
+                            <a href="<?= $url->getUrl('settings/setTheme', ['_query' => ['code' => $code]]) ?>"><?= $code ?></a>
                         </li>
                     <?php endforeach; ?>
                 </ul>

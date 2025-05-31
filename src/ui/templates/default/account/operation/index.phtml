@@ -22,16 +22,16 @@ $now = new \DateTime();
 <table class="data-table operations-table<?php if ($noResults): echo ' no-data'; endif; ?>">
     <thead>
         <tr>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('date' => null)) ?>"><?= $this->__('Date') ?></a></th>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('info' => null)) ?>"><?= $this->__('Info') ?></a></th>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('payee' => null)) ?>"><?= $this->__('Payee') ?></a></th>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('category' => null)) ?>"><?= $this->__('Category') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['date' => null]) ?>"><?= $this->__('Date') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['info' => null]) ?>"><?= $this->__('Info') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['payee' => null]) ?>"><?= $this->__('Payee') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['category' => null]) ?>"><?= $this->__('Category') ?></a></th>
             <th><?= $this->__('Tags') ?></th>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('status' => null)) ?>"><?= $this->__('Status') ?></a></th>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('amount' => null)) ?>"><?= $this->__('Outcome') ?></a></th>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('amount' => null)) ?>"><?= $this->__('Income') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['status' => null]) ?>"><?= $this->__('Status') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['amount' => null]) ?>"><?= $this->__('Outcome') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['amount' => null]) ?>"><?= $this->__('Income') ?></a></th>
             <th><?= $this->__('Balance') ?></th>
-            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, array('wording' => null)) ?>"><?= $this->__('Memo') ?></a></th>
+            <th><a href="<?= $gridHelper->getOrderLinkUrl($CURRENT_ORDER, ['wording' => null]) ?>"><?= $this->__('Memo') ?></a></th>
         </tr>
     </thead>
     <tbody>

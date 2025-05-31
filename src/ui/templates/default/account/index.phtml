@@ -26,7 +26,7 @@ $xhb = $this->getModel();
                     <?php $account = $accountData['account']; ?>
                     <tr class="account">
                         <td class="row-title account-name">
-                            <a href="<?= $this->getUrl('account_operation/index', array('account_id' => $account->getId())) ?>"><?= $account->getName() ?></a>
+                            <a href="<?= $this->getUrl('account_operation/index', ['account_id' => $account->getId()]) ?>"><?= $account->getName() ?></a>
                         </td>
                         <td class="balance bank-balance"><?= $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_BANK], true) ?></td>
                         <td class="balance today-balance"><?= $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_TODAY], true) ?></td>
