@@ -27,7 +27,8 @@ class Session extends \Magic
     public function __construct(protected string $_name) {
         if (!self::$_session) {
             self::$_cacheInstance = new \Cache(Main::app()->getConfig('SESSIONS'));
-            self::$_session = new \Session(null, null, self::$_cacheInstance);
+            // Disable default "onsuspect" behavior (HTTP 403)
+            self::$_session = new \Session(fn() => null, null, self::$_cacheInstance);
         }
 
         $this->_data =& \Base::instance()->ref('SESSION.' . $this->_name);

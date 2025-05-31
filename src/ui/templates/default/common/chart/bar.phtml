@@ -17,9 +17,9 @@ $chartVar = 'chart_' . $chartId;
                 <ul>
                     <?php foreach ($filters as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>
                         <li>
-                            <span class="filter-label"><?= $this->__($filterElement->getLabel()) ?></span>
-                            <div class="filter-input">
-                                <?= $filterElement->toHtml() ?>
+                            <div class="input-group">
+                                <span class="input-group-label"><?= $this->__($filterElement->getLabel()) ?></span>
+                                <?= $filterElement->addClass('input-group-field')->toHtml() ?>
                             </div>
                         </li>
                     <?php endforeach; ?>

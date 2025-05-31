@@ -8,9 +8,9 @@ $i18n = \app\models\core\I18n::instance();
 ?>
 
 <div class="top-bar-right">
-    <ul class="dropdown menu" data-dropdown-menu>
+    <ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
         <li class="account-operations-links has-submenu">
-            <a href="#"><?= $this->__('Account Operations') ?></a>
+            <a href="javascript:"><?= $this->__('Account Operations') ?></a>
             <ul class="submenu menu vertical" data-submenu>
                 <?php foreach($this->getModel()->getAccountCollection() as $account): ?>
                     <li class="level-2 account-operations-link">
@@ -23,10 +23,10 @@ $i18n = \app\models\core\I18n::instance();
             <a href="<?= $url->getUrl('report_vehiclecost/index') ?>"><?= $this->__('Vehicle Cost') ?></a>
         </li>
         <li class="settings-links has-submenu">
-            <a href="#"><?= $this->__('Settings') ?></a>
+            <a href="javascript:"><?= $this->__('Settings') ?></a>
             <ul class="submenu menu vertical" data-submenu>
                 <li class="has-submenu settings-currency-links">
-                    <a href="#"><?= $this->__('Currency') ?></a>
+                    <a href="javascript:"><?= $this->__('Currency') ?></a>
                     <ul class="submenu menu vertical">
                         <?php foreach($i18n->getAvailableCurrencies() as $code): ?>
                             <li class="set-currency-link currency-<?= strtolower($code) ?>">
@@ -36,7 +36,7 @@ $i18n = \app\models\core\I18n::instance();
                     </ul>
                 </li>
                 <li class="has-submenu settings-locale-links">
-                    <a href="#"><?= $this->__('Locale') ?></a>
+                    <a href="javascript:"><?= $this->__('Locale') ?></a>
                     <ul class="submenu menu vertical">
                         <?php foreach($i18n->getAvailableLocales() as $code): ?>
                             <li class="set-locale-link currency-<?= strtolower($code) ?>">
@@ -46,7 +46,7 @@ $i18n = \app\models\core\I18n::instance();
                     </ul>
                 </li>
                 <li class="has-submenu settings-theme-links">
-                    <a href="#"><?= $this->__('Theme') ?></a>
+                    <a href="javascript:"><?= $this->__('Theme') ?></a>
                     <ul class="submenu menu vertical">
                         <?php foreach($design->getAvailableThemes() as $code): ?>
                             <li class="set-theme-link theme-<?= strtolower($code) ?>">

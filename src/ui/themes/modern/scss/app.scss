@@ -23,7 +23,13 @@
 /*****************************************************************************/
 
 table {
+    @include table-hover;
+
+    background-color: white;
     width: 100%;
+    border: solid 1px #DDDDDD;
+    border-spacing: 2px;
+    border-collapse: separate;
 }
 
 select {
@@ -50,11 +56,12 @@ span.mono {
 }
 
 .header-container {
-    a {
-        color: white !important;
-        font-weight: normal;
+    @include breakpoint(medium) {
+        a {
+            color: white !important;
+            font-weight: normal;
+        }
     }
-
     .title-bar {
         background-color: $topbar-background;
 
@@ -62,19 +69,26 @@ span.mono {
             width: 100%;
 
             a {
+                color: white !important;
                 float: right;
             }
         }
     }
 
     .top-bar {
-        padding: 0;
+        @include breakpoint(medium) {
+            padding: 0;
+        }
 
+        li:hover {
+           background-color: $primary-color;
+        }
+    //
         .top-bar-left > ul > li,
         .top-bar-right > ul > li {
-            padding: 0.1rem 1rem;
+    //        padding: 0.1rem 1rem;
 
-            a::before {
+            > a::before {
                 content: " ";
                 width: 24px;
                 height: 24px;
@@ -149,7 +163,7 @@ span.mono {
 }
 
 .toolbar {
-    @include grid-row();
+    @include flex-grid-row();
 
     form {
         margin-bottom: 0;
@@ -204,10 +218,16 @@ input[type='text'].search {
     margin: 0;
 }
 
-.chart {
-    @include grid-row();
+.charts-container {
+    @include flex-grid-column($columns:12);
+}
+
+.chart > .chart-body {
+    @include flex-grid-row();
 
     .canvas-container {
+        @include flex-grid-column($columns:8);
+
         position: relative;
         min-height: 300px;
         text-align: center;
@@ -232,15 +252,15 @@ input[type='text'].search {
 
     .toolbar {
         .filter-label {
-            @include grid-column();
+            @include flex-grid-column();
         }
         .filter-input .custom-dropdown-area {
-            @include grid-column($columns:8);
+            @include flex-grid-column($columns:8);
         }
     }
 
     .legend {
-        @include grid-column($columns:6);
+        @include flex-grid-column($columns:4);
 
         li {
             list-style: none;
@@ -256,11 +276,11 @@ input[type='text'].search {
 
     &.toolbar-right {
         .canvas-container {
-            @include grid-column($columns:6);
+            @include flex-grid-column($columns:6);
         }
 
         .toolbar {
-            @include grid-column($columns:6);
+            @include flex-grid-column($columns:6);
         }
     }
 
@@ -308,12 +328,12 @@ td.date, td.currency {
 }
 
 .account-summary {
-    @include grid-row();
+    @include flex-grid-row();
     margin-bottom: 1em;
 
     .account-balance-summary {
         .label-value-group {
-            @include grid-column($columns:4);
+            @include flex-grid-column($columns:4);
 
             > label {
                 line-height: 1.5;

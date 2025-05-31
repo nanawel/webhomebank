@@ -6,13 +6,19 @@ $gridHelper = \app\models\core\Grid::instance();
 $now = new \DateTime();
 ?>
 
-<div class="back-link top">
-    <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
+<!--
+<div class="row">
+    <div class="back-link top">
+        <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
+    </div>
 </div>
+-->
 
-<h1><?= $account->getName() ?></h1>
-<div class="account-summary">
-    <?= $this->renderBlock('account_summary'); ?>
+<div class="row">
+    <h1><?= $account->getName() ?></h1>
+    <div class="account-summary">
+        <?= $this->renderBlock('account_summary'); ?>
+    </div>
 </div>
 
 <div class="clear"></div>

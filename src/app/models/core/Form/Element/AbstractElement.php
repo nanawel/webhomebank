@@ -23,14 +23,14 @@ class AbstractElement extends MagicObject
     }
 
     public function addClass($class): self {
-        $classes = explode(' ', $this->getClass());
+        $classes = explode(' ', (string) $this->getClass());
         $classes[] = $class;
         $this->setClass(implode(' ', $classes));
         return $this;
     }
 
     public function removeClass($class): self {
-        $classes = explode(' ', $this->getClass());
+        $classes = explode(' ', (string) $this->getClass());
         if ($key = array_search($class, $classes, true) !== null) {
             unset($classes[$key]);
         }

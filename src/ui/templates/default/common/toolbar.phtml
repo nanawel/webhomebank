@@ -5,8 +5,10 @@
                 <?php foreach ($FILTERS as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>
                     <?php if ($filterElement->getName() == 'search') continue; ?>
                     <li class="filter-container">
-                        <label for="<?= $filterElement->getId() ?>" class="filter-label"><?= $this->__($filterElement->getLabel()) ?></label>
-                        <?= $filterElement->toHtml() ?>
+                        <div class="input-group">
+                            <span class="input-group-label"><?= $this->__($filterElement->getLabel()) ?></span>
+                            <?= $filterElement->addClass('input-group-field')->toHtml() ?>
+                        </div>
                     </li>
                 <?php endforeach; ?>
                 <li class="buttons-set">
