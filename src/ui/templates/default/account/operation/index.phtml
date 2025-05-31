@@ -57,9 +57,9 @@ $now = new \DateTime();
                 <td class="date"><?= $this->i18n()->date($operation->getDateModel()) ?></td>
                 <td class="info"><?= $operation->getInfo() ?></td>
                 <td class="payee"><?= \app\helpers\whb\AccountOperation::getPayeeLabelForDisplay($operation) ?></td>
-                <td class="category"><?= $categoryName ? $categoryName : '&nbsp;' ?></td>
+                <td class="category"><?= $categoryName ?: '&nbsp;' ?></td>
                 <td class="tags"><?= $operation->getTags() ?></td>
-                <td class="status"><span class="status-icon status-<?= $operation->getStatus() ?>"></span></td>
+                <td class="status status-icon status-<?= $operation->getStatus() ?>"></td>
                 <td class="currency outcome"><?= $outcome ?></td>
                 <td class="currency income"><?= $income ?></td>
                 <td class="currency balance"><?= $balance ?></td>

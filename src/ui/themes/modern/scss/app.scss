@@ -368,10 +368,12 @@ td.date, td.currency {
 }
 
 .operations-table {
-    td.info {
+    td.info,
+    td.status {
         padding-left: 24px;
-        background-position: 2px 50%;
+        background-position: 50% 50%;
         background-repeat: no-repeat;
+        text-align: center;
     }
     tr.paymode-ccard td.info {
         background-image: url(../images/hicolor_status_16x16_pm-ccard.png);
@@ -410,13 +412,6 @@ td.date, td.currency {
     tr.future {
         font-style: italic;
     }
-}
-
-
-.status-icon {
-    height: 16px;
-    width: 16px;
-    display: inline-block;
 }
 
 /*.status-icon.status-0 {
