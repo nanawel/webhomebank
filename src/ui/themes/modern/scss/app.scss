@@ -172,19 +172,13 @@ span.mono {
             margin: 0;
 
             > li {
-                display: inline-block;
+                @include flex-grid-column();
+                list-style: none;
 
                 &.filter-container {
                     .filter-label {
                         display: inline-block;
                     }
-                    .filter-input {
-                        width: auto;
-                    }
-                }
-
-                &:last-child {
-                    margin-right: 0;
                 }
             }
         }
@@ -344,13 +338,24 @@ td.date, td.currency {
 
 .account-operation-index {
     .content-header {
-        @include flex-grid-row();
+        @include flex-grid-row($size:expand);
 
         > h1 {
-            @include flex-grid-column($columns:6);
+            @include breakpoint(small) {
+                @include flex-grid-column($columns:12);
+            }
+            @include breakpoint(medium) {
+                @include flex-grid-column($columns:expand);
+            }
+            align-self: start;
         }
         > div {
-            @include flex-grid-column($columns:6);
+            @include breakpoint(small) {
+                @include flex-grid-column($columns:12);
+            }
+            @include breakpoint(medium) {
+                @include flex-grid-column($columns:6);
+            }
             @extend .align-self-bottom;
         }
     }
