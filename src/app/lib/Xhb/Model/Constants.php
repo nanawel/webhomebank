@@ -26,7 +26,7 @@ class Constants
     //    const ACC_TYPE_EQUITY     = 10;    //Capitaux propres
     //    const ACC_TYPE_,
 
-    public static $ACC_TYPE = [
+    public const ACC_TYPE = [
         'none'       => self::ACC_TYPE_NONE,
         'bank'       => self::ACC_TYPE_BANK,
         'cash'       => self::ACC_TYPE_CASH,
@@ -36,6 +36,12 @@ class Constants
         'checking'   => self::ACC_TYPE_CHECKING,
         'savings'    => self::ACC_TYPE_SAVINGS,
     ];
+
+    public const ACC_FLAG_CLOSED = (1<<1);
+    public const ACC_FLAG_NOSUMMARY = (1<<4);
+    public const ACC_FLAG_NOBUDGET = (1<<5);
+    public const ACC_FLAG_NOREPORT = (1<<6);
+    public const ACC_FLAG_OUTFLOWSUM = (1<<7);
 
     const PAYMODE_NONE          = 0;
     const PAYMODE_CCARD         = 1;
@@ -54,7 +60,7 @@ class Constants
     //    PAYMODE_,
     const NUM_PAYMODE_MAX       = 12;
 
-    public static $PAYMODES = [
+    public const PAYMODES = [
         'none'        => self::PAYMODE_NONE,
         'ccard'       => self::PAYMODE_CCARD,
         'check'       => self::PAYMODE_CHECK,
@@ -75,7 +81,7 @@ class Constants
     const TXN_STATUS_REMIND     = 3;
     const TXN_STATUS_VOID       = 4;
 
-    public static $TXN_STATUS = [
+    public const TXN_STATUS = [
         'none'       => self::TXN_STATUS_NONE,
         'cleared'    => self::TXN_STATUS_CLEARED,
         'reconciled' => self::TXN_STATUS_RECONCILED,
@@ -87,7 +93,7 @@ class Constants
     const BALANCE_TYPE_BANK         = 'bank';
     const BALANCE_TYPE_FUTURE       = 'future';
 
-    public static $BALANCE_TYPES = [
+    public const BALANCE_TYPES = [
         'today'    => self::BALANCE_TYPE_TODAY,
         'bank'     => self::BALANCE_TYPE_BANK,
         'future'   => self::BALANCE_TYPE_FUTURE

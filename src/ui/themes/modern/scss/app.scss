@@ -163,31 +163,27 @@ span.mono {
 }
 
 .toolbar {
-    @include flex-grid-row();
-
     form {
         margin-bottom: 0;
 
         > ul {
+            @include flex-grid-row();
+            @extend .align-center-middle;
             margin: 0;
 
             > li {
-                margin-top: .2em;
                 display: inline-block;
 
                 &.filter-container {
                     .filter-label {
                         display: inline-block;
-                        margin-right: .4em;
                     }
                     .filter-input {
                         width: auto;
-                        margin-right: 2em;
                     }
                 }
 
                 &:last-child {
-                    float: right;
                     margin-right: 0;
                 }
             }
@@ -328,10 +324,10 @@ td.date, td.currency {
 }
 
 .account-summary {
-    @include flex-grid-row();
     margin-bottom: 1em;
 
     .account-balance-summary {
+        @include flex-grid-row();
         .label-value-group {
             @include flex-grid-column($columns:4);
 
@@ -346,9 +342,24 @@ td.date, td.currency {
 /*                     OPERATIONS                                            */
 /*****************************************************************************/
 
-.account-operation-index #total-balance {
-    float: right;
-    margin: .4em;
+.account-operation-index {
+    .content-header {
+        @include flex-grid-row();
+
+        > h1 {
+            @include flex-grid-column($columns:6);
+        }
+        > div {
+            @include flex-grid-column($columns:6);
+            @extend .align-self-bottom;
+        }
+    }
+
+    #total-balance {
+        @include flex-grid-row();
+        @include flex-grid-column($columns:12);
+        text-align: right;
+    }
 }
 
 .operations-table {

@@ -11,6 +11,7 @@ $i18n = \app\models\core\I18n::instance();
         <?= $this->__('Account Operations') ?>
         <ul class="dir">
             <?php foreach($this->getModel()->getAccountCollection() as $account): ?>
+                <?php if ($account->getFlags() & \Xhb\Model\Constants::ACC_FLAG_NOSUMMARY) continue; ?>
                 <li class="level-2 account-operations-link">
                     <a href="<?= $url->getUrl('account_operation/index', array('account_id' => $account->getId())) ?>"><?= $account->getName() ?></a>
                 </li>

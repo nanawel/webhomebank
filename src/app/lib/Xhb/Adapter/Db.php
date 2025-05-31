@@ -224,6 +224,7 @@ class Db implements AdapterInterface
             $createStmt->addColumn(new Integer('xhb_id', false))
                 ->addColumn(new Integer('key', false))
                 ->addColumn(new Integer('pos', true))
+                ->addColumn(new Integer('flags', true))
                 ->addColumn(new Integer('type', true))
                 ->addColumn(new Varchar('name', 128))
                 ->addColumn(new Varchar('number', 128, true))

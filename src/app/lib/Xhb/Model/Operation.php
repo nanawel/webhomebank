@@ -145,7 +145,7 @@ class Operation extends XhbModel
 
     public function getPaymodeCode(): int|string|false|null {
         if ($paymode = $this->getPaymode()) {
-            return array_search($paymode, Constants::$PAYMODES, true);
+            return array_search($paymode, Constants::PAYMODES, true);
         }
 
         return null;

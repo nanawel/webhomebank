@@ -8,22 +8,13 @@ $distUnit = $xhbSession->getCarDistanceUnit();
 $volUnit = $xhbSession->getCarFuelVolumeUnit();
 ?>
 
-<div class="back-link top">
-    <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
-</div>
-
 <h1><?= $this->__('Vehicle Cost Report') ?></h1>
 
 <?= $this->renderBlock('toolbar'); ?>
 
-<div class="clear"></div>
-
 <div class="vehiclecost-summary">
     <?= $this->renderBlock('summary'); ?>
 </div>
-
-<div class="clear"></div>
-
 
 <table class="data-table vehiclecost-table<?php if ($noResults): echo ' no-data'; endif; ?>">
     <thead>
@@ -60,12 +51,6 @@ $volUnit = $xhbSession->getCarFuelVolumeUnit();
     </tbody>
 </table>
 
-<div class="clear"></div>
 <div class="charts-container">
     <?= $this->renderBlock('charts'); ?>
-</div>
-
-<div class="clear"></div>
-<div class="back-link bottom">
-    <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
 </div>

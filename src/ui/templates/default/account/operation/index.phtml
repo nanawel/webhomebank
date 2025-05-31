@@ -6,26 +6,19 @@ $gridHelper = \app\models\core\Grid::instance();
 $now = new \DateTime();
 ?>
 
-<!--
-<div class="row">
-    <div class="back-link top">
-        <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
-    </div>
-</div>
--->
-
-<div class="row">
+<div class="content-header">
     <h1><?= $account->getName() ?></h1>
     <div class="account-summary">
         <?= $this->renderBlock('account_summary'); ?>
     </div>
 </div>
 
-<div class="clear"></div>
-
 <?= $this->renderBlock('operation_toolbar'); ?>
 
-<div id="total-balance"><?= $this->__('{0} item(s) ({1})', count($OPERATION_COLLECTION), $this->i18n()->currency($OPERATION_COLLECTION->getBalance(), true)) ?></div>
+<div id="total-balance">
+    <?= $this->__('{0} item(s) ({1})', count($OPERATION_COLLECTION), $this->i18n()->currency($OPERATION_COLLECTION->getBalance(), true)) ?>
+</div>
+
 <table class="data-table operations-table<?php if ($noResults): echo ' no-data'; endif; ?>">
     <thead>
         <tr>
@@ -77,12 +70,6 @@ $now = new \DateTime();
     </tbody>
 </table>
 
-<div class="clear"></div>
 <div class="charts-container">
     <?= $this->renderBlock('charts'); ?>
-</div>
-
-<div class="clear"></div>
-<div class="back-link bottom">
-    <span><a href="<?= $this->getUrl('account') ?>"><?= $this->__('Back to accounts page') ?></a></span>
 </div>

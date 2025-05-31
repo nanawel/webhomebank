@@ -175,7 +175,7 @@ class Calculator extends XhbModel
      * @return int[]
      */
     public static function getUnreconciliedStatuses(): array {
-        return array_diff(Constants::$TXN_STATUS, [Constants::TXN_STATUS_RECONCILED, Constants::TXN_STATUS_VOID]);
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_RECONCILED, Constants::TXN_STATUS_VOID]);
     }
 
     /**
@@ -191,7 +191,7 @@ class Calculator extends XhbModel
      * @return int[]
      */
     public static function getUnclearedStatuses(): array {
-        return array_diff(Constants::$TXN_STATUS, [Constants::TXN_STATUS_CLEARED, Constants::TXN_STATUS_VOID]);
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_CLEARED, Constants::TXN_STATUS_VOID]);
     }
 
     /**
@@ -207,7 +207,7 @@ class Calculator extends XhbModel
      * @return int[]
      */
     public static function getBalanceTodayStatuses(): array {
-        return array_diff(Constants::$TXN_STATUS, [Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID]);
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID]);
     }
 
     /**
@@ -215,7 +215,7 @@ class Calculator extends XhbModel
      * @return int[]
      */
     public static function getBalanceFutureStatuses(): array {
-        return array_diff(Constants::$TXN_STATUS, [Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID]);
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID]);
     }
 
     /**

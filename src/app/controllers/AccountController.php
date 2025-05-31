@@ -50,6 +50,9 @@ class AccountController extends WhbController
             $totalData = [];
             /* @var $account \Xhb\Model\Account */
             foreach($xhb->getAccountCollection() as $account) {
+                if ($account->getFlags() & Constants::ACC_FLAG_NOSUMMARY) {
+                    continue;
+                }
                 $type = $account->getType(true);
                 $accountData = [
                     'account' => $account,
