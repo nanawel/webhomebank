@@ -71,6 +71,9 @@ COPY --from=theme-builder /themes/ /var/www/html/ui/themes/
 WORKDIR /var/www/html
 
 RUN composer install \
+    --no-dev \
+    --optimize-autoloader \
+    --verbose \
  && mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini \
  && sed -i "s/^VERSION=.*/VERSION=${appVersion}/" /var/www/html/etc/app.ini \
  && mkdir -p /var/www/html/var \
