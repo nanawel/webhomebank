@@ -39,7 +39,7 @@ class WhbController extends AbstractController
         return null;
     }
 
-    protected function _setupLayoutBlocks(): void {
+    protected function _setupLayoutBlocks(): self {
         $this->getView()
             ->setBlockTemplate('head', 'page/head.phtml')
             ->setBlockTemplate('footer', 'page/footer.phtml')
@@ -51,6 +51,7 @@ class WhbController extends AbstractController
             })                                                                  //
             ->setBlockTemplate('messages', 'messages.phtml')
             ->setBlockCachePlaceholder('messages');
+        return $this;
     }
 
     protected function _addCrumbsToTitle(array $elements) {
