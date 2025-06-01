@@ -19,7 +19,8 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
 {
     const SORT_DIR_DEFAULT = SORT_ASC;
 
-    protected $_itemClass = '\\xhb\\util\\MagicObject';
+    protected $_itemClass = \xhb\util\MagicObject::class;
+
     protected $_keyField = null;
 
     protected $_params = null;
@@ -27,16 +28,19 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
     /**
      * @var MagicObject[]
      */
-    protected $_items = array();
+    protected $_items = [];
 
-    protected $_flags = array();
+    protected $_flags = [];
 
     protected $_isLoaded = false;
-    protected $_filters = array();
-    protected $_orders = array();
+
+    protected $_filters = [];
+
+    protected $_orders = [];
+
     protected $_limit = false;
 
-    public function __construct($params = array()) {
+    public function __construct($params = []) {
         $this->setData($params);
     }
 
@@ -49,6 +53,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
         foreach($items as $it) {
             $this->addItem($it);
         }
+
         return $this;
     }
 
@@ -63,6 +68,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
             $this->_isLoaded = true;
             $this->_afterLoad();
         }
+
         return $this;
     }
 
@@ -97,6 +103,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
         else {
             $this->_items[] = $item;
         }
+
         $this->_isLoaded = false;
         return $this;
     }
@@ -106,21 +113,21 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
         if ($key === null) {
             $key = $this->_keyField;
         }
+
         if ($key === $this->_keyField) {
-            return isset($this->_items[$value]) ? $this->_items[$value] : null;
+            return $this->_items[$value] ?? null;
         }
+
         foreach($this->_items as $item) {
             if ($strict) {
                 if ($item->getDataUsingMethod($key) === $value) {
                     return $item;
                 }
-            }
-            else {
-                if ($item->getDataUsingMethod($key) == $value) {
-                    return $item;
-                }
+            } elseif ($item->getDataUsingMethod($key) == $value) {
+                return $item;
             }
         }
+
         return null;
     }
 
@@ -155,13 +162,13 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
      * @param mixed $cond
      */
     public function addFieldToFilter($field, $cond) {
-        $this->_filters[] = array($field => $cond);
+        $this->_filters[] = [$field => $cond];
         $this->_isLoaded = false;
         return $this;
     }
 
     public function clearFilters() {
-        $this->_filters = array();
+        $this->_filters = [];
         $this->_isLoaded = false;
         return $this;
     }
@@ -170,13 +177,14 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
         if (!$dir) {
             $dir = self::SORT_DIR_DEFAULT;
         }
+
         $this->_orders[$field] = $dir;
         $this->_isLoaded = false;
         return $this;
     }
 
     public function clearOrders() {
-        $this->_orders = array();
+        $this->_orders = [];
         $this->_isLoaded = false;
         return $this;
     }
@@ -202,21 +210,21 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
      * ArrayAccess Methods Implementation
      */
 
-    public function offsetExists($offset) {
+    public function offsetExists($offset): bool {
         $this->load();
         return isset($this->_items[$offset]);
     }
 
-    public function offsetGet($offset) {
+    public function offsetGet($offset): mixed {
         $this->load();
         return $this->_items[$offset];
     }
 
-    public function offsetSet($offset, $value) {
+    public function offsetSet($offset, $value): void {
         throw new \BadMethodCallException('Setter is not supported.');
     }
 
-    public function offsetUnset($offset) {
+    public function offsetUnset($offset): void {
         throw new \BadMethodCallException('Unsetter is not supported.');
     }
 
@@ -224,7 +232,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
      * IterratorAggregate Methods Implementation
      */
 
-    public function getIterator() {
+    public function getIterator(): \Traversable {
         $this->load();
         return new \ArrayIterator($this->_items);
     }
@@ -233,7 +241,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
      * Countable Methods Implementation
      */
 
-    public function count() {
+    public function count(): int {
         $this->load();
         return count($this->_items);
     }
@@ -244,7 +252,7 @@ abstract class AbstractCollection extends MagicObject implements \ArrayAccess, \
     }
 
     public function getFlag($flag) {
-        return isset($this->_flags[$flag]) && $this->_flags[$flag] == 1 ? true : false;
+        return isset($this->_flags[$flag]) && $this->_flags[$flag] == 1;
     }
 
     public function unsetFlag($flag) {

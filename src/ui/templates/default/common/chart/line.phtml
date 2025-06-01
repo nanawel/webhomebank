@@ -1,94 +1,106 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anael
- * Date: 11/11/15
- * Time: 14:35
- */
+// @formatter:off
+/** @var $_block \app\models\core\Chart\Line */
 
 $chartId = $id;
-$chartVar = 'chart_' . $chartId . '_';
+$chartVar = 'chart_' . $chartId;
 ?>
 
-<div id="<?php echo $chartId ?>" class="chart <?php echo $class ?> <?php echo $type ?>">
+<div id="<?= $chartId ?>" class="chart <?= $class ?> <?= $type ?>">
     <div class="chart-heading">
-        <h2 class="chart-title"><?php echo $this->__($title) ?></h2>
+        <h2 class="chart-title"><?= $this->__($title) ?></h2>
+    </div>
+    <div class="chart-toolbar toolbar">
+        <form action="javascript:void(0)" id="<?= $chartId ?>_form">
+            <ul>
+                <?php foreach ($filters as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>
+                    <li>
+                        <div class="input-group">
+                            <span class="input-group-label"><?= $this->__($filterElement->getLabel()) ?></span>
+                            <?= $filterElement->addClass('input-group-field')->toHtml() ?>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </form>
     </div>
     <div class="chart-body">
-        <div class="toolbar">
-            <form action="javascript:void(0)" id="<?php echo $chartId ?>_form">
-                <ul>
-                    <?php foreach ($filters as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>
-                        <li>
-                            <span class="filter-label"><?php echo $this->__($filterElement->getLabel()) ?></span>
-                            <div class="filter-input">
-                                <?php echo $filterElement->toHtml() ?>
-                            </div>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </form>
-        </div>
         <?php if ($show_legend): ?>
-            <div class="legend"></div>
+            <div id="<?= $chartId ?>-legend-container" class="legend"></div>
         <?php endif; ?>
 
         <div class="canvas-container">
-            <canvas width="<?php echo $width ?>" height="<?php echo $height ?>"></canvas>
+            <canvas width="<?= $width ?>" height="<?= $height ?>"></canvas>
         </div>
 
-        <script type="application/javascript">
-            //<![CDATA[
-            var <?php echo $chartVar ?>Canvas;
-            var <?php echo $chartVar ?>;
-            function updateBalanceReportChart() {
-                var filters = $('#<?php echo $chartId ?>_form').serialize();
-                if (typeof(<?php echo $chartVar ?>) != "undefined") {
-                    <?php echo $chartVar ?>.destroy();
-                }
-                <?php echo $chartVar ?>Canvas = new Chart($('#<?php echo $chartId ?> canvas').get(0).getContext('2d'));
-                $.getJSON("<?php echo $data_url ?>", filters, function(data) {
-                    $('#<?php echo $chartId ?> .no-data-message').remove();
-                    if (data == null || data.datasets.length == 0) {
-                        if (typeof <?php echo $chartVar ?> != "undefined") {
-                            <?php echo $chartVar ?>.clear();
-                        }
-                        $('#<?php echo $chartId ?> canvas').after('<div class="no-data-message"><?php echo $this->__($no_data_message); ?></div>');
-                        return;
-                    }
-                    <?php echo $chartVar ?> = <?php echo $chartVar ?>Canvas.Line(data, {
-                        animation: false,
-                        responsive: true,
-                        scaleBeginAtZero: true,
-                        datasetFill : false,
-                        pointHitDetectionRadius: 3,
-                        legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\">"+
-                            "<% for (var i=0; i<segments.length; i++){%>"+
-                            "<li><span class=\"label-color\" style=\"background-color:<%=segments[i].fillColor%>\"></span><span class=\"label-text\"><%if(segments[i].label){%><%=segments[i].label%><%}%></span></li>"+
-                            "<%}%></ul>",
-                        tooltipTemplate: "<%if (label){%><%=label%>: <%}%><%= i18n.formatCurrency(value) %>",
-                        multiTooltipTemplate: "<%= datasetLabel %> - <%= i18n.formatCurrency(value) %>"
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                (function($) {
+                    //<![CDATA[
+                    const chart = new Chart($('#<?= $chartId ?> canvas').get(0), {
+                        type: 'line',
+                        options: {
+                            responsive: true,
+                            animation: false,
+                            plugins: {
+                                htmlLegend: {
+                                    containerID: '<?= $chartId ?>-legend-container',
+                                },
+                                legend: {
+                                    display: <?= $show_legend ? 'true' : 'false' ?>,
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    usePointStyle: true,
+                                    callbacks: {
+                                        title: (data) => data[0].dataset.label,
+                                        label: (data) => <?= $_block->getTooltipJsCallback() ?>,
+                                    },
+                                },
+                            },
+                            scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'week',
+                                        isoWeekday: true,
+                                    }
+                                },
+                            }
+                        },
+                        <?php if ($show_legend): ?>
+                        plugins: [whbChartjs.htmlLegendPlugin],
+                        <?php endif; ?>
                     });
-                    $('#<?php echo $chartId ?> .legend').empty();
-                    try {
-                        $('#<?php echo $chartId ?> .legend').append(<?php echo $chartVar ?>.generateLegend());
-                    }
-                    catch (e) {
-                        // just ignore
-                    }
-                });
-            }
 
-            $(window).load(function() {
-                updateBalanceReportChart();
-                $('#<?php echo $chartId ?> .toolbar select').change(updateBalanceReportChart);
+                    const updateChart = function() {
+                        var filters = $('#<?= $chartId ?>_form').serialize();
+                        $.getJSON("<?= $data_url ?>", filters, function(data) {
+                            $('#<?= $chartId ?> .no-data-message').remove();
+                            if (data == null || !data.datasets?.length) {
+                                if (typeof chart != "undefined") {
+                                    chart.clear();
+                                }
+                                $('#<?= $chartId ?> canvas').after('<div class="no-data-message"><?= $this->__($no_data_message); ?></div>');
+                                return;
+                            } else {
+                                whbChartjs.populateLineChartWithData(chart, data);
+                            }
+                        });
+                    }
+
+                    $(window).on('load', (function() {
+                        updateChart();
+                        $('#<?= $chartId ?> .toolbar select').change(updateChart);
+                    }));
+                })(jQuery);
             });
             //]]>
         </script>
         <div class="clear"></div>
         <?php if ($footer_note): ?>
             <div class="chart-footer right">
-                <p><?php echo $footer_note ?></p>
+                <p><?= $footer_note ?></p>
             </div>
         <?php endif; ?>
     </div>

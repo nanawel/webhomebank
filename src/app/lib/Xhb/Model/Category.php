@@ -15,12 +15,13 @@ use Xhb\Model\Resource\Iface\Category\Collection;
  */
 class Category extends XhbModel
 {
-    public function getFullname() {
+    public function getFullname(): string {
         $fullname = '';
         if ($parentKey = $this->getParent()) {
             $parentCat = $this->getXhb()->getCategory($parentKey);
             $fullname = $parentCat->getName() . ':';
         }
+
         $fullname .= $this->getName();
         return $fullname;
     }

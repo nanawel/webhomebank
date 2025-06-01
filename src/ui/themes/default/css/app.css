@@ -340,7 +340,7 @@ body.init-load .content>div .text {
     font-size: 10px;
 }
 
-.chart.donut .canvas-container {
+.chart.doughnut .canvas-container {
     width: 300px;
     height: 300px;
 }

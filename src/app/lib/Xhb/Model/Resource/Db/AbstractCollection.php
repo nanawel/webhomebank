@@ -32,6 +32,8 @@ use Laminas\Db\Sql\Select;
  */
 abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
 {
+    public $_mainTable;
+
     /**
      * @var Profiler
      */
@@ -50,13 +52,14 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
     /**
      * @var array
      */
-    protected $_columns = array(Select::SQL_STAR);
+    protected $_columns = [Select::SQL_STAR];
 
-    public function __construct(array $params = array()) {
+    public function __construct(array $params = []) {
         parent::__construct($params);
         if (!isset($params['resource_config']['db'])) {
             throw new \Exception('Missing DB config');
         }
+
         $this->setDb(new Adapter($params['resource_config']['db']));
     }
 
@@ -64,7 +67,7 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
         parent::_init($itemClass, $keyField);
         $this->_table = $tableName;
         $this->_select = new Select();
-        $this->_select->from(array('main_table' => $tableName));
+        $this->_select->from(['main_table' => $tableName]);
     }
 
     /**
@@ -74,6 +77,7 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
         if (! $db = $this->getData('db')) {
             throw new \Exception('Missing DB adapter');
         }
+
         return $db;
     }
 
@@ -84,10 +88,11 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
         if (!$this->getData('sql')) {
             $this->setSql(new \Laminas\Db\Sql\Sql($this->getDb(), $this->_mainTable));
         }
+
         return $this->getData('sql');
     }
 
-    function __sleep() {
+    public function __sleep() {
         $this->unsetData('sql');    // Remove objects linked to PDO (not serializable)
     }
 
@@ -123,6 +128,7 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
             $item = new $this->_itemClass((array) $it);
             $this->addItem($item);
         }
+
         return $this;
     }
 
@@ -131,6 +137,7 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
         if ($this->hasData('sql_dumper') && is_callable($dumper = $this->getData('sql_dumper'))) {
             call_user_func($dumper, $sql);
         }
+
         self::getProfiler()->profilerStart($sql);
         $items = $this->getDb()->query($sql, Adapter::QUERY_MODE_EXECUTE);
         self::getProfiler()->profilerFinish();
@@ -142,11 +149,13 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
 
     public function addFieldToSelect($field) {
         if (!is_array($field)) {
-            $field = array($field => $field);
+            $field = [$field => $field];
         }
+
         foreach($field as $correlationName => $fieldName) {
             $this->_columns[$correlationName] = $fieldName;
         }
+
         return $this;
     }
 
@@ -161,8 +170,10 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
                 $cond = current($filter);
                 $predicate = $this->_filterToPredicate($field, $cond);
             }
+
             $this->_select->where($predicate);
         }
+
         return $this;
     }
 
@@ -173,78 +184,39 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
      */
     protected function _filterToPredicate($field, $predicate) {
         if (!is_array($predicate)) {
-            $predicate = array('eq' => $predicate);
+            $predicate = ['eq' => $predicate];
         }
+
         $operator = key($predicate);
         $value = current($predicate);
-        switch($operator) {
-            case 'eq':
-            case '=':
-            case '==':
-                $predicate = new Operator($field, Operator::OP_EQ, $value);
-                break;
+        $predicate = match ($operator) {
+            'eq', '=', '==' => new Operator($field, Operator::OP_EQ, $value),
+            'ne', 'neq', '!=' => new Operator($field, Operator::OP_NE, $value),
+            'gt', '>' => new Operator($field, Operator::OP_GT, $value),
+            'ge', '>=' => new Operator($field, Operator::OP_GTE, $value),
+            'lt', '<' => new Operator($field, Operator::OP_LT, $value),
+            'le', '<' => new Operator($field, Operator::OP_LTE, $value),
+            'null' => new IsNull($field),
+            'in' => new In($field, $value),
+            'nin' => new NotIn($field),
+            'like' => new Like($field, $value),
+            'nlike' => new NotLike($field, $value),
+            default => throw new \InvalidArgumentException('"' . $operator . '" is not a valid operator'),
+        };
 
-            case 'ne':
-            case 'neq':
-            case '!=':
-                $predicate = new Operator($field, Operator::OP_NE, $value);
-                break;
-
-            case 'gt':
-            case '>':
-                $predicate = new Operator($field, Operator::OP_GT, $value);
-                break;
-
-
-            case 'ge':
-            case '>=':
-                $predicate = new Operator($field, Operator::OP_GTE, $value);
-                break;
-
-            case 'lt':
-            case '<':
-                $predicate = new Operator($field, Operator::OP_LT, $value);
-                break;
-
-            case 'le':
-            case '<':
-                $predicate = new Operator($field, Operator::OP_LTE, $value);
-                break;
-
-            case 'null':
-                $predicate = new IsNull($field);
-                break;
-
-            case 'in':
-                $predicate = new In($field, $value);
-                break;
-
-            case 'nin':
-                $predicate = new NotIn($field);
-                break;
-
-            case 'like':
-                $predicate = new Like($field, $value);
-                break;
-
-            case 'nlike':
-                $predicate = new NotLike($field, $value);
-                break;
-
-            default:
-                throw new \InvalidArgumentException('"' . $operator . '" is not a valid operator');
-        }
         return $predicate;
     }
 
     protected function _applyOrder() {
         if (!empty($this->_orders)) {
-            $orderBy = array();
+            $orderBy = [];
             foreach ($this->_orders as $field => $dir) {
                 $orderBy[] = $field . ' ' . ($dir == SORT_DESC ? 'DESC' : 'ASC');
             }
+
             $this->_select->order($orderBy);
         }
+
         return $this;
     }
 
@@ -252,6 +224,7 @@ abstract class AbstractCollection extends \Xhb\Model\Resource\AbstractCollection
         if ($this->_limit !== false) {
             $this->_select->limit($this->_limit);
         }
+
         return $this;
     }
 

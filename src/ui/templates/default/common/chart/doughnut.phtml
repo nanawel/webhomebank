@@ -1,0 +1,96 @@
+<?php
+// @formatter:off
+/** @var $_block \app\models\core\Chart\Doughnut */
+
+$chartId = $id;
+$chartVar = 'chart_' . $chartId;
+?>
+
+<div id="<?= $chartId ?>" class="chart <?= $class ?> <?= $type ?>">
+    <div class="chart-heading">
+        <h2 class="chart-title"><?= $this->__($title) ?></h2>
+    </div>
+    <div class="chart-toolbar toolbar">
+        <form action="javascript:void(0)" id="<?= $chartId ?>_form">
+            <ul>
+                <?php foreach ($filters as $filterElement): /* @var $filterElement \app\models\core\Form\Element\AbstractElement */ ?>
+                    <li>
+                        <div class="input-group">
+                            <span class="input-group-label"><?= $this->__($filterElement->getLabel()) ?></span>
+                            <?= $filterElement->addClass('input-group-field')->toHtml() ?>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </form>
+    </div>
+    <div class="chart-body">
+        <div class="canvas-container">
+            <div class="loading-anim"></div>
+            <canvas width="<?= $width ?>" height="<?= $height ?>"></canvas>
+        </div>
+        <?php if ($show_legend): ?>
+            <div id="<?= $chartId ?>-legend-container" class="legend"></div>
+        <?php endif; ?>
+
+        <script>
+            window.addEventListener('DOMContentLoaded', function() {
+                (function($) {
+                    const chart = new Chart($('#<?= $chartId ?> canvas').get(0), {
+                        type: 'doughnut',
+                        options: {
+                            animation: false,
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                htmlLegend: {
+                                    containerID: '<?= $chartId ?>-legend-container',
+                                },
+                                legend: {
+                                    display: false,
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    usePointStyle: true,
+                                    callbacks: {
+                                        title: (data) => data.label,
+                                        label: (data) => i18n.formatCurrency(data.parsed),
+                                    },
+                                },
+                            },
+                        },
+                        <?php if ($show_legend): ?>
+                        plugins: [whbChartjs.htmlLegendPlugin],
+                        <?php endif; ?>
+                    });
+
+                    function updateChart() {
+                        chart.clear();
+
+                        $('#<?= $chartId ?> .loading-anim').show();
+
+                        var filters = $('#<?= $chartId ?>_form').serialize();
+                        $.getJSON("<?= $data_url ?>", filters, function(data) {
+                            $('#<?= $chartId ?> .loading-anim').hide();
+                            $('#<?= $chartId ?> .no-data-message').remove();
+
+                            whbChartjs.populateDoughnutChartWithData(chart, data);
+
+                            chart.update();
+                        });
+                    }
+
+                    $(window).on('load', (function() {
+                        updateChart();
+                        $('#<?= $chartId ?> .toolbar .filter-input').change(updateChart);
+                    }));
+                })(jQuery);
+            });
+        </script>
+        <?php if ($footer_note): ?>
+            <div class="chart-footer right">
+                <p><?= $footer_note ?></p>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>

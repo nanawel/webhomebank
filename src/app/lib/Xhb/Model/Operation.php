@@ -54,6 +54,7 @@ class Operation extends XhbModel
         if (!$this->_date) {
             $this->_date = Date::jdToDate($this->getDate());
         }
+
         return clone $this->_date;
     }
 
@@ -88,31 +89,34 @@ class Operation extends XhbModel
     /**
      * @return array
      */
-    public function getScat() {
+    public function getScat(): array {
         if (is_string($this->getData('scat'))) {
             return explode('||', $this->getData('scat'));
         }
-        return array();
+
+        return [];
     }
 
     /**
      * @return array
      */
-    public function getSamt() {
+    public function getSamt(): array {
         if (is_string($this->getData('samt'))) {
             return explode('||', $this->getData('samt'));
         }
-        return array();
+
+        return [];
     }
 
     /**
      * @return array
      */
-    public function getSmem() {
+    public function getSmem(): array {
         if (is_string($this->getData('smem'))) {
             return explode('||', $this->getData('smem'));
         }
-        return array();
+
+        return [];
     }
 
     /**
@@ -124,23 +128,26 @@ class Operation extends XhbModel
             $samt = $this->getSamt();
             $smem = $this->getSmem();
 
-            $splitAmountData = array();
+            $splitAmountData = [];
             foreach($scat as $k => $cat) {
-                $splitAmountData[$k] = array(
+                $splitAmountData[$k] = [
                     'category' => $cat,
-                    'amount'   => isset($samt[$k]) ? $samt[$k] : null,
-                    'wording'  => isset($smem[$k]) ? $smem[$k] : null
-                );
+                    'amount'   => $samt[$k] ?? null,
+                    'wording'  => $smem[$k] ?? null
+                ];
             }
+
             $this->_splitAmountData = $splitAmountData;
         }
+
         return $this->_splitAmountData;
     }
 
-    public function getPaymodeCode() {
+    public function getPaymodeCode(): int|string|false|null {
         if ($paymode = $this->getPaymode()) {
-            return array_search($paymode, Constants::$PAYMODES);
+            return array_search($paymode, Constants::PAYMODES, true);
         }
+
         return null;
     }
 
@@ -149,17 +156,18 @@ class Operation extends XhbModel
      */
     public function getCategoryModels() {
         if ($cat = $this->getCategoryModel()) {
-            return array($cat);
-        }
-        else if ($catIds = $this->getScat()) {
-            $categories = array();
+            return [$cat];
+        } elseif ($catIds = $this->getScat()) {
+            $categories = [];
             foreach($catIds as $catId) {
                 if ($catId > 0) {    // 0 is used for non-categorized amounts
                     $categories[] = $this->getXhb()->getCategory($catId);
                 }
             }
+
             return $categories;
         }
+
         return null;
     }
 }

@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "build": "webpack-cli --config webpack.config.js",
+    "watch": "webpack-cli watch --config webpack.config.js"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.9",
+    "chartjs-adapter-moment": "^1.0.1",
+    "jquery": "^2.2.4",
+    "moment": "^2.30.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^6.0.1"
+  }
+}

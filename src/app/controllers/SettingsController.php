@@ -10,21 +10,21 @@ namespace app\controllers;
 
 class SettingsController extends WhbController
 {
-    public function setCurrencyAction() {
+    public function setCurrencyAction(): void {
         $currencyCode = $this->getRequestQuery('code');
         $this->getSession('xhb')->setCurrencyCode($currencyCode);
 
         $this->_redirectReferer();
     }
 
-    public function setLocaleAction() {
+    public function setLocaleAction(): void {
         $locale = $this->getRequestQuery('code');
         $this->getSession()->setLocale($locale);
 
         $this->_redirectReferer();
     }
 
-    public function setThemeAction() {
+    public function setThemeAction(): void {
         $theme = $this->getRequestQuery('code');
         $this->getSession()->setTheme($theme);
 

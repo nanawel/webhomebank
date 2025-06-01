@@ -46,6 +46,23 @@ I18n.prototype = {
         return date;
     },
 
+    formatNumber: function (number, decimal) {
+        for (var l in this.locales) {
+            var locale = this.locales[l];
+            try {
+                number = parseFloat(number).toLocaleString(locale, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                break;
+            }
+            catch (e) {
+                console.log(e);
+            }
+        }
+        return number;
+    },
+
     formatCurrency: function (number, currency) {
         currency = typeof currency != 'undefined' ? currency : this.currency;
         for (var l in this.locales) {
@@ -66,3 +83,5 @@ I18n.prototype = {
         return number;
     }
 };
+
+export default I18n;

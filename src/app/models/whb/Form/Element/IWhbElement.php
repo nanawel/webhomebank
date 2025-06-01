@@ -12,7 +12,7 @@ use Xhb\Model\Xhb;
 
 interface IWhbElement
 {
-    public function __construct(Xhb $xhb, $data = array());
+    public function __construct(Xhb $xhb, $data = []);
 
     public function getXhb();
 }

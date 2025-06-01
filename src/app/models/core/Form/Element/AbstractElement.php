@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anael
- * Date: 02/11/15
- * Time: 21:28
- */
 
 namespace app\models\core\Form\Element;
 
@@ -14,62 +8,68 @@ class AbstractElement extends MagicObject
 {
     protected static $_document = null;
 
-    protected $_tagName = null;
     protected $_domElement = null;
+
     protected $_value = null;
 
-    public function __construct($tagName, $data = array()) {
-        $this->_tagName = $tagName;
+    public function __construct(
+        protected $tagName,
+        array $data = []
+    ) {
         $this->addData($data);
     }
 
-    public function addClass($class) {
-        $classes = explode(' ', $this->getClass());
+    public function addClass($class): self {
+        $classes = explode(' ', (string) $this->getClass());
         $classes[] = $class;
         $this->setClass(implode(' ', $classes));
         return $this;
     }
 
-    public function removeClass($class) {
-        $classes = explode(' ', $this->getClass());
-        if ($key = array_search($class, $classes) !== null) {
+    public function removeClass($class): self {
+        $classes = explode(' ', (string) $this->getClass());
+        if ($key = array_search($class, $classes, true) !== null) {
             unset($classes[$key]);
         }
+
         $this->setClass(implode(' ', $classes));
         return $this;
     }
 
     public function getDOMElement() {
         if (!$this->_domElement) {
-            $this->_domElement = $this->getDocument()->createElement($this->_tagName);
+            $this->_domElement = static::getDocument()->createElement($this->tagName);
         }
+
         return $this->_domElement;
     }
 
-    protected function _setCommonAttributes() {
-        $attributes = array('id', 'name', 'class');
+    protected function _setCommonAttributes(): self {
+        $attributes = ['id', 'name', 'class'];
         foreach($attributes as $a) {
             if ($v = $this->getDataUsingMethod($a)) {
                 $this->getDOMElement()->setAttribute($a, $v);
             }
         }
+
         return $this;
     }
 
-    protected function _addAttributesToDOMElement(\DOMElement $el, array $attributes) {
+    protected function _addAttributesToDOMElement(\DOMElement $el, array $attributes): self {
         foreach($attributes as $k => $v) {
-            if ($k && strpos($k, '_') !== 0) {
+            if ($k && !str_starts_with($k, '_')) {
                 $el->setAttribute($k, $v);
             }
         }
+
         return $this;
     }
 
-    public final function toHtml() {
+    public final function toHtml(): string {
         return $this->_toHtml();
     }
 
-    protected function _toHtml() {
+    protected function _toHtml(): string {
         return '';
     }
 
@@ -77,6 +77,7 @@ class AbstractElement extends MagicObject
         if (!self::$_document) {
             self::$_document = new \DOMDocument();
         }
+
         return self::$_document;
     }
 
@@ -90,10 +91,11 @@ class AbstractElement extends MagicObject
                 }
             }
         }
+
         return $v;
     }
 
-    public function setValue($value) {
+    public function setValue($value): void {
         $this->_value = $value;
     }
 }

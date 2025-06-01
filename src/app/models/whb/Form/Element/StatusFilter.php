@@ -15,25 +15,23 @@ use Xhb\Model\Xhb;
 
 class StatusFilter extends Select implements IWhbElement
 {
-    protected $_xhb;
-
-    public function __construct(Xhb $xhb, $data = array()) {
+    public function __construct(protected \Xhb\Model\Xhb $_xhb, $data = []) {
         $this->setLabel('Status');
         parent::__construct($data);
-        $this->_xhb = $xhb;
 
         $i18n = I18n::instance();
         $periods = AccountOperation::getStaticCollectionFilters()['status'];
-        $options = array();
+        $options = [];
         foreach($periods['values'] as $k => $p) {
-            $options[$k] = array(
+            $options[$k] = [
                 'label' => $i18n->tr($p)
-            );
+            ];
         }
+
         $this->setOptions($options);
     }
 
-    public function getXhb() {
+    public function getXhb(): \Xhb\Model\Xhb {
         return $this->_xhb;
     }
 }

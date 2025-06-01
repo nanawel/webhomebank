@@ -26,7 +26,7 @@ class Constants
     //    const ACC_TYPE_EQUITY     = 10;    //Capitaux propres
     //    const ACC_TYPE_,
 
-    public static $ACC_TYPE = array(
+    public const ACC_TYPE = [
         'none'       => self::ACC_TYPE_NONE,
         'bank'       => self::ACC_TYPE_BANK,
         'cash'       => self::ACC_TYPE_CASH,
@@ -35,7 +35,13 @@ class Constants
         'liability'  => self::ACC_TYPE_LIABILITY,
         'checking'   => self::ACC_TYPE_CHECKING,
         'savings'    => self::ACC_TYPE_SAVINGS,
-    );
+    ];
+
+    public const ACC_FLAG_CLOSED = (1<<1);
+    public const ACC_FLAG_NOSUMMARY = (1<<4);
+    public const ACC_FLAG_NOBUDGET = (1<<5);
+    public const ACC_FLAG_NOREPORT = (1<<6);
+    public const ACC_FLAG_OUTFLOWSUM = (1<<7);
 
     const PAYMODE_NONE          = 0;
     const PAYMODE_CCARD         = 1;
@@ -54,7 +60,7 @@ class Constants
     //    PAYMODE_,
     const NUM_PAYMODE_MAX       = 12;
 
-    public static $PAYMODES = array(
+    public const PAYMODES = [
         'none'        => self::PAYMODE_NONE,
         'ccard'       => self::PAYMODE_CCARD,
         'check'       => self::PAYMODE_CHECK,
@@ -67,7 +73,7 @@ class Constants
         'deposit'     => self::PAYMODE_DEPOSIT,
         'fee'         => self::PAYMODE_FEE,
         'directdebit' => self::PAYMODE_DIRECTDEBIT
-    );
+    ];
 
     const TXN_STATUS_NONE       = 0;
     const TXN_STATUS_CLEARED    = 1;
@@ -75,59 +81,59 @@ class Constants
     const TXN_STATUS_REMIND     = 3;
     const TXN_STATUS_VOID       = 4;
 
-    public static $TXN_STATUS = array(
+    public const TXN_STATUS = [
         'none'       => self::TXN_STATUS_NONE,
         'cleared'    => self::TXN_STATUS_CLEARED,
         'reconciled' => self::TXN_STATUS_RECONCILED,
         'remind'     => self::TXN_STATUS_REMIND,
         'void'       => self::TXN_STATUS_VOID
-    );
+    ];
 
     const BALANCE_TYPE_TODAY        = 'today';
     const BALANCE_TYPE_BANK         = 'bank';
     const BALANCE_TYPE_FUTURE       = 'future';
 
-    public static $BALANCE_TYPES = array(
+    public const BALANCE_TYPES = [
         'today'    => self::BALANCE_TYPE_TODAY,
         'bank'     => self::BALANCE_TYPE_BANK,
         'future'   => self::BALANCE_TYPE_FUTURE
-    );
+    ];
 
     /*
      * @see src/gtk-chart-colors.c
      */
-    public static $CHARTS_DEFAULT_COLORS = array(
-        array(72, 118, 176),
-        array(180, 198, 230),
-        array(227, 126, 35),
-        array(238, 186, 123),
-        array(97, 158, 58),
-        array(175, 222, 142),
-        array(184, 43, 44),
-        array(231, 151, 149),
-        array(136, 103, 185),
-        array(190, 174, 210),
-        array(127, 87, 77),
-        array(184, 155, 147),
-        array(202, 118, 190),
-        array(230, 181, 208),
-        array(126, 126, 126),
-        array(198, 198, 198),
-        array(187, 188, 56),
-        array(218, 218, 144),
-        array(109, 189, 205),
-        array(176, 217, 228),
-        array(237, 212, 0),
-        array(255, 239, 101),
-        array(207, 93, 96),
-        array(234, 186, 187),
-        array(193, 124, 17),
-        array(240, 181, 90),
-        array(186, 189, 182),
-        array(225, 227, 223),
-        array(115, 210, 22),
-        array(175, 240, 112),
-        array(255, 140, 90),
-        array(255, 191, 165),
-    );
+    public static $CHARTS_DEFAULT_COLORS = [
+        [72, 118, 176],
+        [180, 198, 230],
+        [227, 126, 35],
+        [238, 186, 123],
+        [97, 158, 58],
+        [175, 222, 142],
+        [184, 43, 44],
+        [231, 151, 149],
+        [136, 103, 185],
+        [190, 174, 210],
+        [127, 87, 77],
+        [184, 155, 147],
+        [202, 118, 190],
+        [230, 181, 208],
+        [126, 126, 126],
+        [198, 198, 198],
+        [187, 188, 56],
+        [218, 218, 144],
+        [109, 189, 205],
+        [176, 217, 228],
+        [237, 212, 0],
+        [255, 239, 101],
+        [207, 93, 96],
+        [234, 186, 187],
+        [193, 124, 17],
+        [240, 181, 90],
+        [186, 189, 182],
+        [225, 227, 223],
+        [115, 210, 22],
+        [175, 240, 112],
+        [255, 140, 90],
+        [255, 191, 165],
+    ];
 }

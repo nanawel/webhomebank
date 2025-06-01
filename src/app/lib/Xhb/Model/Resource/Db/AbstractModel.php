@@ -33,11 +33,12 @@ abstract class AbstractModel extends MagicObject implements ResourceModel
      */
     protected $_keyField;
 
-    public function __construct(array $params = array()) {
+    public function __construct(array $params = []) {
         parent::__construct($params);
         if (!isset($params['resource_config']['db'])) {
             throw new \Exception('Missing DB config');
         }
+
         $this->setDb(new Adapter($params['resource_config']['db']));
     }
 
@@ -48,6 +49,7 @@ abstract class AbstractModel extends MagicObject implements ResourceModel
         if (! $db = $this->getData('db')) {
             throw new \Exception('Missing DB adapter');
         }
+
         return $db;
     }
 
@@ -58,10 +60,11 @@ abstract class AbstractModel extends MagicObject implements ResourceModel
         if (!$this->getData('sql')) {
             $this->setSql(new \Laminas\Db\Sql\Sql($this->getDb(), $this->_mainTable));
         }
+
         return $this->getData('sql');
     }
 
-    function __sleep() {
+    public function __sleep() {
         // Remove objects linked to PDO (not serializable)
         $this->unsetData('db');
         $this->unsetData('sql');
@@ -69,28 +72,32 @@ abstract class AbstractModel extends MagicObject implements ResourceModel
 
     protected function _init($keyField, $tableName) {
         $this->_mainTable = $tableName;
-        $this->_keyField = is_array($keyField) ? $keyField : array($keyField);
+        $this->_keyField = is_array($keyField) ? $keyField : [$keyField];
     }
 
     public function load(MagicObject $object, $id) {
         if (!is_array($id) && count($this->_keyField) == 1) {
-            $id = array($this->_keyField[0] => $id);
+            $id = [$this->_keyField[0] => $id];
         }
-        if (count($id) != ($fieldsCount = count($this->_keyField))) {
-            throw new \Exception("Invalid ID specified (should have $fieldsCount fields)");
+
+        if (count($id) !== $fieldsCount = count($this->_keyField)) {
+            throw new \Exception(sprintf('Invalid ID specified (should have %s fields)', $fieldsCount));
         }
+
         foreach($this->_keyField as $kf) {
             $object->setData($kf, $id[$kf]);
         }
 
         $select = $this->getSql()->select();
-        $select->columns(array('*'));
+        $select->columns(['*']);
         foreach($this->_keyField as $field) {
             if (!isset($id[$field])) {
                 throw new \Exception('Missing field "' . $field . '" in ID');
             }
-            $select->where(array($field => $id[$field]));
+
+            $select->where([$field => $id[$field]]);
         }
+
         $select->limit(1);
 
         $result = $this->getDb()->query($this->getSql()->buildSqlString($select), Adapter::QUERY_MODE_EXECUTE);
@@ -98,6 +105,7 @@ abstract class AbstractModel extends MagicObject implements ResourceModel
         if ($data) {
             $object->addData((array) $data);
         }
+
         return $this;
     }
 

@@ -35,8 +35,10 @@ class Xhb extends Session
             if (!$xhbFile = $this->get('xhb_file')) {
                 throw new \Exception('Missing XHB file');
             }
+
             $this->_xhbAdapter = new XhbAdapter(\Base::instance(), $xhbFile, Main::app()->getConfig('XHB'));
         }
+
         return $this->_xhbAdapter;
     }
 
@@ -51,13 +53,14 @@ class Xhb extends Session
         if (!$this->_model) {
             $this->_model = $this->_getXhbAdapter()->loadXhb();
         }
+
         return $this->_model;
     }
 
     /**
      * @param $model \Xhb\Model\Xhb
      */
-    public function setModel($model) {
+    public function setModel($model): self {
         $this->_model = $model;
         return $this;
     }
@@ -66,6 +69,7 @@ class Xhb extends Session
         if ($unit = $this->get('car_distance_unit')) {
             return $unit;
         }
+
         return Main::app()->getConfig('CAR_DISTANCE_UNIT');
     }
 
@@ -73,6 +77,7 @@ class Xhb extends Session
         if ($unit = $this->get('car_volume_unit')) {
             return $unit;
         }
+
         return Main::app()->getConfig('CAR_VOLUME_UNIT');
     }
 
@@ -84,6 +89,7 @@ class Xhb extends Session
         if (!$this->get('currency_code')) {
             $this->set('currency_code', Main::app()->getConfig('CURRENCY'));
         }
+
         return $this->get('currency_code');
     }
 

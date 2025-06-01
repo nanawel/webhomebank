@@ -24,19 +24,19 @@ class Operation
      * @param array $collectionFilters
      * @return array
      */
-    public static function getTopSpendingReportData(Xhb $xhb, array $collectionFilters) {
+    public static function getTopSpendingReportData(Xhb $xhb, array $collectionFilters): array {
         $i18n = I18n::instance();
         $opColl = $xhb->getOperationCollection();
         AccountOperation::applyFiltersOnCollection($opColl, $collectionFilters);
-        $opColl->addFieldToFilter('paymode', array('neq' => Constants::PAYMODE_INTXFER))
-            ->addFieldToFilter('amount', array('lt' => 0))
-            ->addFieldToFilter('date', array('lt' => Date::dateToJd(Date::getDate())));
+        $opColl->addFieldToFilter('paymode', ['neq' => Constants::PAYMODE_INTXFER])
+            ->addFieldToFilter('amount', ['lt' => 0])
+            ->addFieldToFilter('date', ['lt' => Date::dateToJd(Date::getDate())]);
 
         // FIXME does not handle split amounts yet
         $maxResults = 6;
         $sumByCategory = Chart::sumBy($opColl, 'category', 'amount', 0, $maxResults);
 
-        $return = array();
+        $return = [];
         $n = 0;
         foreach($sumByCategory as $catId => $sum) {
             $cat = $xhb->getCategory($catId);
@@ -46,13 +46,15 @@ class Operation
             else {
                 $catName = $cat->getFullname();
             }
+
             $v = abs(round($sum, 2));
-            $return[] = array(
+            $return[] = [
                 'value'          => $v,
                 'label'          => $i18n->tr('{0} ({1})', $catName, I18n::instance()->currency($v)),
                 'color'          => Output::rgbToCss(Chart::getColor($n++))
-            );
+            ];
         }
+
         return $return;
     }
 
@@ -62,11 +64,11 @@ class Operation
      * @param array $accountIds
      * @return array
      */
-    public static function getBalanceReportData(Xhb $xhb, array $collectionFilters, array $accountIds, $withGrandTotal = false) {
-        $return = array(
-            'labels'   => array(),
-            'datasets' => array()
-        );
+    public static function getBalanceReportData(Xhb $xhb, array $collectionFilters, array $accountIds, $withGrandTotal = false): array {
+        $return = [
+            'labels'   => [],
+            'datasets' => []
+        ];
         $operationCollection = $xhb->getOperationCollection();
         $processedFilters = AccountOperation::applyFiltersOnCollection($operationCollection, $collectionFilters);
         $firstOp = $operationCollection->getFirstItem();
@@ -74,11 +76,11 @@ class Operation
             return $return;
         }
 
-        $startDate = isset($processedFilters['start_date']) ? $processedFilters['start_date'] : $firstOp->getDateModel();
-        $endDate = isset($processedFilters['end_date']) ? $processedFilters['end_date'] : new \DateTime('last day of this month');
+        $startDate = $processedFilters['start_date'] ?? $firstOp->getDateModel();
+        $endDate = $processedFilters['end_date'] ?? new \DateTime('last day of this month');
         $datePeriod = self::getDatePeriod($xhb, $startDate, $endDate);
 
-        $rawBalanceData = array();
+        $rawBalanceData = [];
         foreach($accountIds as $accountId) {
             $calculator = new Calculator($xhb, $accountId);
             $rawBalanceData[$accountId] = $calculator->getBalanceByDate($datePeriod);
@@ -87,73 +89,79 @@ class Operation
         $now = new \DateTime();
         $idx = 0;
         $addLabels = true;
-        $grandTotal = array();
+        $grandTotal = [];
         foreach($rawBalanceData as $accountId => $accountBalanceData) {
             $periodIdx = 0;
             if (!isset($grandTotal[$idx])) {
-                $grandTotal[$idx] = array();
+                $grandTotal[$idx] = [];
             }
-            $return['datasets'][$idx] = array(
+
+            $return['datasets'][$idx] = [
                 'label'                => $xhb->getAccount($accountId)->getName(),
                 'strokeColor'          => Output::rgbToCss(Chart::getColor($idx)),
                 'pointColor'           => Output::rgbToCss(Chart::getColor($idx)),
                 'pointHighlightFill'   => '#fff',
                 'pointHighlightStroke' => '#bbb',
-                'data'                 => array()
-            );
+                'data'                 => []
+            ];
             foreach($accountBalanceData as $periodBalance) {
                 if ($addLabels) {
                     $return['labels'][] = I18n::instance()->date($periodBalance['date']);
                 }
+
                 if ($periodBalance['date'] < $now) {
-                    $return['datasets'][$idx]['data'][$periodIdx] = array(
+                    $return['datasets'][$idx]['data'][$periodIdx] = [
                         'x' => $periodBalance['date']->getTimestamp(),
                         'y' => $periodBalance['balance']
-                    );
-                    $grandTotal[$periodIdx][] = array(
+                    ];
+                    $grandTotal[$periodIdx][] = [
                         'x' => $periodBalance['date'],
                         'y' => $periodBalance['balance']
-                    );
+                    ];
                 }
                 else {
-                    $return['datasets'][$idx]['data'][$periodIdx] = array(
+                    $return['datasets'][$idx]['data'][$periodIdx] = [
                         'x' => $periodBalance['date']->getTimestamp(),
                         //'y' => null
-                    );
-                    $grandTotal[$periodIdx][] = array(
+                    ];
+                    $grandTotal[$periodIdx][] = [
                         'x' => $periodBalance['date'],
                         //'y' => null
-                    );
+                    ];
                 }
+
                 $periodIdx++;
             }
 
             $addLabels = false;
             $idx++;
         }
+
         if ($withGrandTotal) {
-            $return['datasets'][$idx] = array(
+            $return['datasets'][$idx] = [
                 'label'                => I18n::instance()->tr('Grand Total'),
-                'strokeColor'          => Output::rgbToCss(array(0, 0, 0)),
-                'pointColor'           => Output::rgbToCss(array(0, 0, 0)),
+                'strokeColor'          => Output::rgbToCss([0, 0, 0]),
+                'pointColor'           => Output::rgbToCss([0, 0, 0]),
                 'pointHighlightFill'   => '#fff',
                 'pointHighlightStroke' => '#bbb',
-                'data'                 => array()
-            );
+                'data'                 => []
+            ];
             $periodIdx = 0;
             foreach($grandTotal as $periodAccountsBalance) {
                 $balance = array_sum(array_column($periodAccountsBalance, 'y'));
                 $date = current($periodAccountsBalance)['x'];
-                $balanceData = array(
+                $balanceData = [
                     'x' => $date->getTimestamp()
-                );
+                ];
                 if ($date < $now) {
                     $balanceData['y'] = $balance;
                 }
+
                 $return['datasets'][$idx]['data'][$periodIdx] = $balanceData;
                 $periodIdx++;
             }
         }
+
         return $return;
     }
 

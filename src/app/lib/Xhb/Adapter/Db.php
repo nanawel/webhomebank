@@ -30,38 +30,27 @@ use Laminas\Db\TableGateway\TableGateway;
 
 class Db implements AdapterInterface
 {
-    public static $TABLES = array(
+    public static $TABLES = [
         Xhb::MAIN_TABLE,
         Account::MAIN_TABLE,
         Operation::MAIN_TABLE,
         Category::MAIN_TABLE,
         Payee::MAIN_TABLE
-    );
+    ];
 
-    /**
-     * @var \Laminas\Db\Adapter\Adapter
-     */
-    protected $_db;
+    protected \Laminas\Db\Adapter\Adapter $_db;
 
-    /**
-     * @var \Laminas\Db\Sql\Sql
-     */
-    protected $_sql;
+    protected \Laminas\Db\Sql\Sql $_sql;
 
-    /**
-     * @var \Laminas\Db\Metadata\Metadata
-     */
-    protected $_metadata;
+    protected \Laminas\Db\Metadata\Metadata $_metadata;
 
-    /**
-     * @var array
-     */
-    protected $_config;
+    protected array $_config;
 
     public function __construct(array $config) {
         if (!isset($config['db'])) {
             throw new \Exception('Missing DB config');
         }
+
         $this->_db = new Adapter($config['db']);
         $this->_sql = new \Laminas\Db\Sql\Sql($this->_db);
         $this->_metadata = new \Laminas\Db\Metadata\Metadata($this->_db);
@@ -73,47 +62,49 @@ class Db implements AdapterInterface
      * @param $xhbId
      * @return bool TRUE if database has been created/updated, FALSE otherwise
      */
-    public function importXhbData($xhbData, $xhbId, $force = false) {
+    public function importXhbData($xhbData, $xhbId, $force = false): bool {
         if (!$this->xhbExists($xhbId) || $force) {
             $this->_createSchema()
                 ->_importXhbData($xhbData, $xhbId);
             return true;
         }
+
         return false;
     }
 
-    public function getConnection() {
+    public function getConnection(): \Laminas\Db\Adapter\Adapter {
         return $this->_db;
     }
 
-    public function xhbExists($xhbId) {
+    public function xhbExists($xhbId): bool {
         try {
             $select = $this->_sql->select(Xhb::MAIN_TABLE);
-            $select->columns(array('id'))
-                ->where(array('id' => $xhbId));
+            $select->columns(['id'])
+                ->where(['id' => $xhbId]);
             $result = $this->_db->query($this->_sql->buildSqlString($select), Adapter::QUERY_MODE_EXECUTE);
         }
-        catch (\RuntimeException $e) {
+        catch (\RuntimeException) {
             return false;
         }
+
         return count($result) > 0;
     }
 
-    protected function _createSchema() {
+    protected function _createSchema(): self {
         $this->_createTables();
         return $this;
     }
 
-    protected function _destroySchema($silent = false) {
+    protected function _destroySchema($silent = false): self {
         $this->_destroyTables($silent);
         return $this;
     }
 
-    protected function _importXhbData($data, $xhbId) {
+    protected function _importXhbData(array $data, $xhbId): self {
         try {
             // First delete existing XHB unconditionally
             $deleteStmt = new Delete(Xhb::MAIN_TABLE);
-            $deleteStmt->where(array('id' => $xhbId));
+            $deleteStmt->where(['id' => $xhbId]);
             $this->_db->query($this->_sql->buildSqlString($deleteStmt), Adapter::QUERY_MODE_EXECUTE);
 
             $this->_insertInto(Account::MAIN_TABLE, $this->_addAdditionalFields($data['accounts'], $xhbId), null);
@@ -126,31 +117,33 @@ class Db implements AdapterInterface
 
             // Insert XHB row at the end, so that in case something's gone wrong before, next request may try to
             // create schema and insert data again, without risking to use invalid or incomplete data instead
-            $xhbTableData = array_merge($data['properties'], array(
+            $xhbTableData = array_merge($data['properties'], [
                 'id'         => $xhbId,
                 'updated_at' => time()
-            ));
-            $this->_insertInto(Xhb::MAIN_TABLE, array($xhbTableData));
+            ]);
+            $this->_insertInto(Xhb::MAIN_TABLE, [$xhbTableData]);
         }
-        catch (\Exception $e) {
-            setlocale(LC_ALL, $oldLocale);
+        catch (\Throwable $exception) {
+            Log::instance()->logException($exception, LOG_ERR);
             // If something's gone wrong, destroy everything
             $this->_destroySchema(true);
-            throw $e;
+            throw $exception;
         }
+
         return $this;
     }
 
-    protected function _addAdditionalFields(array &$data, $xhbId, $xhbIdColName = 'xhb_id') {
+    protected function _addAdditionalFields(array &$data, $xhbId, $xhbIdColName = 'xhb_id'): array {
         $now = time();
         foreach($data as &$row) {
             $row[$xhbIdColName] = $xhbId;
             $row['updated_at'] = $now;
         }
+
         return $data;
     }
 
-    protected function _prepareOperationsData($xhbData, $xhbId) {
+    protected function _prepareOperationsData(array $xhbData, $xhbId): array {
         $recordsByKey = [];
         foreach ($xhbData as $type => $records) {
             if (is_array($records)) {
@@ -164,20 +157,24 @@ class Db implements AdapterInterface
 
         foreach ($xhbData['operations'] as &$operation) {
             $searchText = [
-                $operation['info'],
-                $operation['wording'],
-                $operation['smem'],
-                $operation['tags'],
+                $operation['info'] ?? null,
+                $operation['wording'] ?? null,
+                $operation['smem'] ?? null,
+                $operation['tags'] ?? null,
             ];
-            if (!empty($operation['category'])) {
+            if (!empty($operation['category']) && !empty($recordsByKey['categories'][$operation['category']])) {
                 $searchText[] = $recordsByKey['categories'][$operation['category']]['name'];
             }
-            if (!empty($operation['payee'])) {
+
+            if (!empty($operation['payee']) && !empty($recordsByKey['payees'][$operation['payee']])) {
                 $searchText[] = $recordsByKey['payees'][$operation['payee']]['name'];
             }
+
             if (!empty($operation['scat'])) {
                 foreach (explode('||', $operation['scat']) as $categoryKey) {
-                    $searchText[] = $recordsByKey['categories'][$categoryKey]['name'];
+                    if (!empty($recordsByKey['categories'][$categoryKey])) {
+                        $searchText[] = $recordsByKey['categories'][$categoryKey]['name'];
+                    }
                 }
             }
 
@@ -188,18 +185,19 @@ class Db implements AdapterInterface
     }
 
     protected function _insertOperationSplitAmount($operationData, $xhbId) {
-        $data = array();
+        $data = [];
         foreach($operationData as $opData) {
             if (isset($opData['split_amount'])) {
                 foreach($opData['split_amount'] as $saData) {
-                    $data[] = array_merge($saData, array(
+                    $data[] = array_merge($saData, [
                         'xhb_id'      => $xhbId,
                         'operation_id' => $opData['id']
-                    ));
+                    ]);
                 }
             }
         }
-        $this->_insertInto(Operation::SPLIT_AMOUNT_TABLE, $data, null, true);
+
+        $this->_insertInto(Operation::SPLIT_AMOUNT_TABLE, $data, null);
     }
 
     protected function _createTables() {
@@ -226,6 +224,7 @@ class Db implements AdapterInterface
             $createStmt->addColumn(new Integer('xhb_id', false))
                 ->addColumn(new Integer('key', false))
                 ->addColumn(new Integer('pos', true))
+                ->addColumn(new Integer('flags', true))
                 ->addColumn(new Integer('type', true))
                 ->addColumn(new Varchar('name', 128))
                 ->addColumn(new Varchar('number', 128, true))
@@ -233,7 +232,7 @@ class Db implements AdapterInterface
                 ->addColumn(new Floating('initial', 10, 4, false, 0))
                 ->addColumn(new Floating('minimum', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
-                ->addConstraint(new PrimaryKey(array('xhb_id', 'key')))
+                ->addConstraint(new PrimaryKey(['xhb_id', 'key']))
                 ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
             ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
@@ -251,7 +250,7 @@ class Db implements AdapterInterface
                 ->addColumn(new Integer('flags', true))
                 ->addColumn(new Floating('b0', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
-                ->addConstraint(new PrimaryKey(array('xhb_id', 'key')))
+                ->addConstraint(new PrimaryKey(['xhb_id', 'key']))
                 ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
             ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
@@ -266,7 +265,7 @@ class Db implements AdapterInterface
                 ->addColumn(new Integer('key', false))
                 ->addColumn(new Varchar('name', 128))
                 ->addColumn(new Timestamp('updated_at'))
-                ->addConstraint(new PrimaryKey(array('xhb_id', 'key')))
+                ->addConstraint(new PrimaryKey(['xhb_id', 'key']))
                 ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
             ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
@@ -278,7 +277,7 @@ class Db implements AdapterInterface
         if (!in_array($table, $existingTables)) {
             $createStmt = new CreateTable($table);
             $createStmt->addColumn(new Integer('xhb_id', false))
-                ->addColumn(new Integer('id', false, null, array('auto_increment' => true)))
+                ->addColumn(new Integer('id', false, null, ['auto_increment' => true]))
                 ->addColumn(new Date('date'))
                 ->addColumn(new Integer('account', false))
                 ->addColumn(new Varchar('info', 128, true))
@@ -299,7 +298,7 @@ class Db implements AdapterInterface
                 ->addColumn(new Floating('general_balance', 10, 4, false, 0))
                 ->addColumn(new Timestamp('updated_at'))
                 ->addColumn(new Text('text_search'))
-                ->addConstraint(new PrimaryKey(array('xhb_id', 'id')))
+                ->addConstraint(new PrimaryKey(['xhb_id', 'id']))
                 ->addConstraint(new ForeignKey('FK_XHB_ID', 'xhb_id', Xhb::MAIN_TABLE, 'id', 'CASCADE', 'CASCADE'))
             ;
             $this->_db->query($this->_sql->buildSqlString($createStmt), Adapter::QUERY_MODE_EXECUTE);
@@ -341,9 +340,10 @@ class Db implements AdapterInterface
     }
 
     protected function _insertInto($table, array $data, $columns = null) {
-        if (!$data) {
+        if ($data === []) {
             return;
         }
+
         if ($columns === null) {
             $columns = $this->_metadata->getColumnNames($table);
         }
@@ -352,9 +352,11 @@ class Db implements AdapterInterface
         if ($columns !== null) {
             $insertStmt->columns($columns);
         }
+
         foreach ($data as $row) {
             $insertStmt->values($row, InsertMultiple::VALUES_MERGE);
         }
+
         $sql = $this->_sql->buildSqlString($insertStmt);
         $this->_db->query($sql, Adapter::QUERY_MODE_EXECUTE);
     }
@@ -363,7 +365,7 @@ class Db implements AdapterInterface
         foreach ($columns as $column) {
             $this->_db->query(sprintf(
                 'CREATE INDEX %s ON %s(%s)',
-                "{$table}_{$column}_IDX",
+                sprintf('%s_%s_IDX', $table, $column),
                 $table,
                 is_array($column) ? implode(', ', $column) : $column
             ), Adapter::QUERY_MODE_EXECUTE);

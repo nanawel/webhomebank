@@ -16,9 +16,9 @@ class Grid extends \Prefab
      * @param string $gridPath
      * @param array $params
      */
-    public function getOrderLinkUrl(array $currentOrder, array $newOrder, $gridPath = null, $params = array()) {
-        $orderParam = isset($params['order_param']) ? $params['order_param'] : 'order';
-        $dirParam = isset($params['dir_param']) ? $params['dir_param'] : 'dir';
+    public function getOrderLinkUrl(array $currentOrder, array $newOrder, $gridPath = null, $params = []): string {
+        $orderParam = $params['order_param'] ?? 'order';
+        $dirParam = $params['dir_param'] ?? 'dir';
         if ($gridPath === null) {
             $gridPath = '*/*/*';
         }
@@ -29,7 +29,7 @@ class Grid extends \Prefab
         $newOrderDir = current($newOrder);
 
         if ($newOrderDir === null) {
-            if ($currentOrderKey == $newOrderKey) {
+            if ($currentOrderKey === $newOrderKey) {
                 $newOrderDir = $currentOrderDir == SORT_ASC ? SORT_DESC : SORT_ASC;
             }
             else {
@@ -42,6 +42,6 @@ class Grid extends \Prefab
         $query[$orderParam] = $newOrderKey;
         $query[$dirParam] = $newOrderDir;
 
-        return Url::instance()->getUrl($gridPath, array('_query' => $query));
+        return Url::instance()->getUrl($gridPath, ['_query' => $query]);
     }
 } 

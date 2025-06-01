@@ -1,14 +1,12 @@
 <?php
 \app\models\core\Design::instance()
-    ->addCss(array(
-        'app.css',
-    ))
-    ->addJs(array(
-        'foundation/foundation.js',
-        'foundation/foundation.topbar.js',
-    ), 'footer')
-    ->addInlineJs(
-        "jQuery(document).foundation();",
+    ->addCss('dist/app.css')
+    ->addInlineJsModule(
+        <<<EOJS
+            window.addEventListener('DOMContentLoaded', function() {
+                jQuery(document).foundation();
+            });
+        EOJS,
         'footer',
         1000
     )

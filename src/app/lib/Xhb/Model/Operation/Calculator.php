@@ -33,14 +33,15 @@ class Calculator extends XhbModel
     /**
      * @var array
      */
-    protected $_cache = array();
+    protected $_cache = [];
 
-    public function __construct(Xhb $xhb, $account = null, array $data = array()) {
+    public function __construct(Xhb $xhb, $account = null, array $data = []) {
         parent::__construct($data);
         $this->setXhb($xhb);
         if (is_numeric($account)) {
             $account = $xhb->getAccount($account);
         }
+
         $this->_account = $account;
     }
 
@@ -70,7 +71,7 @@ class Calculator extends XhbModel
         return $this->getCurrentBalance(Constants::BALANCE_TYPE_FUTURE);
     }
 
-    public function getCurrentBalance($type, $force = false, $referenceDate = 'now') {
+    public function getCurrentBalance(string $type, $force = false, $referenceDate = 'now') {
         if ($force || !isset($this->_cache['balance_' . $type])) {
 //            $txnTypeFilter = self::getBalanceStatuses($type);
             $referenceTime = Date::dateToJd($this->getBalanceReferenceTime($type, $referenceDate));
@@ -85,10 +86,11 @@ class Calculator extends XhbModel
             $balance += $this->getResource()->getCurrentBalance($this, $type, $referenceTime);
             $this->_cache['balance_' . $type] = $balance;
         }
+
         return $this->_cache['balance_' . $type];
     }
 
-    public function getFutureDate($referenceDate = 'now') {
+    public function getFutureDate($referenceDate = 'now'): \DateTime {
         $d = new \DateTime($referenceDate);
         $d->setTimestamp(mktime(0, 0, 0, $d->format('m') + 1, $this->getXhb()->getAutoWeekday()));
         return $d;
@@ -98,10 +100,12 @@ class Calculator extends XhbModel
         if ($account = $this->getAccount()) {
             return $account->getInitial();
         }
+
         $generalInitial = 0.0;
         foreach($this->getXhb()->getAccountCollection() as $account) {
             $generalInitial += $account->getInitial();
         }
+
         return $generalInitial;
     }
 
@@ -109,47 +113,52 @@ class Calculator extends XhbModel
      * @param \DatePeriod $period
      * @return array
      */
-    public function getBalanceByDate($period) {
-        $balance = array();
+    public function getBalanceByDate(\DatePeriod $period): array {
+        $balance = [];
         $it = $this->getOperationCollection()->getIterator();
+        $periodIt = $period->getIterator();
 
         $currentOperation = $it->current();
-        $firstKey = current($period)->format(self::DATE_FORMAT);
-        $currentBalance = $previousBalance = $this->getAccount()->getInitial();
-        foreach ($period as $date) {
+        $firstKey = $periodIt->current()->format(self::DATE_FORMAT);
+        $currentBalance = $this->getAccount()->getInitial();
+        $previousBalance = $currentBalance;
+        foreach ($periodIt as $date) {
             $arrayKey = $date->format(self::DATE_FORMAT);
-            /* @var $date \DateTime */
+            /** @var $date \DateTime */
             while ($currentOperation->getDateModel() <= $date) {
                 $currentBalance = $currentOperation->getAccountBalance();
-                $balance[$arrayKey] = array(
+                $balance[$arrayKey] = [
                     'date'    => $date,
                     'balance' => $currentBalance,
-                );
+                ];
 
                 // Set initial balance if needed
                 if ($balance[$firstKey] === null && $currentOperation->getDateModel() >= $date) {
-                    $balance[$firstKey] = array(
+                    $balance[$firstKey] = [
                         'date'    => $date,
                         'balance' => $previousBalance,
-                    );
+                    ];
                 }
+
                 $previousBalance = $currentOperation->getAccountBalance();
 
                 $it->next();
                 if (!$it->valid()) {
                     break;
                 }
+
                 $currentOperation = $it->current();
             }
 
             // Report current balance on dates with no operations
             if (!isset($balance[$arrayKey])) {
-                $balance[$arrayKey] = array(
+                $balance[$arrayKey] = [
                     'date'    => $date,
                     'balance' => $currentBalance,
-                );
+                ];
             }
         }
+
         return $balance;
     }
 
@@ -157,32 +166,32 @@ class Calculator extends XhbModel
      *
      * @return int[]
      */
-    public static function getReconciliedStatuses() {
-        return array(Constants::TXN_STATUS_RECONCILED);
+    public static function getReconciliedStatuses(): array {
+        return [Constants::TXN_STATUS_RECONCILED];
     }
 
     /**
      *
      * @return int[]
      */
-    public static function getUnreconciliedStatuses() {
-        return array_diff(Constants::$TXN_STATUS, array(Constants::TXN_STATUS_RECONCILED, Constants::TXN_STATUS_VOID));
+    public static function getUnreconciliedStatuses(): array {
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_RECONCILED, Constants::TXN_STATUS_VOID]);
     }
 
     /**
      *
      * @return int[]
      */
-    public static function getClearedStatuses() {
-        return array(Constants::TXN_STATUS_CLEARED);
+    public static function getClearedStatuses(): array {
+        return [Constants::TXN_STATUS_CLEARED];
     }
 
     /**
      *
      * @return int[]
      */
-    public static function getUnclearedStatuses() {
-        return array_diff(Constants::$TXN_STATUS, array(Constants::TXN_STATUS_CLEARED, Constants::TXN_STATUS_VOID));
+    public static function getUnclearedStatuses(): array {
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_CLEARED, Constants::TXN_STATUS_VOID]);
     }
 
     /**
@@ -197,23 +206,23 @@ class Calculator extends XhbModel
      *
      * @return int[]
      */
-    public static function getBalanceTodayStatuses() {
-        return array_diff(Constants::$TXN_STATUS, array(Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID));
+    public static function getBalanceTodayStatuses(): array {
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID]);
     }
 
     /**
      *
      * @return int[]
      */
-    public static function getBalanceFutureStatuses() {
-        return array_diff(Constants::$TXN_STATUS, array(Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID));
+    public static function getBalanceFutureStatuses(): array {
+        return array_diff(Constants::TXN_STATUS, [Constants::TXN_STATUS_REMIND, Constants::TXN_STATUS_VOID]);
     }
 
     /**
      *
      * @return int[]
      */
-    public function getBalanceStatuses($type) {
+    public function getBalanceStatuses($type): ?array {
         $statuses = null;
         switch($type) {
             case Constants::BALANCE_TYPE_BANK:
@@ -227,22 +236,17 @@ class Calculator extends XhbModel
             case Constants::BALANCE_TYPE_FUTURE:
                 $statuses = self::getBalanceFutureStatuses();
         }
+
         return $statuses;
     }
 
     public function getBalanceReferenceTime($type, $referenceDate = 'now') {
         $referenceTime = null;
-        switch($type) {
-            case Constants::BALANCE_TYPE_FUTURE:
-                $referenceTime = $this->getFutureDate($referenceDate);
-                break;
+        $referenceTime = match ($type) {
+            Constants::BALANCE_TYPE_FUTURE => $this->getFutureDate($referenceDate),
+            default => new \DateTime($referenceDate),
+        };
 
-            case Constants::BALANCE_TYPE_BANK:
-            case Constants::BALANCE_TYPE_TODAY:
-            default:
-                $referenceTime = new \DateTime($referenceDate);
-                break;
-        }
         $referenceTime->setTime(23, 59, 59);
         return $referenceTime;
     }

@@ -18,6 +18,7 @@ use app\models\whb\Xhb\Adapter as XhbAdapter;
 
 class InitController extends WhbController
 {
+    #[\ReturnTypeWillChange]
     protected function _beforeRoute($fw, $args = null) {
         AbstractController::_beforeRoute($fw, $args);
         $this->_viewInstance = View::instance();
@@ -25,16 +26,18 @@ class InitController extends WhbController
         $this->setPageTitle($this->__('WebHomeBank'));
 
         Design::instance()
-            ->addJs('jquery/jquery-2.1.4.min.js', 'header', -100)
-            ->addJs('whb/i18n.js')
-            ->addInlineJs("var LANGUAGE='{$fw->get('LANGUAGE')}';\nvar CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';\nvar i18n = new I18n(LANGUAGE, CURRENCY);");
+            ->addInlineJs(<<<EOJS
+                window.LANGUAGE='{$fw->get('LANGUAGE')}';
+                window.CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';
+            EOJS);
+        Design::instance()->addJsModule('dist/app.bundle.js');
 
         $this->canCacheOutput(false);
         $this->_setupLayoutBlocks();
     }
 
 
-    protected function _setupLayoutBlocks() {
+    protected function _setupLayoutBlocks(): self {
         $this->getView()
             ->setBlockTemplate('head', 'page/head.phtml')
             ->setBlockTemplate('footer', 'page/footer.phtml')
@@ -44,38 +47,39 @@ class InitController extends WhbController
         return $this;
     }
 
-    public function loadAction() {
+    public function loadAction(): void {
         $this->getView()
             ->setBlockTemplate('content', 'common/whbload.phtml')
             ->setData('AJAX_PROGRESS_URL', $this->getUrl('*/doLoad'))
             ->setData('REDIRECT_URL', $this->_getReferer() ?: $this->getUrl('/'));
     }
 
-    public function doLoadAction() {
-        $this->setPageConfig(array(
+    public function doLoadAction(): void {
+        $this->setPageConfig([
             'template' => 'data/json.phtml',
             'mime'     => 'application/json'
-        ));
+        ]);
         try {
             $config = Main::app()->getConfig('XHB');
-            $adapter = new XhbAdapter($this->_fw, $this->getXhbSession()->get('xhb_file'), $config);
+            $adapter = new XhbAdapter($this->fw, $this->getXhbSession()->get('xhb_file'), $config);
             $xhb = $adapter->loadXhb(true);
             $this->getSession()
                 ->addMessage(I18n::instance()->tr('XHB imported to database successfully!'), Session::MESSAGE_INFO);
 
-            $this->getView()->setData('DATA', array(
+            $this->getView()->setData('DATA', [
                 'status'  => 'success',
                 'message' => ''
-            ));
+            ]);
         }
-        catch(\Exception $e) {
-            $response = array(
+        catch(\Exception $exception) {
+            $response = [
                 'status'  => 'error',
-                'message' => $e->getMessage()
-            );
-            if ($this->_fw->get('DEBUG') > 0) {
-                $response['trace'] = $e->getTraceAsString();
+                'message' => $exception->getMessage()
+            ];
+            if ($this->fw->get('DEBUG') > 0) {
+                $response['trace'] = $exception->getTraceAsString();
             }
+
             $this->getView()->setData('DATA', $response);
         }
     }

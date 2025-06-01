@@ -6,56 +6,56 @@ $xhb = $this->getModel();
 <table class="data-table accounts-table">
     <thead>
         <tr>
-            <th><?php echo $this->__('Account') ?></th>
-            <th><?php echo $this->__('Bank') ?></th>
-            <th><?php echo $this->__('Today') ?></th>
-            <th><?php echo $this->__('Future') ?></th>
+            <th><?= $this->__('Account') ?></th>
+            <th><?= $this->__('Bank') ?></th>
+            <th><?= $this->__('Today') ?></th>
+            <th><?= $this->__('Future') ?></th>
         </tr>
     </thead>
     <tbody>
-		<?php if (empty($GRID_DATA)): ?>
-			<tr class="account">
-				<td colspan="10"><?php echo $this->__('No account found') ?></td>
-			</tr>
-		<?php else: ?>
-			<?php foreach($GRID_DATA as $type => $accountTypeData): ?>
-				<tr class="account-type">
-					<td colspan="4"><?php echo $this->__('ACCOUNT_TYPE.' . $type); ?></td>
-				</tr>
-				<?php foreach($accountTypeData as $accountData): ?>
-					<?php $account = $accountData['account']; ?>
-					<tr class="account">
-						<td class="row-title account-name">
-							<a href="<?php echo $this->getUrl('account_operation/index', array('account_id' => $account->getId())) ?>"><?php echo $account->getName() ?></a>
-						</td>
-						<td class="balance bank-balance"><?php echo $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_BANK], true) ?></td>
-						<td class="balance today-balance"><?php echo $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_TODAY], true) ?></td>
-						<td class="balance future-balance"><?php echo $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_FUTURE], true) ?></td>
-					</tr>
-				<?php endforeach; ?>
+        <?php if (empty($GRID_DATA)): ?>
+            <tr class="account">
+                <td colspan="10"><?= $this->__('No account found') ?></td>
+            </tr>
+        <?php else: ?>
+            <?php foreach($GRID_DATA as $type => $accountTypeData): ?>
+                <tr class="account-type">
+                    <td colspan="4"><?= $this->__('ACCOUNT_TYPE.' . $type); ?></td>
+                </tr>
+                <?php foreach($accountTypeData as $accountData): ?>
+                    <?php $account = $accountData['account']; ?>
+                    <tr class="account">
+                        <td class="row-title account-name">
+                            <a href="<?= $this->getUrl('account_operation/index', ['account_id' => $account->getId()]) ?>"><?= $account->getName() ?></a>
+                        </td>
+                        <td class="balance bank-balance"><?= $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_BANK], true) ?></td>
+                        <td class="balance today-balance"><?= $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_TODAY], true) ?></td>
+                        <td class="balance future-balance"><?= $this->i18n()->currency($accountData['balances'][Constants::BALANCE_TYPE_FUTURE], true) ?></td>
+                    </tr>
+                <?php endforeach; ?>
 
-				<tr class="total account-type-total">
-					<td class="row-title"><?php echo $this->__('Total'); ?></td>
-					<td class="balance bank-balance"><?php echo $this->i18n()->currency($TOTAL_DATA[$type][Constants::BALANCE_TYPE_BANK], true) ?></td>
-					<td class="balance today-balance"><?php echo $this->i18n()->currency($TOTAL_DATA[$type][Constants::BALANCE_TYPE_TODAY], true) ?></td>
-					<td class="balance future-balance"><?php echo $this->i18n()->currency($TOTAL_DATA[$type][Constants::BALANCE_TYPE_FUTURE], true) ?></td>
-				</tr>
-			<?php endforeach; ?>
+                <tr class="total account-type-total">
+                    <td class="row-title"><?= $this->__('Total'); ?></td>
+                    <td class="balance bank-balance"><?= $this->i18n()->currency($TOTAL_DATA[$type][Constants::BALANCE_TYPE_BANK], true) ?></td>
+                    <td class="balance today-balance"><?= $this->i18n()->currency($TOTAL_DATA[$type][Constants::BALANCE_TYPE_TODAY], true) ?></td>
+                    <td class="balance future-balance"><?= $this->i18n()->currency($TOTAL_DATA[$type][Constants::BALANCE_TYPE_FUTURE], true) ?></td>
+                </tr>
+            <?php endforeach; ?>
 
-			<tr class="separator">
-				<td colspan="4">&nbsp;</td>
-			</tr>
+            <tr class="separator">
+                <td colspan="4">&nbsp;</td>
+            </tr>
 
-			<tr class="total grand-total">
-				<td class="row-title"><?php echo $this->__('Grand Total'); ?></td>
-				<td class="balance bank-balance"><?php echo $this->i18n()->currency($TOTAL_DATA['grand_total'][Constants::BALANCE_TYPE_BANK], true) ?></td>
-				<td class="balance today-balance"><?php echo $this->i18n()->currency($TOTAL_DATA['grand_total'][Constants::BALANCE_TYPE_TODAY], true) ?></td>
-				<td class="balance future-balance"><?php echo $this->i18n()->currency($TOTAL_DATA['grand_total'][Constants::BALANCE_TYPE_FUTURE], true) ?></td>
-			</tr>
-		<?php endif; ?>
+            <tr class="total grand-total">
+                <td class="row-title"><?= $this->__('Grand Total'); ?></td>
+                <td class="balance bank-balance"><?= $this->i18n()->currency($TOTAL_DATA['grand_total'][Constants::BALANCE_TYPE_BANK], true) ?></td>
+                <td class="balance today-balance"><?= $this->i18n()->currency($TOTAL_DATA['grand_total'][Constants::BALANCE_TYPE_TODAY], true) ?></td>
+                <td class="balance future-balance"><?= $this->i18n()->currency($TOTAL_DATA['grand_total'][Constants::BALANCE_TYPE_FUTURE], true) ?></td>
+            </tr>
+        <?php endif; ?>
     </tbody>
 </table>
 
 <div class="charts-container">
-	<?php echo $this->renderBlock('charts'); ?>
+    <?= $this->renderBlock('charts'); ?>
 </div>

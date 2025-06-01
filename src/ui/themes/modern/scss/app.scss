@@ -1,26 +1,35 @@
-$topbar-bg: #8BB0D7;
-$topbar-link-bg: $topbar-bg;
-$topbar-link-bg-hover: darken($topbar-bg, 20%);
-$topbar-dropdown-bg: $topbar-bg;
-$topbar-dropdown-link-bg: $topbar-bg;
-$topbar-dropdown-link-bg-hover: $topbar-link-bg-hover;
-$primary-color: #3465a4;
-$secondary-color: #edd400;
-$body-bg: #eeeeee;
-$table-row-hover-color: rgba(238, 213, 6, 0.35);
+@import 'settings';
 
-@import "../node_modules/foundation-sites/scss/foundation";
+@import 'foundation-sites/scss/foundation';
+
+@include foundation-everything;
+
+@include foundation-button;
+@include foundation-button-group;
+@include foundation-menu;
+@include foundation-menu-icon;
+@include foundation-accordion-menu;
+@include foundation-drilldown-menu;
+@include foundation-dropdown-menu;
+@include foundation-flex-classes;
+@include foundation-flex-grid;
+@include foundation-table;
+@include foundation-sticky;
+@include foundation-title-bar;
+@include foundation-top-bar;
 
 /*****************************************************************************/
 /*                     HTML ELEMENTS                                         */
 /*****************************************************************************/
 
 table {
-    width: 100%;
+    @include table-hover;
 
-    tbody tr:hover {
-        background-color: $table-row-hover-color;
-    }
+    background-color: white;
+    width: 100%;
+    border: solid 1px #DDDDDD;
+    border-spacing: 2px;
+    border-collapse: separate;
 }
 
 select {
@@ -47,21 +56,39 @@ span.mono {
 }
 
 .header-container {
-    @extend .contain-to-grid;
+    @include breakpoint(medium) {
+        a {
+            color: white !important;
+            font-weight: normal;
+        }
+    }
+    .title-bar {
+        background-color: $topbar-background;
 
-    .top-bar {
-        .title-area {
-            img {
-                margin-left: 10px;
-            }
-            h1 {
-                display: inline-block;
-                a { font-weight: normal; }
+        .logo-container {
+            width: 100%;
+
+            a {
+                color: white !important;
+                float: right;
             }
         }
+    }
 
-        .nav-menu {
-            li.level-1 > a::before {
+    .top-bar {
+        @include breakpoint(medium) {
+            padding: 0;
+        }
+
+        li:hover {
+           background-color: $primary-color;
+        }
+    //
+        .top-bar-left > ul > li,
+        .top-bar-right > ul > li {
+    //        padding: 0.1rem 1rem;
+
+            > a::before {
                 content: " ";
                 width: 24px;
                 height: 24px;
@@ -74,16 +101,16 @@ span.mono {
                 background-repeat: no-repeat;
             }
 
-            li.account-operations-links > a::before {
+            &.account-operations-links > a::before {
                 background-position: 0px -3px;
                 background-image: url(../images/hicolor_actions_24x24_hb-ope-show.png);
             }
 
-            li.vehiclecost-link > a::before {
+            &.vehiclecost-link > a::before {
                 background-image: url(../images/hicolor_actions_24x24_hb-rep-vehicle.png);
             }
 
-            li.settings-links > a::before {
+            &.settings-links > a::before {
                 background-image: url(../images/categories_24x24_gtk-preferences.png);
             }
         }
@@ -91,7 +118,7 @@ span.mono {
 }
 
 .footer {
-    background-color: $topbar-bg;
+    background-color: $topbar-background;
     color: #fff;
     text-align: center;
     margin-top: 30px;
@@ -108,17 +135,18 @@ span.mono {
     margin-top: 0.5em;
 
     .message-info {
-        @include alert($info-color, $alert-radius);
+        @include callout($info-color);
     }
     .message-warn {
-        @include alert($warning-color, $alert-radius);
+        @include callout($warning-color);
     }
     .message-error {
-        @include alert($alert-color, $alert-radius);
+        @include callout($alert-color);
     }
 
     > div {
         margin-bottom: 0.5em !important;
+        flex-grow: 1;
     }
 }
 
@@ -136,39 +164,29 @@ span.mono {
 }
 
 .toolbar {
-    @include grid-row();
-
     form {
         margin-bottom: 0;
 
         > ul {
+            @include flex-grid-row();
+            @extend .align-center-middle;
             margin: 0;
 
             > li {
-                margin-top: .2em;
-                display: inline-block;
+                @include flex-grid-column();
+                list-style: none;
 
                 &.filter-container {
                     .filter-label {
                         display: inline-block;
-                        margin-right: .4em;
                     }
-                    .filter-input {
-                        width: auto;
-                        margin-right: 2em;
-                    }
-                }
-
-                &:last-child {
-                    float: right;
-                    margin-right: 0;
                 }
             }
         }
     }
 
     button {
-        @include button($padding:$button-tny);
+        @include button();
     }
 }
 
@@ -191,10 +209,16 @@ input[type='text'].search {
     margin: 0;
 }
 
-.chart {
-    @include grid-row();
+.charts-container {
+    @include flex-grid-column($columns:12);
+}
+
+.chart > .chart-body {
+    @include flex-grid-row();
 
     .canvas-container {
+        @include flex-grid-column($columns:8);
+
         position: relative;
         min-height: 300px;
         text-align: center;
@@ -219,20 +243,15 @@ input[type='text'].search {
 
     .toolbar {
         .filter-label {
-            @include prefix-postfix-base();
-            @include prefix();
-            @include grid-column(
-                $columns:4,
-                $float:left
-            );
+            @include flex-grid-column();
         }
         .filter-input .custom-dropdown-area {
-            @include grid-column($columns:8);
+            @include flex-grid-column($columns:8);
         }
     }
 
     .legend {
-        @include grid-column($columns:6);
+        @include flex-grid-column($columns:4);
 
         li {
             list-style: none;
@@ -248,11 +267,11 @@ input[type='text'].search {
 
     &.toolbar-right {
         .canvas-container {
-            @include grid-column($columns:6);
+            @include flex-grid-column($columns:6);
         }
 
         .toolbar {
-            @include grid-column($columns:6);
+            @include flex-grid-column($columns:6);
         }
     }
 
@@ -272,10 +291,11 @@ input[type='text'].search {
 /*****************************************************************************/
 
 body.init-load {
-    .content>div {
+    .content > div {
         margin-top: 10%;
         margin-bottom: 10%;
         text-align: center;
+        flex-grow: 1;
     }
 }
 
@@ -300,12 +320,12 @@ td.date, td.currency {
 }
 
 .account-summary {
-    @include grid-row();
     margin-bottom: 1em;
 
     .account-balance-summary {
+        @include flex-grid-row();
         .label-value-group {
-            @include grid-column($columns:4);
+            @include flex-grid-column($columns:4);
 
             > label {
                 line-height: 1.5;
@@ -318,16 +338,44 @@ td.date, td.currency {
 /*                     OPERATIONS                                            */
 /*****************************************************************************/
 
-.account-operation-index #total-balance {
-    float: right;
-    margin: .4em;
+.account-operation-index {
+    .content-header {
+        @include flex-grid-row($size:expand);
+
+        > h1 {
+            @include breakpoint(small) {
+                @include flex-grid-column($columns:12);
+            }
+            @include breakpoint(medium) {
+                @include flex-grid-column($columns:expand);
+            }
+            align-self: start;
+        }
+        > div {
+            @include breakpoint(small) {
+                @include flex-grid-column($columns:12);
+            }
+            @include breakpoint(medium) {
+                @include flex-grid-column($columns:6);
+            }
+            @extend .align-self-bottom;
+        }
+    }
+
+    #total-balance {
+        @include flex-grid-row();
+        @include flex-grid-column($columns:12);
+        text-align: right;
+    }
 }
 
 .operations-table {
-    td.info {
+    td.info,
+    td.status {
         padding-left: 24px;
-        background-position: 2px 50%;
+        background-position: 50% 50%;
         background-repeat: no-repeat;
+        text-align: center;
     }
     tr.paymode-ccard td.info {
         background-image: url(../images/hicolor_status_16x16_pm-ccard.png);
@@ -368,16 +416,9 @@ td.date, td.currency {
     }
 }
 
-
-.status-icon {
-    height: 16px;
-    width: 16px;
-    display: inline-block;
-}
-
-.status-icon.status-0 {
-    background-image: url(..);
-}
+/*.status-icon.status-0 {
+    background-image: url(..?);
+}*/
 .status-icon.status-1 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-cleared.png);
 }
@@ -387,6 +428,6 @@ td.date, td.currency {
 .status-icon.status-3 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-remind.png);
 }
-.status-icon.status-4 {
+/*.status-icon.status-4 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-void.png);
-}
+}*/

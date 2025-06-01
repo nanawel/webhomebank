@@ -13,4 +13,4 @@ services:
         limits:
           # This is the minimum recommended, otherwise XHB loading might silently fail
           # and the message "UNIQUE constraint failed (...)" would show up on the loading screen
-          memory: 256M
+          memory: 512M

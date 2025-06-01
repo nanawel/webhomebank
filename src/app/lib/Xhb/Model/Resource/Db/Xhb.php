@@ -9,7 +9,7 @@ class Xhb extends AbstractModel implements \Xhb\Model\Resource\Iface\Xhb
 {
     const MAIN_TABLE = 'xhb';
 
-    public function __construct(array $params = array()) {
+    public function __construct(array $params = []) {
         parent::__construct($params);
         $this->_init('id', self::MAIN_TABLE);
     }
@@ -50,7 +50,7 @@ class Xhb extends AbstractModel implements \Xhb\Model\Resource\Iface\Xhb
         return  $this->getCollectionInstance('Payee');
     }
 
-    public function getCollectionInstance($modelClass, $params = array()) {
+    public function getCollectionInstance($modelClass, $params = []) {
         $params = array_merge($this->getData(), $params);
         return $this->getXhb()->getCollectionInstance($modelClass, $params);
     }

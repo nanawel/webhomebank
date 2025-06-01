@@ -17,7 +17,7 @@ use Xhb\Util\MagicObject;
  */
 interface Model
 {
-    public function __construct(array $params = array());
+    public function __construct(array $params = []);
 
     public function load(MagicObject $object, $id);
 

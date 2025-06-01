@@ -1,5 +1,5 @@
 <?php
-return array(
+return [
     'Account'     => 'Compte',
     'Bank'        => 'Banque',
     'Today'       => "Aujourd'hui",
@@ -114,4 +114,4 @@ return array(
 
     'Page rendered in {0} msecs{2} / Memory usage {1} Kibytes' => 'Page générée en {0} ms{2} / Mémoire utilisée {1} Kio',
     '{0} {1} - Powered by {2} {3}' => '{0} {1} - Propulsé par {2} {3}',
-);
+];

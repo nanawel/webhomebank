@@ -1,4 +1,4 @@
 <?php
 /* @var $this \app\models\core\View */
 ?>
-<?php echo $BALANCE_REPORT_CHART->toHtml() ?>
+<?= isset($BALANCE_REPORT_CHART) ? $BALANCE_REPORT_CHART->toHtml() : '' ?>

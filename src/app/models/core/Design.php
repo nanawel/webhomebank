@@ -11,27 +11,31 @@ namespace app\models\core;
 class Design extends \Prefab
 {
     const DEFAULT_THEME = 'default';
+
     const DEFAULT_THEMES_DIR    = 'ui/themes/';
 
     protected $_themesDir = null;
+
     protected $_themes = null;
 
     protected $_bodyClass = '';
-    protected $_externals = array(
-        'header' => array(),
-        'footer' => array()
-    );
 
-    public function init() {
+    protected $_externals = [
+        'header' => [],
+        'footer' => []
+    ];
+
+    public function init(): void {
         $this->_themesDir = Main::app()->getConfig('THEMES_DIR');
         if (!$this->_themesDir) {
             $this->_themesDir = self::DEFAULT_THEMES_DIR;
         }
+
         $this->_appendThemesToUi()
             ->_runThemeInit();
     }
 
-    protected function _appendThemesToUi() {
+    protected function _appendThemesToUi(): self {
         $fw = \Base::instance();
         if (!$fw->get('UI_ORIG')) {
             $ui = $fw->get('UI');
@@ -40,31 +44,34 @@ class Design extends \Prefab
         else {
             $ui = $fw->get('UI_ORIG');
         }
+
         $uiPaths = explode(';', $ui);
-        $newUiPaths = array();
+        $newUiPaths = [];
         foreach($uiPaths as $uiPath) {
             $newUiPaths[] = $uiPath . DIRECTORY_SEPARATOR . $this->getTheme() . DIRECTORY_SEPARATOR;
             $newUiPaths[] = $uiPath . DIRECTORY_SEPARATOR . self::DEFAULT_THEME . DIRECTORY_SEPARATOR;
         }
+
         $fw->set('UI', implode(';', $newUiPaths));
         return $this;
     }
 
-    protected function _runThemeInit() {
+    protected function _runThemeInit(): self {
         try {
-            \View::instance()->render('_init.php', 'text/html', array());
+            \View::instance()->render('_init.php', 'text/html', []);
         }
-        catch (\Exception $e) {}
+        catch (\Exception) {}
+
         return $this;
     }
 
-    public function addBodyClass($class) {
+    public function addBodyClass($class): void {
         $classes = explode(' ', $this->_bodyClass);
         $classes[] = $class;
         $this->_bodyClass = implode(' ', $classes);
     }
 
-    public function setBodyClass($newClass) {
+    public function setBodyClass($newClass): void {
         $this->_bodyClass = $newClass;
     }
 
@@ -76,7 +83,7 @@ class Design extends \Prefab
         return $this->getImageUrl(Main::app()->getConfig('FAVICON'));
     }
 
-    public function setTheme($theme) {
+    public function setTheme($theme): self {
         Main::app()->setConfig('THEME', $theme);
         return $this;
     }
@@ -88,50 +95,57 @@ class Design extends \Prefab
     public function getAvailableThemes() {
         if (!$this->_themes) {
             $uiDirs = \Base::instance()->get('UI_ORIG') ?: \Base::instance()->get('UI');
-            $themes = array();
+            $themes = [];
             foreach(explode(';', $uiDirs) as $uiDir) {
                 $dir = new \DirectoryIterator($uiDir);
                 foreach ($dir as $themeDir) {
                     if($themeDir->isDot()) {
                         continue;
                     }
+
                     if ($themeDir->isDir()) {
                         $themes[] = $themeDir->getFilename();
                     }
                 }
             }
+
             $this->_themes = array_unique($themes);
         }
+
         return $this->_themes;
     }
 
-    public function getThemePath($path, $theme = null) {
+    public function getThemePath($path, $theme = null): string {
         return $this->_themesDir
-            . ($theme === null ? $this->getTheme() : $theme) . DIRECTORY_SEPARATOR
+            . ($theme ?? $this->getTheme()) . DIRECTORY_SEPARATOR
             . trim($path, DIRECTORY_SEPARATOR);
     }
 
     public function getThemeUrl($path, $fallbackDefault = true) {
-        if (strpos('//', $path) !== false) {    // Full URL (for externals; handles "same protocol as current page" syntax)
+        if (str_contains('//', (string) $path)) {    // Full URL (for externals; handles "same protocol as current page" syntax)
             return $path;
         }
+
         $theme = $this->getTheme();
         if ($fallbackDefault && !file_exists($this->getThemePath($path, $theme))) {
             $theme = self::DEFAULT_THEME;
         }
+
         $themedPath = $this->getThemePath($path, $theme);
-        return Url::instance()->getUrl($themedPath, array('_skip_scheme' => true));
+        return Url::instance()->getUrl($themedPath, ['_skip_scheme' => true]);
     }
 
-    public function getCssUrl($path) {
-        return $this->getThemeUrl('css/' . $path);
+    public function getCssUrl(string $path) {
+        // Prefix has been removed after migrating to Webpack
+        return $this->getThemeUrl($path);
     }
 
-    public function getJsUrl($path) {
-        return $this->getThemeUrl('js/' . $path);
+    public function getJsUrl(string $path) {
+        // Prefix has been removed after migrating to Webpack
+        return $this->getThemeUrl($path);
     }
 
-    public function getImageUrl($path) {
+    public function getImageUrl(string $path) {
         return $this->getThemeUrl('images/' . $path);
     }
 
@@ -140,7 +154,7 @@ class Design extends \Prefab
      * @param string $area
      * @return $this
      */
-    public function addCss($filepath, $area = 'header', $order = 0) {
+    public function addCss($filepath, $area = 'header', $order = 0): self {
         $this->addItems($filepath, 'css', $area, $order);
         return $this;
     }
@@ -150,8 +164,18 @@ class Design extends \Prefab
      * @param string $area
      * @return $this
      */
-    public function addJs($filepath, $area = 'header', $order = 0) {
+    public function addJs($filepath, $area = 'header', $order = 0): self {
         $this->addItems($filepath, 'js', $area, $order);
+        return $this;
+    }
+
+    /**
+     * @param array|string $filepath
+     * @param string $area
+     * @return $this
+     */
+    public function addJsModule($filepath, $area = 'header', $order = 0): self {
+        $this->addItems($filepath, 'js_module', $area, $order);
         return $this;
     }
 
@@ -160,8 +184,18 @@ class Design extends \Prefab
      * @param string $area
      * @return $this
      */
-    public function addInlineJs($content, $area = 'header', $order = 0) {
+    public function addInlineJs($content, $area = 'header', $order = 0): self {
         $this->addItems($content, 'js_inline', $area, $order);
+        return $this;
+    }
+
+    /**
+     * @param array|string $content
+     * @param string $area
+     * @return $this
+     */
+    public function addInlineJsModule($content, $area = 'header', $order = 0): self {
+        $this->addItems($content, 'js_module_inline', $area, $order);
         return $this;
     }
 
@@ -170,26 +204,31 @@ class Design extends \Prefab
      * @param $type
      * @param string $area
      */
-    public function addItems($items, $type, $area = 'header', $order = 0) {
+    public function addItems($items, $type, $area = 'header', $order = 0): self {
         if (!is_array($items)) {
-            $items = array($items);
+            $items = [$items];
         }
+
         if (!isset($this->_externals[$area])) {
-            $this->_externals[$area] = array();
+            $this->_externals[$area] = [];
         }
+
         if (!isset($this->_externals[$area][$type])) {
-            $this->_externals[$area][$type] = array();
+            $this->_externals[$area][$type] = [];
         }
+
         foreach($items as $item) {
             while (isset($this->_externals[$area][$type][$order])) {
                 $order++;
             }
+
             $this->_externals[$area][$type][$order] = $item;
         }
+
         return $this;
     }
 
-    public function renderItems($area = 'header') {
+    public function renderItems($area = 'header'): string {
         $html = '';
         if (isset($this->_externals[$area])) {
             foreach($this->_externals[$area] as $type => $items) {
@@ -199,31 +238,37 @@ class Design extends \Prefab
                 }
             }
         }
+
         return $html;
     }
 
-    protected function _renderItem($item, $type) {
+    protected function _renderItem(string $item, $type): ?string {
         $output = null;
         switch ($type) {
             case 'css':
-                $output = '<link rel="stylesheet" href="' . $this->getCssUrl($item) . '" type="text/css" />';
+                $output = '<link rel="stylesheet" href="' . $this->getCssUrl($item) . '" type="text/css">';
                 break;
             case 'js':
-                $output = '<script src="' . $this->getJsUrl($item) . '" type="application/javascript"></script>';
+            case 'js_module':
+                $typeAttr = $type == 'js_module' ? ' type="module"' : '';
+                $output = sprintf('<script src="%s"%s></script>', $this->getJsUrl($item), $typeAttr);
                 break;
             case 'js_inline':
+            case 'js_module_inline':
+                $typeAttr = $type == 'js_module_inline' ? ' type="module"' : '';
                 $output = <<<"EOJS"
-<script type="application/javascript">
-//<![CDATA[
-$item
-//]]>
-</script>
-EOJS;
+                    <script{$typeAttr}>
+                    //<![CDATA[
+                    {$item}
+                    //]]>
+                    </script>
+                    EOJS;
                 break;
             default:
                 // ?
                 break;
         }
+
         return $output;
     }
 }

@@ -19,6 +19,7 @@ class App extends \app\models\core\App
      * @var \Base
      */
     protected $_fw = null;
+
     protected $_xhbFile = null;
 
     public function __construct() {
@@ -51,14 +52,15 @@ class App extends \app\models\core\App
         if ($theme = $this->getSession()->getTheme()) {
             Design::instance()->setTheme($theme);
         }
+
         Design::instance()->init();
 
         if ($this->_xhbFile == 'data/example.xhb') {
             $this->getSession()->addMessage($i18n->tr(
                 "It seems you're using the default <span class=\"mono\">example.xhb</span> file. " .
-                "You may want to change it by editing <span class=\"mono\">etc/local.ini</span>."),
+                'You may want to change it by editing <span class="mono">etc/local.ini</span>.'),
                 Session::MESSAGE_INFO,
-                array('no_escape' => true)
+                ['no_escape' => true]
             );
         }
     }

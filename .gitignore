@@ -1,7 +1,10 @@
 .idea
 .env
+.sass-cache
 .svn
+dist
 export
+node_modules
 /*.sh
 Dockerfile-*
 docker-compose.override.yml
@@ -15,6 +18,4 @@ src/var/tmp
 src/var/log
 src/var/sessions
 src/tmp
-src/ui/themes/modern/.sass-cache
-src/ui/themes/modern/node_modules
 src/app/tests/var

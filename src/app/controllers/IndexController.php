@@ -15,7 +15,7 @@ class IndexController extends AbstractController
     /**
      * @param \Base $fw
      */
-    public function indexAction() {
+    public function indexAction(): void {
         $this->_reroute('/account/index', true);
     }
 } 

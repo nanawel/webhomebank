@@ -15,6 +15,7 @@ use app\models\whb\View;
 
 class WhbController extends AbstractController
 {
+    #[\ReturnTypeWillChange]
     protected function _beforeRoute($fw, $args = null) {
         parent::_beforeRoute($fw, $args);
         $this->_viewInstance = View::instance();
@@ -24,30 +25,32 @@ class WhbController extends AbstractController
             return false;
         }
 
+        Design::instance()
+            ->addInlineJs(<<<EOJS
+                window.LANGUAGE='{$fw->get('LANGUAGE')}';
+                window.CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';
+            EOJS);
+        Design::instance()->addJsModule('dist/app.bundle.js');
+
         $xhb = $this->getXhbSession()->getModel();
         $this->setPageTitle($xhb->getTitle());
 
-        Design::instance()
-            ->addJs('jquery/jquery-2.1.4.min.js', 'header', -100)
-            ->addJs('whb/i18n.js')
-            ->addInlineJs("var LANGUAGE='{$fw->get('LANGUAGE')}';\nvar CURRENCY='{$this->getXhbSession()->getCurrencyCode()}';\nvar i18n = new I18n(LANGUAGE, CURRENCY);");
-
         $this->_setupLayoutBlocks();
+        return null;
     }
 
-    protected function _setupLayoutBlocks() {
+    protected function _setupLayoutBlocks(): void {
         $this->getView()
             ->setBlockTemplate('head', 'page/head.phtml')
             ->setBlockTemplate('footer', 'page/footer.phtml')
             ->setBlockTemplate('header', 'page/header.phtml')
             ->setBlockTemplate('header.nav', 'page/header/nav.phtml')
-            //->setBlockCachePlaceholder('footer');                                 // Both method calls
-            ->setBlockCachePlaceholder('footer', function() {                       // are equivalent here.
-                    return $this->getView()->renderBlockWithoutCache('footer');     //
-                })                                                                  //
+            //->setBlockCachePlaceholder('footer');                             // Both method calls
+            ->setBlockCachePlaceholder('footer', function() {                   // are equivalent here.
+                return $this->getView()->renderBlockWithoutCache('footer');     //
+            })                                                                  //
             ->setBlockTemplate('messages', 'messages.phtml')
             ->setBlockCachePlaceholder('messages');
-        return $this;
     }
 
     protected function _addCrumbsToTitle(array $elements) {
@@ -64,7 +67,7 @@ class WhbController extends AbstractController
         return Main::app()->getSession('xhb');
     }
 
-    protected function _getRequestCacheKeyInfo()
+    protected function _getRequestCacheKeyInfo(): array
     {
         $cacheKeyInfo = parent::_getRequestCacheKeyInfo();
         $cacheKeyInfo[] = $this->getXhbSession()->getId();

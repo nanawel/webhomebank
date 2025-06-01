@@ -18,7 +18,6 @@ use app\models\core\I18n;
 use app\models\core\Log;
 use app\models\core\Main;
 use app\models\whb\App;
-use app\models\whb\Chart\Scatter;
 use app\models\whb\Form\Element\PeriodFilter;
 use app\models\whb\Form\Element\SearchFilter;
 use app\models\whb\Form\Element\StatusFilter;
@@ -31,14 +30,15 @@ use Xhb\Model\Xhb\DateHelper;
 
 class OperationController extends WhbController
 {
+    #[\ReturnTypeWillChange]
     protected function _beforeRoute($fw, $args = null) {
         parent::_beforeRoute($fw, $args);
 
-        $this->_addCrumbsToTitle(array('Account', 'Operations'));
+        $this->_addCrumbsToTitle(['Account', 'Operations']);
         $this->_initAccount();
     }
 
-    public function _initAccount() {
+    public function _initAccount(): void {
         $accountId = $this->_getRequestParam('account_id');
         $account = $this->getXhbSession()->getModel()->getAccount($accountId);
         if (empty($account)) {
@@ -47,17 +47,18 @@ class OperationController extends WhbController
             $this->_error($message);
             $this->_redirectReferer();
         }
-        $this->_fw->set('current_account', $account);
+
+        $this->fw->set('current_account', $account);
     }
 
     /**
      * @return Account
      */
     public function getAccount() {
-        return $this->_fw->get('current_account');
+        return $this->fw->get('current_account');
     }
 
-    public function indexAction() {
+    public function indexAction(): void {
         $xhb = $this->getXhbSession()->getModel();
         $order = $this->getRequestQuery('order');
         $dir = $this->getRequestQuery('dir');
@@ -65,10 +66,12 @@ class OperationController extends WhbController
             $order = 'date';
             $dir = SORT_ASC;
         }
+
         if (!$dir) {
             $dir = SORT_ASC;
         }
-        $currentOrder = array($order => $dir);
+
+        $currentOrder = [$order => $dir];
 
         $coll = $this->getAccount()->getOperationCollection()
             ->orderBy($order, $dir);
@@ -80,38 +83,36 @@ class OperationController extends WhbController
 
         AccountOperation::applyFiltersOnCollection($coll, $query);
 
-        $filterFormElements = array();
-        $periodFilter = new PeriodFilter($xhb, array(
+        $filterFormElements = [];
+        $periodFilter = new PeriodFilter($xhb, [
             'name'          => 'period',
             'id'            => 'filter-period',
             'value'         => $query['period'],
             'class'         => 'filter-input'
-        ));
+        ]);
         $filterFormElements['period'] = $periodFilter;
-        $typeFilter = new TypeFilter($xhb, array(
+        $typeFilter = new TypeFilter($xhb, [
             'name'          => 'type',
             'id'            => 'filter-type',
-            'value'         => isset($query['type']) ? $query['type'] : null,
+            'value'         => $query['type'] ?? null,
             'class'         => 'filter-input'
-        ));
+        ]);
         $filterFormElements['type'] = $typeFilter;
-        $statusFilter = new StatusFilter($xhb, array(
+        $statusFilter = new StatusFilter($xhb, [
             'name'          => 'status',
             'id'            => 'filter-status',
-            'value'         => isset($query['status']) ? $query['status'] : null,
+            'value'         => $query['status'] ?? null,
             'class'         => 'filter-input'
-        ));
+        ]);
         $filterFormElements['status'] = $statusFilter;
-        $searchFilter = new SearchFilter($xhb, array(
+        $searchFilter = new SearchFilter($xhb, [
             'name'          => 'search',
             'id'            => 'filter-search',
-            'value'         => isset($query['search']) ? $query['search'] : null,
+            'value'         => $query['search'] ?? null,
             'class'         => 'filter-input'
-        ));
+        ]);
         $filterFormElements['search'] = $searchFilter;
 
-        Design::instance()->addJs('chartjs/Chart.min.js')
-            ->addJs('chartjs/Chart.Scatter.js');    //FIXME Scale is buggy with minified JS
         $this->getView()
             ->setBlockTemplate('operation_toolbar', 'common/toolbar.phtml')
             ->setBlockTemplate('account_summary', 'account/operation/index/summary.phtml')
@@ -121,34 +122,31 @@ class OperationController extends WhbController
             ->setData('RESET_FILTERS_URL', $this->getUrl('*/*/*'))
             ->setData('FILTERS', $filterFormElements)
             ->setData('CURRENT_ORDER', $currentOrder)
-            ->setData('BALANCE_REPORT_CHART', new Scatter(array(
+            ->setData('BALANCE_REPORT_CHART', new Line([
                 'id'       => 'balanceReportChart',
                 'title'    => 'Balance Report',
-                'data_url' => $this->getUrl('*/balanceReportChartData/*', array('_query' => '*')),
+                'data_url' => $this->getUrl('*/balanceReportChartData/*', ['_query' => '*']),
                 'class'       => 'toolbar-top-right',
                 'show_legend' => false,
-                'axis_type'   => Scatter::AXIS_TYPE_DATE_CURRENCY
-            )))
+            ]))
         ;
     }
 
-    public function balanceReportChartDataAction() {
-        $collFilters = array(
-            'period' => $this->getRequestQuery('period')
-                ? $this->getRequestQuery('period')
-                : Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD'),
-        );
+    public function balanceReportChartDataAction(): void {
+        $collFilters = [
+            'period' => $this->getRequestQuery('period') ?: Main::app()->getConfig('DEFAULT_OPERATIONS_PERIOD'),
+        ];
 
         $chartData = Chart\Operation::getBalanceReportData(
             $this->getXhbSession()->getModel(),
             $collFilters,
-            array($this->getAccount()->getId())
+            [$this->getAccount()->getId()]
         );
 
-        $this->setPageConfig(array(
+        $this->setPageConfig([
             'template' => 'data/json.phtml',
             'mime'     => 'application/json'
-        ));
+        ]);
         $this->getView()->setData('DATA', $chartData);
     }
 }

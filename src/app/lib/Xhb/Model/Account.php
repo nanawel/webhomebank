@@ -20,7 +20,7 @@ class Account extends XhbModel
 {
     protected $_calculator;
 
-    public function __construct($data) {
+    public function __construct(array $data) {
         parent::__construct($data);
     }
 
@@ -33,7 +33,8 @@ class Account extends XhbModel
         if (!$returnLabel) {
             return $typeId;
         }
-        return array_search($typeId, Constants::$ACC_TYPE);
+
+        return array_search($typeId, Constants::ACC_TYPE, true);
     }
 
     /**
@@ -49,6 +50,7 @@ class Account extends XhbModel
         if (!$this->_calculator) {
             $this->_calculator = new Calculator($this->getXhb(), $this);
         }
+
         return $this->_calculator;
     }
 

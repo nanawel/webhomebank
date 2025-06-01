@@ -14,26 +14,24 @@ use Xhb\Model\Xhb;
 
 class CategoryFilter extends Select implements IWhbElement
 {
-    protected $_xhb;
-
-    public function __construct(Xhb $xhb, $data = array()) {
+    public function __construct(protected \Xhb\Model\Xhb $_xhb, $data = []) {
         $this->setLabel('Category');
         parent::__construct($data);
-        $this->_xhb = $xhb;
-        $options = array();
-        foreach($xhb->getCategoryCollection() as $key => $category) {
+        $options = [];
+        foreach($this->_xhb->getCategoryCollection() as $key => $category) {
             $options[$key] = $this->_categoryToOptionArray($category);
         }
+
         $this->setOptions($options);
     }
 
-    public function getXhb() {
+    public function getXhb(): \Xhb\Model\Xhb {
         return $this->_xhb;
     }
 
-    protected function _categoryToOptionArray(Category $category) {
-        return array(
+    protected function _categoryToOptionArray(Category $category): array {
+        return [
             'label' => $category->getFullname()
-        );
+        ];
     }
 }
