@@ -27,10 +27,12 @@ COPY src/ui/themes/ /themes
 
 RUN cd /themes/default \
  && npm install \
- && npm run build
+ && npm run build \
+ && rm -rf node_modules
 RUN cd /themes/modern \
  && npm install \
- && npm run build
+ && npm run build \
+ && rm -rf node_modules
 
 # -----------------------------------------------
 
@@ -47,14 +49,13 @@ RUN apt-get update \
     git \
     libicu-dev \
  && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
-RUN docker-php-ext-install -j$(nproc) intl
+ && rm -rf /var/lib/apt/lists/* \
+ && docker-php-ext-install -j$(nproc) intl
 
-# Log Apache access and errors to STDOUT/STDERR
+# Apache setup
 RUN ln -sf /dev/stdout /var/log/apache2/access.log \
  && ln -sf /dev/stderr /var/log/apache2/error.log
-
-RUN a2enmod rewrite \
+ && a2enmod rewrite \
     deflate \
     expires
 
@@ -62,24 +63,23 @@ ARG installXdebug=0
 RUN test "${installXdebug}" = "0" || pecl install xdebug
 ENV XDEBUG=${installXdebug}
 
-COPY resources/php.ini    /usr/local/etc/php/conf.d/zz-webhomebank.ini
-COPY resources/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY docker/php.ini    /usr/local/etc/php/conf.d/zz-webhomebank.ini
+COPY docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 COPY src/ /var/www/html/
 
 COPY --from=theme-builder /themes/ /var/www/html/ui/themes/
 
 WORKDIR /var/www/html
 
-RUN composer install
-RUN mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini \
- && sed -i "s/^VERSION=.*/VERSION=${appVersion}/" /var/www/html/etc/app.ini
-
-RUN mkdir -p /var/www/html/var \
+RUN composer install \
+ && mv -f /var/www/html/etc/local.ini.docker /var/www/html/etc/local.ini \
+ && sed -i "s/^VERSION=.*/VERSION=${appVersion}/" /var/www/html/etc/app.ini \
+ && mkdir -p /var/www/html/var \
  && chown -R www-data /var/www/html/var \
  && chmod -R 775 /var/www/html/var
 
 # Override entrypoint to add conditional XDebug support
-COPY resources/docker-entrypoint.sh /
+COPY docker/docker-entrypoint.sh /
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["apache2-foreground"]
 

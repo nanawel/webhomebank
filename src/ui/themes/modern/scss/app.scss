@@ -146,6 +146,7 @@ span.mono {
 
     > div {
         margin-bottom: 0.5em !important;
+        flex-grow: 1;
     }
 }
 
@@ -290,10 +291,11 @@ input[type='text'].search {
 /*****************************************************************************/
 
 body.init-load {
-    .content>div {
+    .content > div {
         margin-top: 10%;
         margin-bottom: 10%;
         text-align: center;
+        flex-grow: 1;
     }
 }
 
