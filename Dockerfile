@@ -28,11 +28,10 @@ COPY src/ui/themes/ /themes
 RUN cd /themes/default \
  && npm install \
  && npm run build \
- && rm -rf node_modules
-RUN cd /themes/modern \
+ && cd /themes/modern \
  && npm install \
  && npm run build \
- && rm -rf node_modules
+ && rm -rf /themes/default/node_modules /themes/modern/node_modules
 
 # -----------------------------------------------
 
