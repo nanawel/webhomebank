@@ -61,7 +61,7 @@ class InitController extends WhbController
         ]);
         try {
             $config = Main::app()->getConfig('XHB');
-            $adapter = new XhbAdapter($this->_fw, $this->getXhbSession()->get('xhb_file'), $config);
+            $adapter = new XhbAdapter($this->fw, $this->getXhbSession()->get('xhb_file'), $config);
             $xhb = $adapter->loadXhb(true);
             $this->getSession()
                 ->addMessage(I18n::instance()->tr('XHB imported to database successfully!'), Session::MESSAGE_INFO);
@@ -76,7 +76,7 @@ class InitController extends WhbController
                 'status'  => 'error',
                 'message' => $exception->getMessage()
             ];
-            if ($this->_fw->get('DEBUG') > 0) {
+            if ($this->fw->get('DEBUG') > 0) {
                 $response['trace'] = $exception->getTraceAsString();
             }
 

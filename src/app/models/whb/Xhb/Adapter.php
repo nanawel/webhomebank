@@ -25,11 +25,6 @@ class Adapter
     protected $_config;
 
     /**
-     * @var array
-     */
-    protected $_hive;
-
-    /**
      * @var XhbParser
      */
     protected $_parser;
@@ -51,13 +46,16 @@ class Adapter
      * @param \Base $fw
      * @param string $xhbFile
      */
-    public function __construct(protected $_fw, protected $_xhbFile, protected array $_rawConfig)
-    {
+    public function __construct(
+        protected $fw,
+        protected $xhbFile,
+        protected array $rawConfig
+    ) {
     }
 
     public function getParser() {
         if (!$this->_parser) {
-            $this->_parser = new XhbParser($this->_xhbFile);
+            $this->_parser = new XhbParser($this->xhbFile);
         }
 
         return $this->_parser;
@@ -73,7 +71,7 @@ class Adapter
 
     protected function _getConfig() {
         if (!$this->_config) {
-            $hive = $this->_fw->hive();
+            $hive = $this->fw->hive();
             $hive['xhbid'] = $this->getXhbId();
             $this->_processConfig($hive);
         }
@@ -91,7 +89,7 @@ class Adapter
 
     public function loadXhb($force = false) {
         $xhbId = $this->getXhbId();
-        $flock = new FlockLock($this->_fw->get('TEMP'));
+        $flock = new FlockLock($this->fw->get('TEMP'));
         if ($force || !$this->isXhbLoaded()) {
             if ($flock->acquireLock($xhbId)) {
                 $this->getResourceAdapter()->importXhbData(
@@ -123,7 +121,7 @@ class Adapter
     }
 
     protected function _processConfig($hive) {
-        $this->_config = $this->_rawConfig;
+        $this->_config = $this->rawConfig;
         array_walk_recursive($this->_config, [$this, '_filterConfig'], $hive);
     }
 

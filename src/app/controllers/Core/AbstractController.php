@@ -50,22 +50,22 @@ abstract class AbstractController
 
     protected $_canCacheOutput = true;
 
-    public final function __construct(protected $_fw) {
+    public final function __construct(protected $fw) {
         Main::instance()->setup();
         Main::app()->setCurrentController($this);
         $this->setPageTemplate(self::PAGE_TEMPLATE_DEFAULT);
         $this->_init();
     }
 
-    protected function _init() {
+    protected function _init(): void {
         // to be overridden
     }
 
-    public function getSession($name = null) {
+    public function getSession($name = null): Session {
         return Main::app()->getSession($name);
     }
 
-    protected function _initRequestData($args) {
+    protected function _initRequestData($args): void {
         $parts = explode('/', trim(preg_replace('#(.*?)\?(.*)#', '$1', $args[0]), '/'));
         $controller = array_shift($parts);
         if ($controller === null) {
@@ -82,15 +82,15 @@ abstract class AbstractController
         $this->_setRequestParams($parts);
     }
 
-    public function getControllerName() {
+    public function getControllerName(): string {
         return $this->_controller;
     }
 
-    public function getActionName() {
+    public function getActionName(): string {
         return $this->_action;
     }
 
-    protected function _setRequestParams($params) {
+    protected function _setRequestParams(array $params): self {
         $parts = array_chunk($params, 2);
         $keys = array_column($parts, 0);
         $values = array_column($parts, 1);
@@ -103,16 +103,16 @@ abstract class AbstractController
         return $this;
     }
 
-    protected function _getRequestParams() {
+    protected function _getRequestParams(): array {
         return $this->_requestParams;
     }
 
-    protected function _getRequestParam($param) {
+    protected function _getRequestParam($param): ?string {
         return $this->_requestParams[$param] ?? null;
     }
 
-    public function getRequestQuery($param = null) {
-        $query = $this->_fw->get('REQUEST');
+    public function getRequestQuery($param = null): string|array|null {
+        $query = $this->fw->get('REQUEST');
         if ($param === null) {
             return $query;
         }
@@ -120,58 +120,46 @@ abstract class AbstractController
         return $query[$param] ?? null;
     }
 
-    public function getFullActionName() {
+    public function getFullActionName(): string {
         return $this->_controller . '/' . $this->_action;
     }
 
-    protected function _setContentTemplate() {
+    protected function _setContentTemplate(): self {
         $fullAction = $this->getFullActionName();
         $defaultTemplate = str_replace(['_', '/'], DIRECTORY_SEPARATOR, $fullAction) . View::TEMPLATE_DEFAULT_EXTENSION;
         $this->getView()->setBlockTemplate(View::TEMPLATE_CONTENT_KEY, $defaultTemplate);
         return $this;
     }
 
-    protected function _addBodyClass() {
+    protected function _addBodyClass(): void {
         $class = preg_replace('/[^a-z-]/i', '-', $this->_controller);
         Design::instance()->addBodyClass($class);
         $class = preg_replace('/[^a-z-]/i', '-', $this->getFullActionName());
         Design::instance()->addBodyClass($class);
     }
 
-    /**
-     * @return string
-     */
-    public function getPageTitle() {
-        return $this->_fw->get('PAGE_TITLE');
+    public function getPageTitle(): string {
+        return $this->fw->get('PAGE_TITLE');
     }
 
-    /**
-     * @param string $title
-     */
-    public function setPageTitle($title) {
-        $this->_fw->set('PAGE_TITLE', $title);
+    public function setPageTitle(string $title): self {
+        $this->fw->set('PAGE_TITLE', $title);
         return $this;
     }
 
-    /**
-     * @param bool $shouldRender
-     */
-    public function setShouldRender($shouldRender) {
+    public function setShouldRender(bool $shouldRender): self {
         $this->_shouldRender = $shouldRender;
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getShouldRender() {
+    public function getShouldRender(): bool {
         return $this->_shouldRender;
     }
 
     /**
      * @param string $template
      */
-    public function setPageTemplate($template) {
+    public function setPageTemplate($template): self {
         $this->getView()->setBlockTemplate(self::PAGE_BLOCK_NAME, $template);
         return $this;
     }
@@ -179,7 +167,7 @@ abstract class AbstractController
     /**
      * @param string $template
      */
-    public function setPageConfig($config) {
+    public function setPageConfig($config): self {
         $this->getView()->setBlockConfig(self::PAGE_BLOCK_NAME, $config);
         return $this;
     }
@@ -187,7 +175,7 @@ abstract class AbstractController
     /**
      * @return string
      */
-    public function getPageTemplate() {
+    public function getPageTemplate(): string {
         return $this->getView()->getBlockTemplate(self::PAGE_BLOCK_NAME);
     }
 
@@ -267,14 +255,11 @@ abstract class AbstractController
         // to be overridden
     }
 
-    /**
-     * @return View
-     */
-    public function getView() {
+    public function getView(): View {
         return $this->_viewInstance ?: View::instance();
     }
 
-    protected function _render() {
+    protected function _render(): bool {
         if ($this->_shouldRender) {
             ob_start();
             echo $this->getView()->renderBlock(self::PAGE_BLOCK_NAME);
@@ -291,7 +276,7 @@ abstract class AbstractController
      *
      * @return bool
      */
-    protected function _renderFromCache() {
+    protected function _renderFromCache(): bool {
         if ($this->_shouldRender && $output = $this->_loadOutputFromCache()) {
             echo $this->getView()->fillBlockPlaceholders($output);
             $this->_shouldRender = false;
@@ -305,7 +290,7 @@ abstract class AbstractController
         $this->_canCacheOutput = (bool) $canCache;
     }
 
-    protected function _saveOutputToCache($output) {
+    protected function _saveOutputToCache($output): void {
         if ($this->_canCacheOutput) {
             $cacheKey = $this->_getRequestCacheKey();
             Main::app()->saveCache(
@@ -320,7 +305,7 @@ abstract class AbstractController
      *
      * @return mixed
      */
-    protected function _loadOutputFromCache() {
+    protected function _loadOutputFromCache(): string|false {
         if ($this->_canCacheOutput) {
             $cacheKey = $this->_getRequestCacheKey();
             return Main::app()->loadCache(self::CACHE_REQUEST_OUTPUT_PREFIX . $cacheKey);
@@ -329,18 +314,18 @@ abstract class AbstractController
         return false;
     }
 
-    protected function _getRequestCacheKey() {
-        return $this->_fw->hash(implode('|', $this->_getRequestCacheKeyInfo()));
+    protected function _getRequestCacheKey(): string {
+        return $this->fw->hash(implode('|', $this->_getRequestCacheKeyInfo()));
     }
 
-    protected function _getRequestCacheKeyInfo() {
+    protected function _getRequestCacheKeyInfo(): array {
         return [
-            $this->_fw->get('REALM'),
+            $this->fw->get('REALM'),
             $this->getSession()->getLocale()
         ];
     }
 
-    protected function _saveCache($key, $data, $ttl = self::CACHE_DEFAULT_TTL, $strictFullActionName = true) {
+    protected function _saveCache($key, $data, $ttl = self::CACHE_DEFAULT_TTL, $strictFullActionName = true): self {
         if ($strictFullActionName) {
             $key = $this->getFullActionName() . '_' . $key;
         }
@@ -349,7 +334,7 @@ abstract class AbstractController
         return $this;
     }
 
-    protected function _loadCache($key, $strictFullActionName = true) {
+    protected function _loadCache($key, $strictFullActionName = true): mixed {
         if ($strictFullActionName) {
             $key = $this->getFullActionName() . '_' . $key;
         }
@@ -357,15 +342,11 @@ abstract class AbstractController
         return Main::app()->loadCache($key);
     }
 
-    public function getUrl($path, $params = null) {
+    public function getUrl($path, $params = null): string {
         return Url::instance()->getUrl($path, $params);
     }
 
-    /**
-     * @param $path
-     * @return string
-     */
-    public function autocompleteUrlPath($path) {
+    public function autocompleteUrlPath(string $path): string {
         $matches = null;
         $parts = explode('/', $path);
         if (!isset($parts[0])) {
@@ -393,65 +374,60 @@ abstract class AbstractController
         return implode('/', $parts);
     }
 
-    public function __(?string $string, $vars = null) {
+    public function __(?string $string, $vars = null): string {
         return I18n::instance()->tr($string, $vars);
     }
 
-    protected function _info(?string $message, $vars = null) {
+    protected function _info(?string $message, $vars = null): void {
         $this->getSession()->addMessage($this->__($message, $vars), Session::MESSAGE_INFO);
-        return $this;
     }
 
-    protected function _warn(?string $message, $vars = null) {
+    protected function _warn(?string $message, $vars = null): void {
         $this->getSession()->addMessage($this->__($message, $vars), Session::MESSAGE_WARN);
-        return $this;
     }
 
-    protected function _error(?string $message, $vars = null) {
+    protected function _error(?string $message, $vars = null): void {
         $this->getSession()->addMessage($this->__($message, $vars), Session::MESSAGE_ERROR);
-        return $this;
     }
 
-    protected function _getReferer() {
-        $referrer = $this->_fw->get('SERVER.HTTP_REFERER');
-        if ($referrer && $referrer != $this->_fw->get('REALM')) {
+    protected function _getReferer(): ?string {
+        $referrer = $this->fw->get('SERVER.HTTP_REFERER');
+        if ($referrer && $referrer != $this->fw->get('REALM')) {
             return $referrer;
         }
 
         return null;
     }
 
-    protected function _redirectReferer() {
+    protected function _redirectReferer(): void {
         if ($referrer = $this->_getReferer()) {
             $this->_rerouteUrl($referrer);
         }
         else {
             $this->_reroute('/');
         }
-
-        return $this;
     }
 
-    protected function _reroute($path, $permanent = false) {
+    protected function _reroute($path, $permanent = false): void {
         $url = $this->getUrl($path, ['_force_scheme' => true]);
         $this->_rerouteUrl($url, $permanent);
     }
 
-    protected function _rerouteUrl($url, $permanent = false) {
-        $this->_fw->reroute($url, $permanent);
+    protected function _rerouteUrl($url, $permanent = false): void {
+        $this->fw->reroute($url, $permanent);
     }
 
-    public function __call(string $name, $arguments) {
+    public function __call(string $name, $arguments): mixed {
         if (strcasecmp(substr($name, -6), 'action') === 0) {
             // Tried to call an undefined action, return 404 (instead of 405 from standard)
-            if ($this->_fw->get('DEBUG') > 1) {
+            if ($this->fw->get('DEBUG') > 1) {
                 Log::instance()->log(
                     'Invalid action requested "' .$name . '" for controller "' . static::class . '".',
                     LOG_INFO
                 );
             }
 
-            $this->_fw->error(404);
+            $this->fw->error(404);
             return false;
         }
 

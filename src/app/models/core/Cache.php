@@ -44,7 +44,7 @@ class Cache
         'app'
     ];
 
-    public function __construct(protected $_params = []) {
+    public function __construct(protected $params = []) {
         $this->_softBackend = \Cache::instance();
     }
 

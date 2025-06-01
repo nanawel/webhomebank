@@ -39,7 +39,7 @@ class WhbController extends AbstractController
         return null;
     }
 
-    protected function _setupLayoutBlocks(): self {
+    protected function _setupLayoutBlocks(): void {
         $this->getView()
             ->setBlockTemplate('head', 'page/head.phtml')
             ->setBlockTemplate('footer', 'page/footer.phtml')
@@ -51,7 +51,6 @@ class WhbController extends AbstractController
             })                                                                  //
             ->setBlockTemplate('messages', 'messages.phtml')
             ->setBlockCachePlaceholder('messages');
-        return $this;
     }
 
     protected function _addCrumbsToTitle(array $elements) {
@@ -68,7 +67,7 @@ class WhbController extends AbstractController
         return Main::app()->getSession('xhb');
     }
 
-    protected function _getRequestCacheKeyInfo()
+    protected function _getRequestCacheKeyInfo(): array
     {
         $cacheKeyInfo = parent::_getRequestCacheKeyInfo();
         $cacheKeyInfo[] = $this->getXhbSession()->getId();

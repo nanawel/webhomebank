@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: anael
- * Date: 02/11/15
- * Time: 21:28
- */
 
 namespace app\models\core\Form\Element;
 
@@ -18,7 +12,10 @@ class AbstractElement extends MagicObject
 
     protected $_value = null;
 
-    public function __construct(protected $_tagName, $data = []) {
+    public function __construct(
+        protected $tagName,
+        array $data = []
+    ) {
         $this->addData($data);
     }
 
@@ -41,7 +38,7 @@ class AbstractElement extends MagicObject
 
     public function getDOMElement() {
         if (!$this->_domElement) {
-            $this->_domElement = static::getDocument()->createElement($this->_tagName);
+            $this->_domElement = static::getDocument()->createElement($this->tagName);
         }
 
         return $this->_domElement;

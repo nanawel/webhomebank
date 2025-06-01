@@ -48,14 +48,14 @@ class OperationController extends WhbController
             $this->_redirectReferer();
         }
 
-        $this->_fw->set('current_account', $account);
+        $this->fw->set('current_account', $account);
     }
 
     /**
      * @return Account
      */
     public function getAccount() {
-        return $this->_fw->get('current_account');
+        return $this->fw->get('current_account');
     }
 
     public function indexAction(): void {
