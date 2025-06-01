@@ -2,13 +2,13 @@
     "name": "whb-theme-modern",
     "version": "1.0.0",
     "description": "WHB Modern Theme",
+    "author": "Nanawel",
+    "license": "MIT",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "build": "webpack-cli --config webpack.config.js",
         "watch": "webpack-cli watch --config webpack.config.js"
     },
-    "author": "Nanawel",
-    "license": "MIT",
     "devDependencies": {
         "chart.js": "^4.4.9",
         "chartjs-adapter-moment": "^1.0.1",

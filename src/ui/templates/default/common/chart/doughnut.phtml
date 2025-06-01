@@ -82,7 +82,7 @@ $chartVar = 'chart_' . $chartId;
 
                     $(window).on('load', (function() {
                         updateChart();
-                        $('#<?= $chartId ?> .toolbar .filter-input').change(updateChart);
+                        $('#<?= $chartId ?> .toolbar .input-group-field').change(updateChart);
                     }));
                 })(jQuery);
             });

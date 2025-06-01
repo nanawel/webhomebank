@@ -91,7 +91,7 @@ $chartVar = 'chart_' . $chartId;
 
                     $(window).on('load', (function() {
                         updateChart();
-                        $('#<?= $chartId ?> .toolbar select').change(updateChart);
+                        $('#<?= $chartId ?> .toolbar .input-group-field').change(updateChart);
                     }));
                 })(jQuery);
             });

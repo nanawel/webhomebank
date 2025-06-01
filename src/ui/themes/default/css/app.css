@@ -373,9 +373,10 @@ body.init-load .content>div .text {
     width: auto;
 }
 
-.operations-table td.info {
+.operations-table td.info,
+.operations-table td.status {
     padding-left: 24px;
-    background-position: 2px 50%;
+    background-position: 50% 50%;
     background-repeat: no-repeat;
 }
 
@@ -448,9 +449,9 @@ body.init-load .content>div .text {
     display: inline-block;
 }
 
-.status-icon.status-0 {
-    background-image: url(..);
-}
+/*.status-icon.status-0 {*/
+/*    background-image: url(..);*/
+/*}*/
 .status-icon.status-1 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-cleared.png);
 }
@@ -460,9 +461,9 @@ body.init-load .content>div .text {
 .status-icon.status-3 {
     background-image: url(../images/hicolor_actions_16x16_hb-ope-remind.png);
 }
-.status-icon.status-4 {
-    background-image: url(../images/hicolor_actions_16x16_hb-ope-void.png);
-}
+/*.status-icon.status-4 {*/
+/*    background-image: url(../images/hicolor_actions_16x16_hb-ope-void.png);*/
+/*}*/
 
 /*****************************************************************************/
 /*                     VEHICLE REPORTS                                       */
