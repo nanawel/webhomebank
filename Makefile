@@ -12,6 +12,10 @@ build:
 build-with-xdebug:
 	docker-compose build --build-arg installXdebug=1
 
+.PHONY: build-verbose
+build-verbose:
+	docker-compose build --progress=plain --build-arg installXdebug=0
+
 .PHONY: upd
 upd:
 	docker-compose up -d
