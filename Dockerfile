@@ -57,6 +57,7 @@ RUN ln -sf /dev/stdout /var/log/apache2/access.log \
  && a2enmod rewrite \
     deflate \
     expires
+COPY docker/apache/mpm_prefork.conf /etc/apache2/mods-available/
 
 ARG installXdebug=0
 RUN test "${installXdebug}" = "0" || pecl install xdebug
