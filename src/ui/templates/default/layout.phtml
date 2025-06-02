@@ -9,7 +9,7 @@ $url = \app\models\core\Url::instance();
 
     <?= $this->renderBlock('head') ?>
 
-    <body<?php if ($class = $design->getBodyClass()) echo ' class="' . $class . '"' ?>>
+    <body<?php if ($class = $design->getBodyClass()) echo ' class="' . $class . ' no-js"' ?>>
 
         <div class="header-container">
             <?= $this->renderBlock('header') ?>

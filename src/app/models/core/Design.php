@@ -164,6 +164,16 @@ class Design extends \Prefab
      * @param string $area
      * @return $this
      */
+    public function addInlineCss($filepath, $area = 'header', $order = 0): self {
+        $this->addItems($filepath, 'css_inline', $area, $order);
+        return $this;
+    }
+
+    /**
+     * @param array|string $filepath
+     * @param string $area
+     * @return $this
+     */
     public function addJs($filepath, $area = 'header', $order = 0): self {
         $this->addItems($filepath, 'js', $area, $order);
         return $this;
@@ -247,6 +257,9 @@ class Design extends \Prefab
         switch ($type) {
             case 'css':
                 $output = '<link rel="stylesheet" href="' . $this->getCssUrl($item) . '" type="text/css">';
+                break;
+            case 'css_inline':
+                $output = sprintf('<style>%s</style>', $item);
                 break;
             case 'js':
             case 'js_module':
