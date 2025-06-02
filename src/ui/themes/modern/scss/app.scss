@@ -24,6 +24,7 @@
 
 table {
     @include table-hover;
+    @include table-scroll;
 
     background-color: white;
     width: 100%;
@@ -174,6 +175,7 @@ span.mono {
 
             > li {
                 @include flex-grid-column();
+                min-width: auto;
                 list-style: none;
 
                 &.filter-container {
