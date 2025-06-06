@@ -24,7 +24,10 @@
 
 table {
     @include table-hover;
-    @include table-scroll;
+
+    @include breakpoint(medium down) {
+        @include table-scroll;
+    }
 
     background-color: white;
     width: 100%;
