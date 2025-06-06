@@ -61,7 +61,7 @@ COPY docker/apache/mpm_prefork.conf /etc/apache2/mods-available/
 
 ARG installXdebug=0
 RUN test "${installXdebug}" = "0" || pecl install xdebug
-ENV XDEBUG=${installXdebug}
+ENV XDEBUG_INSTALLED=${installXdebug}
 
 COPY docker/php.ini    /usr/local/etc/php/conf.d/zz-webhomebank.ini
 COPY docker/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
